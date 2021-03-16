@@ -1,0 +1,44 @@
+name: tests
+on: [pull_request, push]
+env:
+  GO111MODULE: on
+
+jobs:
+  test:
+    strategy:
+      matrix:
+        go-version: [1.15.x, 1.16.x]
+        platform: [ubuntu-latest]
+    runs-on: ${{ matrix.platform }}
+
+    steps:
+      - uses: actions/setup-go@v2.1.3
+        with:
+          go-version: ${{ matrix.go-version }}
+      - uses: actions/checkout@v2.3.4
+
+      - name: Cache go modules
+        uses: actions/cache@v2.1.4
+        with:
+          path: ~/go/pkg/mod
+          key: ${{ runner.os }}-go-${{ hashFiles('go.sum') }}
+          restore-keys: ${{ runner.os }}-go-
+
+      - name: Run make fmt
+        if: runner.os != 'Windows'
+        run: |
+          make fmt
+          git diff --exit-code; code=$?; git checkout -- .; (exit $code)
+
+      - name: Run go vet
+        run: go vet ./...
+
+      - name: Ensure generating accessors produces a zero diff
+        shell: bash
+        run: cd api && go run gen-accessors.go && git diff --exit-code; code=$?; git checkout -- .; (exit $code)
+
+      - name: Run make build
+        run: make build
+
+      - name: Run make test
+        run: make testacc TEST="./herokux/" TESTARGS='-run=TestProvider'
