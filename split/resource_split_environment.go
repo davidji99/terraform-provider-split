@@ -37,7 +37,8 @@ func resourceSplitEnvironment() *schema.Resource {
 
 			"production": {
 				Type:     schema.TypeBool,
-				Required: true,
+				Optional: true,
+				Default:  false,
 			},
 		},
 	}
@@ -52,18 +53,28 @@ func resourceSplitEnvironmentImport(ctx context.Context, d *schema.ResourceData,
 	}
 
 	workspaceID := importID[0]
-	envID := importID[1]
+	envName := importID[1]
 
-	e, _, getErr := client.Environments.Get(workspaceID, envID)
+	envs, _, getErr := client.Environments.List(workspaceID)
 	if getErr != nil {
 		return nil, getErr
 	}
 
-	d.SetId(fmt.Sprintf("%s:%s", workspaceID, e.GetID()))
+	notFound := true
+	for _, e := range envs {
+		if e.GetName() == envName {
+			notFound = false
+			d.SetId(fmt.Sprintf("%s:%s", workspaceID, e.GetID()))
 
-	d.Set("workspace_id", workspaceID)
-	d.Set("name", e.GetName())
-	d.Set("production", e.GetProduction())
+			d.Set("workspace_id", workspaceID)
+			d.Set("name", e.GetName())
+			d.Set("production", e.GetProduction())
+		}
+	}
+
+	if notFound {
+		return nil, fmt.Errorf("could not find environment [%s]", envName)
+	}
 
 	return []*schema.ResourceData{d}, nil
 }
