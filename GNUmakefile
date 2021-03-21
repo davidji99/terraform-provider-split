@@ -1,7 +1,7 @@
 TEST?=$$(go list ./... |grep -v 'vendor')
 GOFMT_FILES?=$$(find . -name '*.go' |grep -v vendor)
-PKG_NAME=<REPLACE_ME>
-WEBSITE_REPO=github.com/davidji99/${PKG_NAME}
+PKG_NAME=split
+WEBSITE_REPO=github.com/davidji99/terraform-provider-${PKG_NAME}
 OS := $(shell uname | tr '[:upper:]' '[:lower:]')
 VERSION := $(shell go run ${PKG_NAME}/version.go)
 SHA := $(shell git rev-parse --short HEAD)
