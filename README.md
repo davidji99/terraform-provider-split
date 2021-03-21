@@ -1,4 +1,4 @@
-Terraform Provider splitio
+Terraform Provider Split
 =========================
 
 Some general information about this provider.
@@ -13,7 +13,7 @@ Usage
 -----
 
 ```hcl
-provider "splitio" {
+provider "split" {
   version = "~> 0.1.0"
 }
 ```
@@ -32,7 +32,7 @@ To compile the provider, run `make build`. This will build the provider and put 
 ```shell script
 $ make build
 ...
-$ $GOPATH/bin/terraform-provider-splitio
+$ $GOPATH/bin/terraform-provider-split
 ...
 ```
 
@@ -41,13 +41,13 @@ $ $GOPATH/bin/terraform-provider-splitio
 To use the dev provider with local Terraform, copy the freshly built plugin into Terraform's local plugins directory:
 
 ```sh
-cp $GOPATH/bin/terraform-provider-splitio ~/.terraform.d/plugins/
+cp $GOPATH/bin/terraform-provider-split ~/.terraform.d/plugins/
 ```
 
-Set the splitio provider without a version constraint:
+Set the split provider without a version constraint:
 
 ```hcl
-provider "splitio" {}
+provider "split" {}
 ```
 
 Then, initialize Terraform:

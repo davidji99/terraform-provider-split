@@ -16,8 +16,8 @@ Run `terraform -v` to show the version. If you are not running the latest versio
 Run `terraform -v` to show core and any provider versions. A sample output could be:
 
 ```
-Terraform v0.12.20
-+ provider.herokux v0.1.0
+Terraform v0.14.8
++ provider.split v0.1.0
 ```
 
 ### Affected Resource(s)

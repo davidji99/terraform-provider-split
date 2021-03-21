@@ -11,7 +11,7 @@ const (
 	DefaultAPIBaseURL = "https://api.split.io/internal/api/v2"
 
 	// DefaultUserAgent is the user agent used when making API calls.
-	DefaultUserAgent = "splitio-go"
+	DefaultUserAgent = "split-go"
 
 	// DefaultContentTypeHeader is the default and Content-Type header.
 	DefaultContentTypeHeader = "application/json"

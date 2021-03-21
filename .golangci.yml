@@ -86,8 +86,6 @@ linters:
 #    - gochecknoglobals
     - maligned
 #    - wsl
-resource_herokux_postgres:
-  go:399:
 issues:
   # Excluding configuration per-path, per-linter, per-text and per-source
   exclude-rules:

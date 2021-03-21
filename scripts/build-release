@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 os=$(uname)
-PROVIDER="splitio"
+PROVIDER="split"
 VERSION="v$(go run ${PROVIDER}/version.go)"
 
 if [ "$(command -v goreleaser)" = "" ]; then
