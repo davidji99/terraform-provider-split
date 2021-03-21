@@ -1,4 +1,4 @@
-Terraform Provider <REPLACE_ME>
+Terraform Provider Split
 =========================
 
 Some general information about this provider.
@@ -6,19 +6,19 @@ Some general information about this provider.
 Requirements
 ------------
 
-- [Terraform](https://www.terraform.io/downloads.html) `v0.12.x`+
-- [Go](https://golang.org/doc/install) 1.14 (to build the provider plugin)
+- [Terraform](https://www.terraform.io/downloads.html) `v0.13.x`+
+- [Go](https://golang.org/doc/install) 1.16 (to build the provider plugin)
 
 Usage
 -----
 
 ```hcl
-provider "<REPLACE_ME>" {
+provider "split" {
   version = "~> 0.1.0"
 }
 ```
 
-This provider is not compatible with terraform `v0.11.x`.
+This provider is not compatible with terraform `v0.12` and below.
 
 Development
 -----------
@@ -32,7 +32,7 @@ To compile the provider, run `make build`. This will build the provider and put 
 ```shell script
 $ make build
 ...
-$ $GOPATH/bin/terraform-provider-<REPLACE_ME>
+$ $GOPATH/bin/terraform-provider-split
 ...
 ```
 
@@ -41,13 +41,13 @@ $ $GOPATH/bin/terraform-provider-<REPLACE_ME>
 To use the dev provider with local Terraform, copy the freshly built plugin into Terraform's local plugins directory:
 
 ```sh
-cp $GOPATH/bin/terraform-provider-<REPLACE_ME> ~/.terraform.d/plugins/
+cp $GOPATH/bin/terraform-provider-split ~/.terraform.d/plugins/
 ```
 
-Set the <REPLACE_ME> provider without a version constraint:
+Set the split provider without a version constraint:
 
 ```hcl
-provider "<REPLACE_ME>" {}
+provider "split" {}
 ```
 
 Then, initialize Terraform:

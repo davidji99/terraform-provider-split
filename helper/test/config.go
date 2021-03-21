@@ -11,12 +11,14 @@ import (
 type TestConfigKey int
 
 const (
-	TestConfigSomeKey TestConfigKey = iota
+	TestConfigSplitAPIKey TestConfigKey = iota
+	TestConfigSplitWorkspaceID
 	TestConfigAcceptanceTestKey
 )
 
 var testConfigKeyToEnvName = map[TestConfigKey]string{
-	TestConfigSomeKey:           "SOME_KEY",
+	TestConfigSplitAPIKey:       "SPLIT_API_KEY",
+	TestConfigSplitWorkspaceID:  "SPLIT_WORKSPACE_ID",
 	TestConfigAcceptanceTestKey: resource.TestEnvVar,
 }
 
@@ -66,4 +68,8 @@ func (t *TestConfig) SkipUnlessAccTest(testing *testing.T) {
 	if val == "" {
 		testing.Skip(fmt.Sprintf("Acceptance tests skipped unless env '%s' set", TestConfigAcceptanceTestKey.String()))
 	}
+}
+
+func (t *TestConfig) GetWorkspaceIDorSkip(testing *testing.T) (val string) {
+	return t.GetOrSkip(testing, TestConfigSplitWorkspaceID)
 }

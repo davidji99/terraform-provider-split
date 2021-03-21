@@ -9,33 +9,36 @@ $ make test
 
 ## Acceptance Tests
 
-You can run the complete suite of <REPLACE_ME> acceptance tests by doing the following:
+You can run the complete suite of split acceptance tests by doing the following:
 
 ```bash
-$ make testacc TEST="./<REPLACE_ME>/" 2>&1 | tee test.log
+$ make testacc TEST="./split/" 2>&1 | tee test.log
 ```
 
 To run a single acceptance test in isolation replace the last line above with:
 
 ```bash
-$ make testacc TEST="./<REPLACE_ME>/" TESTARGS='-run=NAME_OF_TEST'
+$ make testacc TEST="./split/" TESTARGS='-run=TestAccSplitEnvironment_Basic'
 ```
 
-A set of tests can be selected by passing `TESTARGS` a substring. For example, to run all <REPLACE_ME> tests:
+A set of tests can be selected by passing `TESTARGS` a substring. For example, to run all split tests:
 
 ```bash
-$ make testacc TEST="./<REPLACE_ME>/" TESTARGS='-run=NAME_OF_TEST'
+$ make testacc TEST="./split/" TESTARGS='-run=TestAccSplitEnvironment_Basic'
 ```
 
 ### Test Parameters
 
-The following parameters are available for running the test. The absence of some of the non-required parameters
+The following parameters are available for running the test. The absence of some non-required parameters
 will cause certain tests to be skipped.
 
 * **TF_ACC** (`integer`) **Required** - must be set to `1`.
+* **SPLIT_API_KEY** (`string`) **Required**  - A valid Split admin API key.
+* **SPLIT_WORKSPACE** (`string`) - A valid Split workspace ID.
 
 **For example:**
 ```bash
 export TF_ACC=1
-$ make testacc TEST="./NAME_OF_TEST/" 2>&1 | tee test.log
+export SPLIT_API_KEY=<SOME_KEY>
+$ make testacc TEST="./TestAccSplitEnvironment_Basic/" 2>&1 | tee test.log
 ```
