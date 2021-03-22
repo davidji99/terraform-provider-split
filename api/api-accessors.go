@@ -44,3 +44,70 @@ func (e *EnvironmentRequest) GetProduction() bool {
 	}
 	return *e.Production
 }
+
+// GetID returns the ID field if it's non-nil, zero value otherwise.
+func (w *Workspace) GetID() string {
+	if w == nil || w.ID == nil {
+		return ""
+	}
+	return *w.ID
+}
+
+// GetName returns the Name field if it's non-nil, zero value otherwise.
+func (w *Workspace) GetName() string {
+	if w == nil || w.Name == nil {
+		return ""
+	}
+	return *w.Name
+}
+
+// GetRequiresTitleAndComments returns the RequiresTitleAndComments field if it's non-nil, zero value otherwise.
+func (w *Workspace) GetRequiresTitleAndComments() bool {
+	if w == nil || w.RequiresTitleAndComments == nil {
+		return false
+	}
+	return *w.RequiresTitleAndComments
+}
+
+// GetType returns the Type field if it's non-nil, zero value otherwise.
+func (w *Workspace) GetType() string {
+	if w == nil || w.Type == nil {
+		return ""
+	}
+	return *w.Type
+}
+
+// GetLimit returns the Limit field if it's non-nil, zero value otherwise.
+func (w *Workspaces) GetLimit() int {
+	if w == nil || w.Limit == nil {
+		return 0
+	}
+	return *w.Limit
+}
+
+// HasObjects checks if Workspaces has any Objects.
+func (w *Workspaces) HasObjects() bool {
+	if w == nil || w.Objects == nil {
+		return false
+	}
+	if len(w.Objects) == 0 {
+		return false
+	}
+	return true
+}
+
+// GetOffset returns the Offset field if it's non-nil, zero value otherwise.
+func (w *Workspaces) GetOffset() int {
+	if w == nil || w.Offset == nil {
+		return 0
+	}
+	return *w.Offset
+}
+
+// GetTotalCount returns the TotalCount field if it's non-nil, zero value otherwise.
+func (w *Workspaces) GetTotalCount() int {
+	if w == nil || w.TotalCount == nil {
+		return 0
+	}
+	return *w.TotalCount
+}

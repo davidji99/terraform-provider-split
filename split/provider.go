@@ -36,7 +36,9 @@ func New() *schema.Provider {
 			},
 		},
 
-		DataSourcesMap: map[string]*schema.Resource{},
+		DataSourcesMap: map[string]*schema.Resource{
+			"split_workspace": dataSourceSplitWorkspace(),
+		},
 
 		ResourcesMap: map[string]*schema.Resource{
 			"split_environment": resourceSplitEnvironment(),

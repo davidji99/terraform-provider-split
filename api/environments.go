@@ -40,11 +40,11 @@ func (e *EnvironmentsService) List(workspaceID string) ([]*Environment, *simpler
 	return result, response, getErr
 }
 
-// GetByID retrieves an environment by its ID.
+// FindByID retrieves an environment by its ID.
 //
 // Note: this method uses the List() method to first return all environments and then look for the target environment
 // by an ID. The Split APIv2 does not provide a GET#show endpoint for environments unfortunately.
-func (e *EnvironmentsService) Get(workspaceID, envID string) (*Environment, *simpleresty.Response, error) {
+func (e *EnvironmentsService) FindByID(workspaceID, envID string) (*Environment, *simpleresty.Response, error) {
 	envs, listResponse, listErr := e.List(workspaceID)
 	if listErr != nil {
 		return nil, listResponse, listErr
