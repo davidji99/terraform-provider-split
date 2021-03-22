@@ -131,7 +131,7 @@ func resourceSplitEnvironmentRead(ctx context.Context, d *schema.ResourceData, m
 	workspaceID := result[0]
 	envID := result[1]
 
-	e, _, getErr := client.Environments.Get(workspaceID, envID)
+	e, _, getErr := client.Environments.FindByID(workspaceID, envID)
 	if getErr != nil {
 		diags = append(diags, diag.Diagnostic{
 			Severity: diag.Error,

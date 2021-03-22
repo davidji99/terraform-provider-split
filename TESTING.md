@@ -34,7 +34,8 @@ will cause certain tests to be skipped.
 
 * **TF_ACC** (`integer`) **Required** - must be set to `1`.
 * **SPLIT_API_KEY** (`string`) **Required**  - A valid Split admin API key.
-* **SPLIT_WORKSPACE** (`string`) - A valid Split workspace ID.
+* **SPLIT_WORKSPACE_ID** (`string`) - A valid Split workspace ID.
+* **SPLIT_WORKSPACE_NAME** (`string`) - A valid Split workspace name.
 
 **For example:**
 ```bash

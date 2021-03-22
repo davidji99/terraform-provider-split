@@ -13,13 +13,15 @@ type TestConfigKey int
 const (
 	TestConfigSplitAPIKey TestConfigKey = iota
 	TestConfigSplitWorkspaceID
+	TestConfigSplitWorkspaceName
 	TestConfigAcceptanceTestKey
 )
 
 var testConfigKeyToEnvName = map[TestConfigKey]string{
-	TestConfigSplitAPIKey:       "SPLIT_API_KEY",
-	TestConfigSplitWorkspaceID:  "SPLIT_WORKSPACE_ID",
-	TestConfigAcceptanceTestKey: resource.TestEnvVar,
+	TestConfigSplitAPIKey:        "SPLIT_API_KEY",
+	TestConfigSplitWorkspaceID:   "SPLIT_WORKSPACE_ID",
+	TestConfigSplitWorkspaceName: "SPLIT_WORKSPACE_NAME",
+	TestConfigAcceptanceTestKey:  resource.TestEnvVar,
 }
 
 func (k TestConfigKey) String() (name string) {
@@ -72,4 +74,8 @@ func (t *TestConfig) SkipUnlessAccTest(testing *testing.T) {
 
 func (t *TestConfig) GetWorkspaceIDorSkip(testing *testing.T) (val string) {
 	return t.GetOrSkip(testing, TestConfigSplitWorkspaceID)
+}
+
+func (t *TestConfig) GetWorkspaceNameorSkip(testing *testing.T) (val string) {
+	return t.GetOrSkip(testing, TestConfigSplitWorkspaceName)
 }
