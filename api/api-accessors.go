@@ -45,6 +45,46 @@ func (e *EnvironmentRequest) GetProduction() bool {
 	return *e.Production
 }
 
+// GetDisplayAttributeID returns the DisplayAttributeID field if it's non-nil, zero value otherwise.
+func (t *TrafficType) GetDisplayAttributeID() string {
+	if t == nil || t.DisplayAttributeID == nil {
+		return ""
+	}
+	return *t.DisplayAttributeID
+}
+
+// GetID returns the ID field if it's non-nil, zero value otherwise.
+func (t *TrafficType) GetID() string {
+	if t == nil || t.ID == nil {
+		return ""
+	}
+	return *t.ID
+}
+
+// GetName returns the Name field if it's non-nil, zero value otherwise.
+func (t *TrafficType) GetName() string {
+	if t == nil || t.Name == nil {
+		return ""
+	}
+	return *t.Name
+}
+
+// GetType returns the Type field if it's non-nil, zero value otherwise.
+func (t *TrafficType) GetType() string {
+	if t == nil || t.Type == nil {
+		return ""
+	}
+	return *t.Type
+}
+
+// GetWorkspace returns the Workspace field.
+func (t *TrafficType) GetWorkspace() *Workspace {
+	if t == nil {
+		return nil
+	}
+	return t.Workspace
+}
+
 // GetID returns the ID field if it's non-nil, zero value otherwise.
 func (w *Workspace) GetID() string {
 	if w == nil || w.ID == nil {
