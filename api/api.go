@@ -33,6 +33,7 @@ type Client struct {
 
 	// Services used for talking to different parts of the Sendgrid APIv3.
 	Environments *EnvironmentsService
+	TrafficTypes *TrafficTypesService
 	Workspaces   *WorkspacesService
 }
 
@@ -73,6 +74,7 @@ func New(opts ...Option) (*Client, error) {
 func (c *Client) injectServices() {
 	c.common.client = c
 	c.Environments = (*EnvironmentsService)(&c.common)
+	c.TrafficTypes = (*TrafficTypesService)(&c.common)
 	c.Workspaces = (*WorkspacesService)(&c.common)
 }
 
