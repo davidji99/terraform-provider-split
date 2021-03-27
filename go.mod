@@ -4,5 +4,5 @@ go 1.16
 
 require (
 	github.com/davidji99/simpleresty v0.2.3
-	github.com/hashicorp/terraform-plugin-sdk/v2 v2.4.4
+	github.com/hashicorp/terraform-plugin-sdk/v2 v2.5.0
 )
