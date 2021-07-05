@@ -101,6 +101,49 @@ func (g *Group) GetType() string {
 	return *g.Type
 }
 
+// GetCount returns the Count field if it's non-nil, zero value otherwise.
+func (g *GroupListResult) GetCount() int {
+	if g == nil || g.Count == nil {
+		return 0
+	}
+	return *g.Count
+}
+
+// HasData checks if GroupListResult has any Data.
+func (g *GroupListResult) HasData() bool {
+	if g == nil || g.Data == nil {
+		return false
+	}
+	if len(g.Data) == 0 {
+		return false
+	}
+	return true
+}
+
+// GetLimit returns the Limit field if it's non-nil, zero value otherwise.
+func (g *GroupListResult) GetLimit() int {
+	if g == nil || g.Limit == nil {
+		return 0
+	}
+	return *g.Limit
+}
+
+// GetNextMarker returns the NextMarker field if it's non-nil, zero value otherwise.
+func (g *GroupListResult) GetNextMarker() string {
+	if g == nil || g.NextMarker == nil {
+		return ""
+	}
+	return *g.NextMarker
+}
+
+// GetPreviousMarker returns the PreviousMarker field if it's non-nil, zero value otherwise.
+func (g *GroupListResult) GetPreviousMarker() string {
+	if g == nil || g.PreviousMarker == nil {
+		return ""
+	}
+	return *g.PreviousMarker
+}
+
 // GetCreationTime returns the CreationTime field if it's non-nil, zero value otherwise.
 func (s *Segment) GetCreationTime() int64 {
 	if s == nil || s.CreationTime == nil {
