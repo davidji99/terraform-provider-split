@@ -45,6 +45,100 @@ func (e *EnvironmentRequest) GetProduction() bool {
 	return *e.Production
 }
 
+// GetLimit returns the Limit field if it's non-nil, zero value otherwise.
+func (g *GenericListResult) GetLimit() int {
+	if g == nil || g.Limit == nil {
+		return 0
+	}
+	return *g.Limit
+}
+
+// GetOffset returns the Offset field if it's non-nil, zero value otherwise.
+func (g *GenericListResult) GetOffset() int {
+	if g == nil || g.Offset == nil {
+		return 0
+	}
+	return *g.Offset
+}
+
+// GetTotalCount returns the TotalCount field if it's non-nil, zero value otherwise.
+func (g *GenericListResult) GetTotalCount() int {
+	if g == nil || g.TotalCount == nil {
+		return 0
+	}
+	return *g.TotalCount
+}
+
+// GetCreationTime returns the CreationTime field if it's non-nil, zero value otherwise.
+func (s *Segment) GetCreationTime() int64 {
+	if s == nil || s.CreationTime == nil {
+		return 0
+	}
+	return *s.CreationTime
+}
+
+// GetDescription returns the Description field if it's non-nil, zero value otherwise.
+func (s *Segment) GetDescription() string {
+	if s == nil || s.Description == nil {
+		return ""
+	}
+	return *s.Description
+}
+
+// GetEnvironment returns the Environment field.
+func (s *Segment) GetEnvironment() *Environment {
+	if s == nil {
+		return nil
+	}
+	return s.Environment
+}
+
+// GetName returns the Name field if it's non-nil, zero value otherwise.
+func (s *Segment) GetName() string {
+	if s == nil || s.Name == nil {
+		return ""
+	}
+	return *s.Name
+}
+
+// HasTags checks if Segment has any Tags.
+func (s *Segment) HasTags() bool {
+	if s == nil || s.Tags == nil {
+		return false
+	}
+	if len(s.Tags) == 0 {
+		return false
+	}
+	return true
+}
+
+// GetTrafficType returns the TrafficType field.
+func (s *Segment) GetTrafficType() *TrafficType {
+	if s == nil {
+		return nil
+	}
+	return s.TrafficType
+}
+
+// HasObjects checks if SegmentListResult has any Objects.
+func (s *SegmentListResult) HasObjects() bool {
+	if s == nil || s.Objects == nil {
+		return false
+	}
+	if len(s.Objects) == 0 {
+		return false
+	}
+	return true
+}
+
+// GetName returns the Name field if it's non-nil, zero value otherwise.
+func (t *Tag) GetName() string {
+	if t == nil || t.Name == nil {
+		return ""
+	}
+	return *t.Name
+}
+
 // GetDisplayAttributeID returns the DisplayAttributeID field if it's non-nil, zero value otherwise.
 func (t *TrafficType) GetDisplayAttributeID() string {
 	if t == nil || t.DisplayAttributeID == nil {
@@ -117,14 +211,6 @@ func (w *Workspace) GetType() string {
 	return *w.Type
 }
 
-// GetLimit returns the Limit field if it's non-nil, zero value otherwise.
-func (w *Workspaces) GetLimit() int {
-	if w == nil || w.Limit == nil {
-		return 0
-	}
-	return *w.Limit
-}
-
 // HasObjects checks if Workspaces has any Objects.
 func (w *Workspaces) HasObjects() bool {
 	if w == nil || w.Objects == nil {
@@ -134,20 +220,4 @@ func (w *Workspaces) HasObjects() bool {
 		return false
 	}
 	return true
-}
-
-// GetOffset returns the Offset field if it's non-nil, zero value otherwise.
-func (w *Workspaces) GetOffset() int {
-	if w == nil || w.Offset == nil {
-		return 0
-	}
-	return *w.Offset
-}
-
-// GetTotalCount returns the TotalCount field if it's non-nil, zero value otherwise.
-func (w *Workspaces) GetTotalCount() int {
-	if w == nil || w.TotalCount == nil {
-		return 0
-	}
-	return *w.TotalCount
 }

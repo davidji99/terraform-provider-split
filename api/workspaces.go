@@ -5,7 +5,7 @@ import (
 	"github.com/davidji99/simpleresty"
 )
 
-// WorkspacesService handles communication with the environments related
+// WorkspacesService handles communication with the environment related
 // methods of the Split.io APIv2.
 //
 // Reference: https://docs.split.io/reference#get-workspaces
@@ -13,10 +13,8 @@ type WorkspacesService service
 
 // Workspaces represents all workspaces.
 type Workspaces struct {
-	Objects    []*Workspace `json:"objects"`
-	Offset     *int         `json:"offset"`
-	Limit      *int         `json:"limit"`
-	TotalCount *int         `json:"totalCount"`
+	Objects []*Workspace `json:"objects"`
+	GenericListResult
 }
 
 // Workspace represents a workspace.

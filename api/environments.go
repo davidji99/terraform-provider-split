@@ -40,6 +40,16 @@ func (e *EnvironmentsService) List(workspaceID string) ([]*Environment, *simpler
 	return result, response, getErr
 }
 
+func (e *EnvironmentsService) ListSegments(workspaceID string) (*SegmentListResult, *simpleresty.Response, error) {
+	var result SegmentListResult
+	urlStr := e.client.http.RequestURL("/segments/ws/%s", workspaceID)
+
+	// Execute the request
+	response, getErr := e.client.http.Get(urlStr, &result, nil)
+
+	return &result, response, getErr
+}
+
 // FindByID retrieves an environment by its ID.
 //
 // Note: this method uses the List() method to first return all environments and then look for the target environment
@@ -65,10 +75,11 @@ func (e *EnvironmentsService) FindByID(workspaceID, envID string) (*Environment,
 func (e *EnvironmentsService) Create(workspaceID string, opts *EnvironmentRequest) (*Environment, *simpleresty.Response, error) {
 	var result Environment
 	urlStr := e.client.http.RequestURL("/environments/ws/%s", workspaceID)
-	// Execute the request
-	response, getErr := e.client.http.Post(urlStr, &result, opts)
 
-	return &result, response, getErr
+	// Execute the request
+	response, createErr := e.client.http.Post(urlStr, &result, opts)
+
+	return &result, response, createErr
 }
 
 type environmentPatchRequest struct {
