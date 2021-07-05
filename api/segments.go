@@ -10,7 +10,7 @@ type SegmentsService service
 
 type Segment struct {
 	Name         *string      `json:"name"`
-	Description  *string      `json:"description"`
+	Description  *string      `json:"description,omitempty"`
 	Environment  *Environment `json:"environment"`
 	TrafficType  *TrafficType `json:"trafficType"`
 	CreationTime *int64       `json:"creationTime"`
@@ -37,6 +37,16 @@ func (s *SegmentsService) List(workspaceID string) (*SegmentListResult, *simpler
 	return &result, response, getErr
 }
 
+func (s *SegmentsService) Get(workspaceID, name string) (*Segment, *simpleresty.Response, error) {
+	var result Segment
+	urlStr := s.client.http.RequestURL("/segments/ws/%s/%s", workspaceID, name)
+
+	// Execute the request
+	response, getErr := s.client.http.Get(urlStr, &result, nil)
+
+	return &result, response, getErr
+}
+
 func (s *SegmentsService) Create(workspaceID, trafficTypeID string, opts *SegmentRequest) (*Segment, *simpleresty.Response, error) {
 	var result Segment
 	urlStr := s.client.http.RequestURL("/segments/ws/%s/trafficTypes/%s", workspaceID, trafficTypeID)
@@ -46,6 +56,13 @@ func (s *SegmentsService) Create(workspaceID, trafficTypeID string, opts *Segmen
 
 	return &result, response, createErr
 }
+
+// There exists an update (PUT) endpoint to modify the description but that is an internal endpoint:
+// https://app.split.io/internal/api/segmentMetadata/updateDescription/<SEGMENT_ID>
+//
+// TODO: implement this method whenever this endpoint is GA.
+//func (s *SegmentsService) Update() {
+//}
 
 func (s *SegmentsService) Delete(workspaceID, segmentName string) (*simpleresty.Response, error) {
 	urlStr := s.client.http.RequestURL("/segments/ws/%s/%s", workspaceID, segmentName)
