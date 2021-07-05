@@ -1,7 +1,19 @@
 Terraform Provider Split
 =========================
 
-Some general information about this provider.
+This provider is used to configure certain resources supported by [Split API](https://docs.split.io/reference#introduction).
+
+For provider bugs/questions, please open an issue on this repository.
+
+Please note that I (@davidji99) am limited in what I can implement as I do not have a paid Split account.
+If an employee of Split would like to provide me with a paid account to assist my development efforts,
+please create an issue, and we'll go from there.
+
+Documentation
+------------
+
+Documentation about resources and data sources can be found
+[here](https://registry.terraform.io/providers/davidji99/split/latest/docs).
 
 Requirements
 ------------
@@ -18,12 +30,17 @@ provider "split" {
 }
 ```
 
-This provider is not compatible with terraform `v0.12` and below.
+Releases
+------------
+
+Provider binaries can be found [here](https://github.com/davidji99/terraform-provider-split/releases).
 
 Development
 -----------
 
-If you wish to work on the provider, you'll first need [Go](http://www.golang.org) installed on your machine (version 1.14+ is *required*).
+If you wish to work on the provider, you'll first need [Go](http://www.golang.org) installed on your machine (version 1.12+ is *required*).
+
+If you wish to bump the provider version, you can do so in the file `version/version.go`.
 
 ### Build the Provider
 
