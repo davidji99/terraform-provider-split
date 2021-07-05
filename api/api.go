@@ -18,6 +18,10 @@ const (
 
 	// DefaultAcceptHeader is the default and Content-Type header.
 	DefaultAcceptHeader = "application/json"
+
+	UserStatusPending     = "PENDING"
+	UserStatusActive      = "ACTIVE"
+	UserStatusDeactivated = "DEACTIVATED"
 )
 
 // Client manages communication with Sendgrid APIs.
