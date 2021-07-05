@@ -35,6 +35,7 @@ type Client struct {
 	Environments *EnvironmentsService
 	TrafficTypes *TrafficTypesService
 	Segments     *SegmentsService
+	Users        *UsersService
 	Workspaces   *WorkspacesService
 }
 
@@ -85,6 +86,7 @@ func (c *Client) injectServices() {
 	c.Environments = (*EnvironmentsService)(&c.common)
 	c.TrafficTypes = (*TrafficTypesService)(&c.common)
 	c.Segments = (*SegmentsService)(&c.common)
+	c.Users = (*UsersService)(&c.common)
 	c.Workspaces = (*WorkspacesService)(&c.common)
 }
 
