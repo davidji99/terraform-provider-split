@@ -34,6 +34,7 @@ type Client struct {
 	// Services used for talking to different parts of the Sendgrid APIv3.
 	Environments *EnvironmentsService
 	TrafficTypes *TrafficTypesService
+	Segments     *SegmentsService
 	Workspaces   *WorkspacesService
 }
 
@@ -42,6 +43,14 @@ type service struct {
 	client *Client
 }
 
+// GenericListResult
+type GenericListResult struct {
+	Offset     *int `json:"offset"`
+	Limit      *int `json:"limit"`
+	TotalCount *int `json:"totalCount"`
+}
+
+// New constructs a new Client.
 func New(opts ...Option) (*Client, error) {
 	config := &Config{
 		APIBaseURL:        DefaultAPIBaseURL,
@@ -75,6 +84,7 @@ func (c *Client) injectServices() {
 	c.common.client = c
 	c.Environments = (*EnvironmentsService)(&c.common)
 	c.TrafficTypes = (*TrafficTypesService)(&c.common)
+	c.Segments = (*SegmentsService)(&c.common)
 	c.Workspaces = (*WorkspacesService)(&c.common)
 }
 
