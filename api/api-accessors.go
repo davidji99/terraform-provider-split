@@ -69,6 +69,81 @@ func (g *GenericListResult) GetTotalCount() int {
 	return *g.TotalCount
 }
 
+// GetDescription returns the Description field if it's non-nil, zero value otherwise.
+func (g *Group) GetDescription() string {
+	if g == nil || g.Description == nil {
+		return ""
+	}
+	return *g.Description
+}
+
+// GetID returns the ID field if it's non-nil, zero value otherwise.
+func (g *Group) GetID() string {
+	if g == nil || g.ID == nil {
+		return ""
+	}
+	return *g.ID
+}
+
+// GetName returns the Name field if it's non-nil, zero value otherwise.
+func (g *Group) GetName() string {
+	if g == nil || g.Name == nil {
+		return ""
+	}
+	return *g.Name
+}
+
+// GetType returns the Type field if it's non-nil, zero value otherwise.
+func (g *Group) GetType() string {
+	if g == nil || g.Type == nil {
+		return ""
+	}
+	return *g.Type
+}
+
+// GetCount returns the Count field if it's non-nil, zero value otherwise.
+func (g *GroupListResult) GetCount() int {
+	if g == nil || g.Count == nil {
+		return 0
+	}
+	return *g.Count
+}
+
+// HasData checks if GroupListResult has any Data.
+func (g *GroupListResult) HasData() bool {
+	if g == nil || g.Data == nil {
+		return false
+	}
+	if len(g.Data) == 0 {
+		return false
+	}
+	return true
+}
+
+// GetLimit returns the Limit field if it's non-nil, zero value otherwise.
+func (g *GroupListResult) GetLimit() int {
+	if g == nil || g.Limit == nil {
+		return 0
+	}
+	return *g.Limit
+}
+
+// GetNextMarker returns the NextMarker field if it's non-nil, zero value otherwise.
+func (g *GroupListResult) GetNextMarker() string {
+	if g == nil || g.NextMarker == nil {
+		return ""
+	}
+	return *g.NextMarker
+}
+
+// GetPreviousMarker returns the PreviousMarker field if it's non-nil, zero value otherwise.
+func (g *GroupListResult) GetPreviousMarker() string {
+	if g == nil || g.PreviousMarker == nil {
+		return ""
+	}
+	return *g.PreviousMarker
+}
+
 // GetCreationTime returns the CreationTime field if it's non-nil, zero value otherwise.
 func (s *Segment) GetCreationTime() int64 {
 	if s == nil || s.CreationTime == nil {
@@ -177,6 +252,127 @@ func (t *TrafficType) GetWorkspace() *Workspace {
 		return nil
 	}
 	return t.Workspace
+}
+
+// GetEmail returns the Email field if it's non-nil, zero value otherwise.
+func (u *User) GetEmail() string {
+	if u == nil || u.Email == nil {
+		return ""
+	}
+	return *u.Email
+}
+
+// HasGroups checks if User has any Groups.
+func (u *User) HasGroups() bool {
+	if u == nil || u.Groups == nil {
+		return false
+	}
+	if len(u.Groups) == 0 {
+		return false
+	}
+	return true
+}
+
+// GetID returns the ID field if it's non-nil, zero value otherwise.
+func (u *User) GetID() string {
+	if u == nil || u.ID == nil {
+		return ""
+	}
+	return *u.ID
+}
+
+// GetName returns the Name field if it's non-nil, zero value otherwise.
+func (u *User) GetName() string {
+	if u == nil || u.Name == nil {
+		return ""
+	}
+	return *u.Name
+}
+
+// GetStatus returns the Status field if it's non-nil, zero value otherwise.
+func (u *User) GetStatus() string {
+	if u == nil || u.Status == nil {
+		return ""
+	}
+	return *u.Status
+}
+
+// GetTFA returns the TFA field if it's non-nil, zero value otherwise.
+func (u *User) GetTFA() bool {
+	if u == nil || u.TFA == nil {
+		return false
+	}
+	return *u.TFA
+}
+
+// GetType returns the Type field if it's non-nil, zero value otherwise.
+func (u *User) GetType() string {
+	if u == nil || u.Type == nil {
+		return ""
+	}
+	return *u.Type
+}
+
+// HasGroups checks if UserCreateRequest has any Groups.
+func (u *UserCreateRequest) HasGroups() bool {
+	if u == nil || u.Groups == nil {
+		return false
+	}
+	if len(u.Groups) == 0 {
+		return false
+	}
+	return true
+}
+
+// GetCount returns the Count field if it's non-nil, zero value otherwise.
+func (u *UserListResult) GetCount() int {
+	if u == nil || u.Count == nil {
+		return 0
+	}
+	return *u.Count
+}
+
+// HasData checks if UserListResult has any Data.
+func (u *UserListResult) HasData() bool {
+	if u == nil || u.Data == nil {
+		return false
+	}
+	if len(u.Data) == 0 {
+		return false
+	}
+	return true
+}
+
+// GetLimit returns the Limit field if it's non-nil, zero value otherwise.
+func (u *UserListResult) GetLimit() int {
+	if u == nil || u.Limit == nil {
+		return 0
+	}
+	return *u.Limit
+}
+
+// GetNextMarker returns the NextMarker field if it's non-nil, zero value otherwise.
+func (u *UserListResult) GetNextMarker() string {
+	if u == nil || u.NextMarker == nil {
+		return ""
+	}
+	return *u.NextMarker
+}
+
+// GetPreviousMarker returns the PreviousMarker field if it's non-nil, zero value otherwise.
+func (u *UserListResult) GetPreviousMarker() string {
+	if u == nil || u.PreviousMarker == nil {
+		return ""
+	}
+	return *u.PreviousMarker
+}
+
+// GetTFA returns the TFA field if it's non-nil, zero value otherwise.
+func (u *UserUpdateRequest) GetTFA() bool {
+	if u == nil || u.TFA == nil {
+		return false
+	}
+	return *u.TFA
 }
 
 // GetID returns the ID field if it's non-nil, zero value otherwise.

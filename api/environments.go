@@ -40,6 +40,9 @@ func (e *EnvironmentsService) List(workspaceID string) ([]*Environment, *simpler
 	return result, response, getErr
 }
 
+// ListSegments retrieves the Segments given an environment.
+//
+// Reference: https://docs.split.io/reference#list-segments-in-environment
 func (e *EnvironmentsService) ListSegments(workspaceID string) (*SegmentListResult, *simpleresty.Response, error) {
 	var result SegmentListResult
 	urlStr := e.client.http.RequestURL("/segments/ws/%s", workspaceID)

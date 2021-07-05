@@ -138,7 +138,7 @@ func resourceSplitSegmentRead(ctx context.Context, d *schema.ResourceData, meta 
 	d.Set("name", s.GetName())
 	d.Set("description", s.GetDescription())
 
-	return nil
+	return diags
 }
 
 //func resourceSplitSegmentUpdate(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
@@ -162,9 +162,9 @@ func resourceSplitSegmentDelete(ctx context.Context, d *schema.ResourceData, met
 		return diags
 	}
 
-	log.Printf("[DEBUG] Deleting segment %s", d.Id())
+	log.Printf("[DEBUG] Deleted segment %s", d.Id())
 
 	d.SetId("")
 
-	return nil
+	return diags
 }
