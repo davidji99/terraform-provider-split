@@ -43,6 +43,7 @@ func New() *schema.Provider {
 
 		ResourcesMap: map[string]*schema.Resource{
 			"split_environment": resourceSplitEnvironment(),
+			"split_segment":     resourceSplitSegment(),
 		},
 
 		ConfigureContextFunc: providerConfigure,
