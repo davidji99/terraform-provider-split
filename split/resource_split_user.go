@@ -6,7 +6,6 @@ import (
 	"github.com/davidji99/terraform-provider-split/api"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
 	"log"
 )
 
@@ -35,15 +34,7 @@ func resourceSplitUser() *schema.Resource {
 
 			"2fa": {
 				Type:     schema.TypeBool,
-				Optional: true,
 				Computed: true,
-			},
-
-			"status": {
-				Type:         schema.TypeString,
-				Optional:     true,
-				Computed:     true,
-				ValidateFunc: validation.StringInSlice([]string{"ACTIVE", "DEACTIVATED"}, false),
 			},
 		},
 	}
@@ -73,9 +64,24 @@ func resourceSplitUserCreate(ctx context.Context, d *schema.ResourceData, meta i
 
 	log.Printf("[DEBUG] Invited user %s", opts.Email)
 
-	log.Printf("[DEBUG] New user ID: %s", u.GetID())
-
 	d.SetId(u.GetID())
+
+	// Update the user if applicable.
+	if v, ok := d.GetOk("name"); ok {
+		updateOpts := &api.UserUpdateRequest{}
+		updateOpts.Name = v.(string)
+		log.Printf("[DEBUG] new user name is : %v", updateOpts.Name)
+
+		_, _, updateErr := client.Users.Update(d.Id(), updateOpts)
+		if updateErr != nil {
+			diags = append(diags, diag.Diagnostic{
+				Severity: diag.Error,
+				Summary:  fmt.Sprintf("Unable to update user %v name on initial creation", opts.Email),
+				Detail:   updateErr.Error(),
+			})
+			return diags
+		}
+	}
 
 	return resourceSplitUserRead(ctx, d, meta)
 }
@@ -103,6 +109,30 @@ func resourceSplitUserRead(ctx context.Context, d *schema.ResourceData, meta int
 }
 
 func resourceSplitUserUpdate(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
+	var diags diag.Diagnostics
+	client := meta.(*Config).API
+	opts := &api.UserUpdateRequest{}
+
+	if v, ok := d.GetOk("name"); ok {
+		opts.Name = v.(string)
+		log.Printf("[DEBUG] updated user name is : %v", opts.Name)
+	}
+
+	if v, ok := d.GetOk("email"); ok {
+		opts.Email = v.(string)
+		log.Printf("[DEBUG] updated user email is : %v", opts.Email)
+	}
+
+	_, _, updateErr := client.Users.Update(d.Id(), opts)
+	if updateErr != nil {
+		diags = append(diags, diag.Diagnostic{
+			Severity: diag.Error,
+			Summary:  fmt.Sprintf("Unable to update user %v", opts.Email),
+			Detail:   updateErr.Error(),
+		})
+		return diags
+	}
+
 	return resourceSplitUserRead(ctx, d, meta)
 }
 

@@ -7,7 +7,7 @@ import (
 )
 
 const (
-	// DefaultAPIBaseURL
+	// DefaultAPIBaseURL is the base API url.
 	DefaultAPIBaseURL = "https://api.split.io/internal/api/v2"
 
 	// DefaultUserAgent is the user agent used when making API calls.
@@ -49,7 +49,7 @@ type service struct {
 	client *Client
 }
 
-// GenericListResult
+// GenericListResult is the generic list result.
 type GenericListResult struct {
 	Offset     *int `json:"offset"`
 	Limit      *int `json:"limit"`
