@@ -28,12 +28,16 @@ func resourceSplitUser() *schema.Resource {
 
 			"name": {
 				Type:     schema.TypeString,
-				Optional: true,
 				Computed: true,
 			},
 
 			"2fa": {
 				Type:     schema.TypeBool,
+				Computed: true,
+			},
+
+			"status": {
+				Type:     schema.TypeString,
 				Computed: true,
 			},
 		},
@@ -65,23 +69,6 @@ func resourceSplitUserCreate(ctx context.Context, d *schema.ResourceData, meta i
 	log.Printf("[DEBUG] Invited user %s", opts.Email)
 
 	d.SetId(u.GetID())
-
-	// Update the user if applicable.
-	if v, ok := d.GetOk("name"); ok {
-		updateOpts := &api.UserUpdateRequest{}
-		updateOpts.Name = v.(string)
-		log.Printf("[DEBUG] new user name is : %v", updateOpts.Name)
-
-		_, _, updateErr := client.Users.Update(d.Id(), updateOpts)
-		if updateErr != nil {
-			diags = append(diags, diag.Diagnostic{
-				Severity: diag.Error,
-				Summary:  fmt.Sprintf("Unable to update user %v name on initial creation", opts.Email),
-				Detail:   updateErr.Error(),
-			})
-			return diags
-		}
-	}
 
 	return resourceSplitUserRead(ctx, d, meta)
 }
@@ -116,11 +103,6 @@ func resourceSplitUserUpdate(ctx context.Context, d *schema.ResourceData, meta i
 	if v, ok := d.GetOk("name"); ok {
 		opts.Name = v.(string)
 		log.Printf("[DEBUG] updated user name is : %v", opts.Name)
-	}
-
-	if v, ok := d.GetOk("email"); ok {
-		opts.Email = v.(string)
-		log.Printf("[DEBUG] updated user email is : %v", opts.Email)
 	}
 
 	_, _, updateErr := client.Users.Update(d.Id(), opts)
