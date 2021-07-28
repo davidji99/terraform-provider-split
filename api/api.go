@@ -7,7 +7,7 @@ import (
 )
 
 const (
-	// DefaultAPIBaseURL
+	// DefaultAPIBaseURL is the base API url.
 	DefaultAPIBaseURL = "https://api.split.io/internal/api/v2"
 
 	// DefaultUserAgent is the user agent used when making API calls.
@@ -18,6 +18,10 @@ const (
 
 	// DefaultAcceptHeader is the default and Content-Type header.
 	DefaultAcceptHeader = "application/json"
+
+	UserStatusPending     = "PENDING"
+	UserStatusActive      = "ACTIVE"
+	UserStatusDeactivated = "DEACTIVATED"
 )
 
 // Client manages communication with Sendgrid APIs.
@@ -45,7 +49,7 @@ type service struct {
 	client *Client
 }
 
-// GenericListResult
+// GenericListResult is the generic list result.
 type GenericListResult struct {
 	Offset     *int `json:"offset"`
 	Limit      *int `json:"limit"`

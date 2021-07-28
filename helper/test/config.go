@@ -15,6 +15,7 @@ const (
 	TestConfigSplitTrafficTypeName
 	TestConfigSplitWorkspaceID
 	TestConfigSplitWorkspaceName
+	TestConfigSplitUserEmail
 	TestConfigAcceptanceTestKey
 )
 
@@ -23,6 +24,7 @@ var testConfigKeyToEnvName = map[TestConfigKey]string{
 	TestConfigSplitTrafficTypeName: "SPLIT_TRAFFIC_TYPE_NAME",
 	TestConfigSplitWorkspaceID:     "SPLIT_WORKSPACE_ID",
 	TestConfigSplitWorkspaceName:   "SPLIT_WORKSPACE_NAME",
+	TestConfigSplitUserEmail:       "SPLIT_USER_EMAIL",
 	TestConfigAcceptanceTestKey:    resource.TestEnvVar,
 }
 
@@ -84,4 +86,8 @@ func (t *TestConfig) GetWorkspaceNameorSkip(testing *testing.T) (val string) {
 
 func (t *TestConfig) GetTrafficTypeNameorSkip(testing *testing.T) (val string) {
 	return t.GetOrSkip(testing, TestConfigSplitTrafficTypeName)
+}
+
+func (t *TestConfig) GetUserEmailorSkip(testing *testing.T) (val string) {
+	return t.GetOrSkip(testing, TestConfigSplitUserEmail)
 }

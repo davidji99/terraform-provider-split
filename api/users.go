@@ -16,7 +16,7 @@ type User struct {
 	Email  *string  `json:"email"`
 	Status *string  `json:"status"`
 	TFA    *bool    `json:"2fa"`
-	Groups []*Group `json:"groups"`
+	Groups []*Group `json:"groups,omitempty"`
 }
 
 // UserListResult
@@ -28,7 +28,7 @@ type UserListResult struct {
 	Count          *int    `json:"count"`
 }
 
-// UserListOpts
+// UserListOpts represents all query parameters when fetching all Users.
 type UserListOpts struct {
 	// ACTIVE | DEACTIVATED | PENDING are the allowed status values to filter by
 	Status string `url:"status,omitempty"`
@@ -46,7 +46,7 @@ type UserListOpts struct {
 	GroupID string `url:"limit,omitempty"`
 }
 
-// UserCreateRequest
+// UserCreateRequest is to create a new user.
 type UserCreateRequest struct {
 	Email  string `json:"email,omitempty"`
 	Groups []struct {
@@ -55,6 +55,7 @@ type UserCreateRequest struct {
 	} `json:"groups,omitempty"`
 }
 
+// UserUpdateRequest updates an existing user.
 type UserUpdateRequest struct {
 	Name   string `json:"name,omitempty"`
 	Email  string `json:"email,omitempty"`
@@ -63,6 +64,8 @@ type UserUpdateRequest struct {
 }
 
 // List all active, deactivated, and pending users in the organization.
+//
+// By default, pending users are not returned via this endpoint.
 //
 // Reference: https://docs.split.io/reference#list-users
 func (u *UsersService) List(opts *UserListOpts) (*UserListResult, *simpleresty.Response, error) {
