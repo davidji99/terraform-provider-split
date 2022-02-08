@@ -1,5 +1,6 @@
 // Copyright 2017 The go-github AUTHORS. All rights reserved.
 
+//go:build ignore
 // +build ignore
 
 // gen-accessors generates accessor methods for structs with pointer fields.
