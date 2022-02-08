@@ -1,3 +1,4 @@
+//go:build ignore
 // +build ignore
 
 // This a hack to populate the version in the custom binary file as this provider is not official.
