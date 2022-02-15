@@ -5,10 +5,6 @@ This provider is used to configure certain resources supported by [Split API](ht
 
 For provider bugs/questions, please open an issue on this repository.
 
-Please note that I (@davidji99) am limited in what I can implement as I do not have a paid Split account.
-If an employee of Split would like to provide me with a paid account to assist my development efforts,
-please create an issue, and we'll go from there.
-
 Documentation
 ------------
 
