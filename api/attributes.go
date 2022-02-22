@@ -1,6 +1,7 @@
 package api
 
 import (
+	"fmt"
 	"github.com/davidji99/simpleresty"
 	"net/url"
 )
@@ -28,6 +29,7 @@ type AttributeRequest struct {
 	DisplayName  string `json:"displayName"`
 	Description  string `json:"description"`
 	IsSearchable bool   `json:"isSearchable,omitempty"`
+	DataType     string `json:"dataType,omitempty"`
 }
 
 // List all attributes for a traffic type.
@@ -41,6 +43,24 @@ func (a *AttributesService) List(workspaceID, trafficTypeID string) ([]*Attribut
 	response, listErr := a.client.http.Get(urlStr, &result, nil)
 
 	return result, response, listErr
+}
+
+// FindById retrieves an attribute by its ID.
+//
+// This is a helper method as it is not possible to retrieve a single attribute.
+func (a *AttributesService) FindById(workspaceID, trafficTypeID, attributeID string) (*Attribute, *simpleresty.Response, error) {
+	attributes, listErr, listResponse := a.List(workspaceID, trafficTypeID)
+	if listErr != nil {
+		return nil, listErr, listResponse
+	}
+
+	for _, a := range attributes {
+		if a.GetID() == attributeID {
+			return a, nil, nil
+		}
+	}
+
+	return nil, nil, fmt.Errorf("could not find attribute [%s]", attributeID)
 }
 
 // Create an attribute.

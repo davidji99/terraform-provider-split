@@ -14,7 +14,6 @@ func resourceSplitAttribute() *schema.Resource {
 	return &schema.Resource{
 		CreateContext: resourceSplitAttributeCreate,
 		ReadContext:   resourceSplitAttributeRead,
-		UpdateContext: resourceSplitAttributeUpdate,
 		DeleteContext: resourceSplitAttributeDelete,
 
 		Importer: &schema.ResourceImporter{
@@ -36,10 +35,35 @@ func resourceSplitAttribute() *schema.Resource {
 				ValidateFunc: validation.IsUUID,
 			},
 
-			"production": {
+			"attribute_id": {
+				Type:     schema.TypeString,
+				Required: true,
+				ForceNew: true,
+			},
+
+			"display_name": {
+				Type:     schema.TypeString,
+				Required: true,
+				ForceNew: true,
+			},
+
+			"description": {
+				Type:     schema.TypeString,
+				Required: true,
+				ForceNew: true,
+			},
+
+			"data_type": {
+				Type:         schema.TypeString,
+				Optional:     true,
+				ForceNew:     true,
+				ValidateFunc: validation.StringInSlice([]string{"string", "datetime", "number", "set"}, false),
+			},
+
+			"is_searchable": {
 				Type:     schema.TypeBool,
 				Optional: true,
-				Default:  false,
+				ForceNew: true,
 			},
 		},
 	}
@@ -83,7 +107,7 @@ func resourceSplitAttributeImport(ctx context.Context, d *schema.ResourceData, m
 func resourceSplitAttributeCreate(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
 	var diags diag.Diagnostics
 	client := meta.(*Config).API
-	opts := &api.EnvironmentRequest{}
+	opts := &api.AttributeRequest{}
 	workspaceID := getWorkspaceID(d)
 
 	if v, ok := d.GetOk("name"); ok {
@@ -147,51 +171,6 @@ func resourceSplitAttributeRead(ctx context.Context, d *schema.ResourceData, met
 	d.Set("production", e.GetProduction())
 
 	return diags
-}
-
-func resourceSplitAttributeUpdate(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
-	var diags diag.Diagnostics
-	client := meta.(*Config).API
-	opts := &api.EnvironmentRequest{}
-
-	result, parseErr := parseCompositeID(d.Id(), 2)
-	if parseErr != nil {
-		diags = append(diags, diag.Diagnostic{
-			Severity: diag.Error,
-			Summary:  "unable to parse resource ID during resource update",
-			Detail:   parseErr.Error(),
-		})
-		return diags
-	}
-
-	workspaceID := result[0]
-	envID := result[1]
-
-	if ok := d.HasChange("name"); ok {
-		vs := d.Get("name").(string)
-		opts.Name = &vs
-		log.Printf("[DEBUG] updated environment name is : %v", opts.GetName())
-	}
-
-	production := d.Get("production").(bool)
-	opts.Production = &production
-	log.Printf("[DEBUG] updated environment production is : %v", opts.GetProduction())
-
-	log.Printf("[DEBUG] Updating environment")
-
-	_, _, updateErr := client.Environments.Update(workspaceID, envID, opts)
-	if updateErr != nil {
-		diags = append(diags, diag.Diagnostic{
-			Severity: diag.Error,
-			Summary:  fmt.Sprintf("unable to update environment %s", envID),
-			Detail:   updateErr.Error(),
-		})
-		return diags
-	}
-
-	log.Printf("[DEBUG] Updated environment")
-
-	return resourceSplitAttributeRead(ctx, d, meta)
 }
 
 func resourceSplitAttributeDelete(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
