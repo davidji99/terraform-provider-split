@@ -12,10 +12,10 @@ jobs:
     runs-on: ${{ matrix.platform }}
 
     steps:
-      - uses: actions/setup-go@v2.2.0
+      - uses: actions/setup-go@3.0.0
         with:
           go-version: ${{ matrix.go-version }}
-      - uses: actions/checkout@v2.4.0
+      - uses: actions/checkout@v3.0.0
 
       - name: Cache go modules
         uses: actions/cache@v2.1.7
