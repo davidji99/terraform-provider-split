@@ -35,12 +35,6 @@ func resourceSplitAttribute() *schema.Resource {
 				ValidateFunc: validation.IsUUID,
 			},
 
-			"attribute_id": {
-				Type:     schema.TypeString,
-				Required: true,
-				ForceNew: true,
-			},
-
 			"display_name": {
 				Type:     schema.TypeString,
 				Required: true,
@@ -63,6 +57,7 @@ func resourceSplitAttribute() *schema.Resource {
 			"is_searchable": {
 				Type:     schema.TypeBool,
 				Optional: true,
+				Default:  true,
 				ForceNew: true,
 			},
 		},
@@ -72,34 +67,27 @@ func resourceSplitAttribute() *schema.Resource {
 func resourceSplitAttributeImport(ctx context.Context, d *schema.ResourceData, meta interface{}) ([]*schema.ResourceData, error) {
 	client := meta.(*Config).API
 
-	importID, parseErr := parseCompositeID(d.Id(), 2)
+	importID, parseErr := parseCompositeID(d.Id(), 3)
 	if parseErr != nil {
 		return nil, parseErr
 	}
 
 	workspaceID := importID[0]
-	envName := importID[1]
+	trafficTypeID := importID[1]
+	attributeID := importID[2]
 
-	envs, _, getErr := client.Environments.List(workspaceID)
+	a, _, getErr := client.Attributes.FindByID(workspaceID, trafficTypeID, attributeID)
 	if getErr != nil {
 		return nil, getErr
 	}
 
-	notFound := true
-	for _, e := range envs {
-		if e.GetName() == envName {
-			notFound = false
-			d.SetId(fmt.Sprintf("%s:%s", workspaceID, e.GetID()))
-
-			d.Set("workspace_id", workspaceID)
-			d.Set("name", e.GetName())
-			d.Set("production", e.GetProduction())
-		}
-	}
-
-	if notFound {
-		return nil, fmt.Errorf("could not find environment [%s]", envName)
-	}
+	d.SetId(a.GetID())
+	d.Set("workspace_id", workspaceID)
+	d.Set("traffic_type_id", trafficTypeID)
+	d.Set("display_name", a.GetDisplayName())
+	d.Set("description", a.GetDescription())
+	d.Set("data_type", a.GetDataType())
+	d.Set("is_searchable", a.GetIsSearchable())
 
 	return []*schema.ResourceData{d}, nil
 }
@@ -109,32 +97,43 @@ func resourceSplitAttributeCreate(ctx context.Context, d *schema.ResourceData, m
 	client := meta.(*Config).API
 	opts := &api.AttributeRequest{}
 	workspaceID := getWorkspaceID(d)
+	trafficTypeID := getTrafficTypeID(d)
 
-	if v, ok := d.GetOk("name"); ok {
-		vs := v.(string)
-		opts.Name = &vs
-		log.Printf("[DEBUG] new environment name is : %v", opts.GetName())
+	if v, ok := d.GetOk("display_name"); ok {
+		opts.DisplayName = v.(string)
+		log.Printf("[DEBUG] new attribute display_name is : %v", opts.DisplayName)
 	}
 
-	production := d.Get("production").(bool)
-	opts.Production = &production
-	log.Printf("[DEBUG] new environment production is : %v", opts.GetProduction())
+	if v, ok := d.GetOk("description"); ok {
+		opts.Description = v.(string)
+		log.Printf("[DEBUG] new attribute description is : %v", opts.Description)
+	}
 
-	log.Printf("[DEBUG] Creating Environment named %v", opts.GetName())
+	if v, ok := d.GetOk("data_type"); ok {
+		opts.DataType = v.(string)
+		log.Printf("[DEBUG] new attribute DataType is : %v", opts.DataType)
+	}
 
-	e, _, createErr := client.Environments.Create(workspaceID, opts)
+	isSearchable := d.Get("is_searchable").(bool)
+	opts.IsSearchable = &isSearchable
+
+	log.Printf("[DEBUG] Creating attribute %v", opts.DisplayName)
+
+	e, _, createErr := client.Attributes.Create(workspaceID, trafficTypeID, opts)
 	if createErr != nil {
 		diags = append(diags, diag.Diagnostic{
 			Severity: diag.Error,
-			Summary:  fmt.Sprintf("Unable to create environment %v", opts.GetName()),
+			Summary:  fmt.Sprintf("Unable to create attribute %v", opts.DisplayName),
 			Detail:   createErr.Error(),
 		})
 		return diags
 	}
 
-	log.Printf("[DEBUG] Created Environment named %v", opts.GetName())
+	log.Printf("[DEBUG] Created attribute %v", opts.DisplayName)
 
-	d.SetId(fmt.Sprintf("%s:%s", workspaceID, e.GetID()))
+	d.SetId(e.GetID())
+	d.Set("workspace_id", workspaceID)
+	d.Set("traffic_type_id", trafficTypeID)
 
 	return resourceSplitAttributeRead(ctx, d, meta)
 }
@@ -142,70 +141,45 @@ func resourceSplitAttributeCreate(ctx context.Context, d *schema.ResourceData, m
 func resourceSplitAttributeRead(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
 	var diags diag.Diagnostics
 	client := meta.(*Config).API
+	workspaceID := getWorkspaceID(d)
+	trafficTypeID := getTrafficTypeID(d)
 
-	result, parseErr := parseCompositeID(d.Id(), 2)
-	if parseErr != nil {
-		diags = append(diags, diag.Diagnostic{
-			Severity: diag.Error,
-			Summary:  "unable to parse resource ID during state refresh",
-			Detail:   parseErr.Error(),
-		})
-		return diags
-	}
-
-	workspaceID := result[0]
-	envID := result[1]
-
-	e, _, getErr := client.Environments.FindByID(workspaceID, envID)
+	a, _, getErr := client.Attributes.FindByID(workspaceID, trafficTypeID, d.Id())
 	if getErr != nil {
 		diags = append(diags, diag.Diagnostic{
 			Severity: diag.Error,
-			Summary:  fmt.Sprintf("unable to fetch environment %s", envID),
+			Summary:  fmt.Sprintf("unable to fetch attribute %s", d.Id()),
 			Detail:   getErr.Error(),
 		})
 		return diags
 	}
 
-	d.Set("workspace_id", workspaceID)
-	d.Set("name", e.GetName())
-	d.Set("production", e.GetProduction())
+	d.Set("display_name", a.GetDisplayName())
+	d.Set("description", a.GetDescription())
+	d.Set("data_type", a.GetDataType())
+	d.Set("is_searchable", a.GetIsSearchable())
 
 	return diags
 }
 
 func resourceSplitAttributeDelete(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
-	config := meta.(*Config)
+	client := meta.(*Config).API
 	var diags diag.Diagnostics
+	workspaceID := getWorkspaceID(d)
+	trafficTypeID := getTrafficTypeID(d)
 
-	if !config.RemoveEnvFromStateOnly {
-		client := config.API
-
-		result, parseErr := parseCompositeID(d.Id(), 2)
-		if parseErr != nil {
-			diags = append(diags, diag.Diagnostic{
-				Severity: diag.Error,
-				Summary:  "unable to parse resource ID during deletion",
-				Detail:   parseErr.Error(),
-			})
-			return diags
-		}
-
-		workspaceID := result[0]
-		envID := result[1]
-
-		log.Printf("[DEBUG] Deleting Environment %s", envID)
-		_, deleteErr := client.Environments.Delete(workspaceID, envID)
-		if deleteErr != nil {
-			diags = append(diags, diag.Diagnostic{
-				Severity: diag.Error,
-				Summary:  fmt.Sprintf("unable to delete environment %s", envID),
-				Detail:   deleteErr.Error(),
-			})
-			return diags
-		}
-
-		log.Printf("[DEBUG] Deleted Environment %s", envID)
+	log.Printf("[DEBUG] Deleting attribute %s", d.Id())
+	_, deleteErr := client.Attributes.Delete(workspaceID, trafficTypeID, d.Id())
+	if deleteErr != nil {
+		diags = append(diags, diag.Diagnostic{
+			Severity: diag.Error,
+			Summary:  fmt.Sprintf("unable to delete attribute %s", d.Id()),
+			Detail:   deleteErr.Error(),
+		})
+		return diags
 	}
+
+	log.Printf("[DEBUG] Deleted attribute %s", d.Id())
 
 	d.SetId("")
 

@@ -28,7 +28,7 @@ type AttributeRequest struct {
 	ID           string `json:"id"`
 	DisplayName  string `json:"displayName"`
 	Description  string `json:"description"`
-	IsSearchable bool   `json:"isSearchable,omitempty"`
+	IsSearchable *bool  `json:"isSearchable,omitempty"`
 	DataType     string `json:"dataType,omitempty"`
 }
 
@@ -45,10 +45,10 @@ func (a *AttributesService) List(workspaceID, trafficTypeID string) ([]*Attribut
 	return result, response, listErr
 }
 
-// FindById retrieves an attribute by its ID.
+// FindByID retrieves an attribute by its ID.
 //
 // This is a helper method as it is not possible to retrieve a single attribute.
-func (a *AttributesService) FindById(workspaceID, trafficTypeID, attributeID string) (*Attribute, *simpleresty.Response, error) {
+func (a *AttributesService) FindByID(workspaceID, trafficTypeID, attributeID string) (*Attribute, *simpleresty.Response, error) {
 	attributes, listErr, listResponse := a.List(workspaceID, trafficTypeID)
 	if listErr != nil {
 		return nil, listErr, listResponse
