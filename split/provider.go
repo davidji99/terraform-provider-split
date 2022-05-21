@@ -42,11 +42,12 @@ func New() *schema.Provider {
 		},
 
 		ResourcesMap: map[string]*schema.Resource{
-			"split_attribute":   resourceSplitAttribute(),
-			"split_environment": resourceSplitEnvironment(),
-			"split_group":       resourceSplitGroup(),
-			"split_segment":     resourceSplitSegment(),
-			"split_user":        resourceSplitUser(),
+			"split_attribute":    resourceSplitAttribute(),
+			"split_environment":  resourceSplitEnvironment(),
+			"split_group":        resourceSplitGroup(),
+			"split_segment":      resourceSplitSegment(),
+			"split_traffic_type": resourceSplitTrafficType(),
+			"split_user":         resourceSplitUser(),
 		},
 
 		ConfigureContextFunc: providerConfigure,

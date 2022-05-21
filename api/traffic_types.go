@@ -71,7 +71,7 @@ func (t *TrafficTypesService) FindByName(workspaceID, trafficTypeName string) (*
 // Create a traffic type.
 //
 // Reference: https://docs.split.io/reference/create-traffic-types
-func (t *TrafficTypesService) Create(workspaceID, opts *TrafficTypeRequest) (*TrafficType, *simpleresty.Response, error) {
+func (t *TrafficTypesService) Create(workspaceID string, opts *TrafficTypeRequest) (*TrafficType, *simpleresty.Response, error) {
 	var result TrafficType
 	urlStr := t.client.http.RequestURL("/traffic/api/v2/trafficTypes/ws/%s", workspaceID)
 
