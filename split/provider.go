@@ -48,6 +48,7 @@ func New() *schema.Provider {
 			"split_segment":      resourceSplitSegment(),
 			"split_traffic_type": resourceSplitTrafficType(),
 			"split_user":         resourceSplitUser(),
+			//"split_workspace":    resourceSplitWorkspace(),
 		},
 
 		ConfigureContextFunc: providerConfigure,

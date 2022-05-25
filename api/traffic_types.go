@@ -20,6 +20,8 @@ type TrafficType struct {
 }
 
 type TrafficTypeRequest struct {
+	// Name must begin with a letter (a-z or A-Z) and can only contain letters, numbers, hyphens and underscores
+	// (a-z, A-Z, 0-9, -, _).
 	Name string `json:"name"`
 }
 
@@ -73,7 +75,7 @@ func (t *TrafficTypesService) FindByName(workspaceID, trafficTypeName string) (*
 // Reference: https://docs.split.io/reference/create-traffic-types
 func (t *TrafficTypesService) Create(workspaceID string, opts *TrafficTypeRequest) (*TrafficType, *simpleresty.Response, error) {
 	var result TrafficType
-	urlStr := t.client.http.RequestURL("/traffic/api/v2/trafficTypes/ws/%s", workspaceID)
+	urlStr := t.client.http.RequestURL("/trafficTypes/ws/%s", workspaceID)
 
 	// Execute the request
 	response, createErr := t.client.http.Post(urlStr, &result, opts)
@@ -85,7 +87,7 @@ func (t *TrafficTypesService) Create(workspaceID string, opts *TrafficTypeReques
 //
 // Reference: https://docs.split.io/reference/delete-trafic-type
 func (t *TrafficTypesService) Delete(trafficTypeID string) (*simpleresty.Response, error) {
-	urlStr := t.client.http.RequestURL("/traffic/api/v2/trafficTypes/%s", trafficTypeID)
+	urlStr := t.client.http.RequestURL("/trafficTypes/%s", trafficTypeID)
 
 	// Execute the request
 	response, deleteErr := t.client.http.Delete(urlStr, nil, nil)

@@ -5,10 +5,10 @@ import (
 	"github.com/davidji99/simpleresty"
 )
 
-// WorkspacesService handles communication with the environment related
+// WorkspacesService handles communication with the workspace related
 // methods of the Split.io APIv2.
 //
-// Reference: https://docs.split.io/reference#get-workspaces
+// Reference: https://docs.split.io/reference/workspaces-overview
 type WorkspacesService service
 
 // Workspaces represents all workspaces.
@@ -23,6 +23,12 @@ type Workspace struct {
 	Type                     *string `json:"type"`
 	ID                       *string `json:"id"`
 	RequiresTitleAndComments *bool   `json:"requiresTitleAndComments"`
+}
+
+// WorkspaceCreateRequest represents a request to create a workspace.
+type WorkspaceCreateRequest struct {
+	Name                     string `json:"name"`
+	RequiresTitleAndComments bool   `json:"requiresTitleAndComments"` // Require title and comments for splits, segment, and metric changes.
 }
 
 // List all workspaces.
@@ -78,4 +84,20 @@ func (w *WorkspacesService) FindByName(name string) (*Workspace, *simpleresty.Re
 	}
 
 	return nil, nil, fmt.Errorf("workspace [%s] not found", name)
+}
+
+// Create a workspaces.
+//
+// Note: When you create a workspace from this API, this won't create the default environment.
+// You must use the create environment API to create an environment.
+//
+// Reference: https://docs.split.io/reference/create-workspace
+func (w *WorkspacesService) Create(opts *WorkspaceCreateRequest) (*Workspaces, *simpleresty.Response, error) {
+	var result Workspaces
+	urlStr := w.client.http.RequestURL("/workspaces")
+
+	// Execute the request
+	response, getErr := w.client.http.Post(urlStr, &result, opts)
+
+	return &result, response, getErr
 }

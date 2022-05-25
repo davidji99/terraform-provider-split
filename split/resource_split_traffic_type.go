@@ -80,7 +80,7 @@ func resourceSplitTrafficTypeCreate(ctx context.Context, d *schema.ResourceData,
 
 	if v, ok := d.GetOk("name"); ok {
 		opts.Name = v.(string)
-		log.Printf("[DEBUG] new traffuc type is : %v", opts.Name)
+		log.Printf("[DEBUG] new traffic type is : %v", opts.Name)
 	}
 
 	log.Printf("[DEBUG] Creating traffic type %v", opts.Name)
@@ -95,7 +95,7 @@ func resourceSplitTrafficTypeCreate(ctx context.Context, d *schema.ResourceData,
 		return diags
 	}
 
-	log.Printf("[DEBUG] Created traffuc type %v", opts.Name)
+	log.Printf("[DEBUG] Created traffic type %v", tt.GetID())
 
 	d.SetId(tt.GetID())
 	d.Set("workspace_id", tt.Workspace.GetID())
