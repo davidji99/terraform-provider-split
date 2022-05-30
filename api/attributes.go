@@ -3,7 +3,6 @@ package api
 import (
 	"fmt"
 	"github.com/davidji99/simpleresty"
-	"net/url"
 )
 
 // AttributesService handles communication with the attributes related
@@ -14,7 +13,7 @@ type AttributesService service
 
 // Attribute represents an attribute in Split.
 type Attribute struct {
-	ID             *string `json:"id"`
+	Identifier     *string `json:"id"` // this is different from the usually computed ID.
 	OrganizationId *string `json:"organizationId"`
 	TrafficTypeID  *string `json:"trafficTypeId"`
 	DisplayName    *string `json:"displayName"`
@@ -25,11 +24,12 @@ type Attribute struct {
 
 // AttributeRequest represents a request to create an attribute.
 type AttributeRequest struct {
-	ID           string `json:"id"`
-	DisplayName  string `json:"displayName"`
-	Description  string `json:"description"`
-	IsSearchable *bool  `json:"isSearchable,omitempty"`
-	DataType     string `json:"dataType,omitempty"`
+	Identifier    string `json:"id"`
+	DisplayName   string `json:"displayName"`
+	Description   string `json:"description"`
+	TrafficTypeID string `json:"trafficTypeId"`
+	IsSearchable  *bool  `json:"isSearchable,omitempty"`
+	DataType      string `json:"dataType,omitempty"`
 }
 
 // List all attributes for a traffic type.
@@ -55,7 +55,7 @@ func (a *AttributesService) FindByID(workspaceID, trafficTypeID, attributeID str
 	}
 
 	for _, a := range attributes {
-		if a.GetID() == attributeID {
+		if a.GetIdentifier() == attributeID {
 			return a, nil, nil
 		}
 	}
@@ -80,8 +80,8 @@ func (a *AttributesService) Create(workspaceID, trafficTypeID string, opts *Attr
 //
 // Reference: https://docs.split.io/reference/delete-attribute
 func (a *AttributesService) Delete(workspaceID, trafficTypeID, attributeID string) (*simpleresty.Response, error) {
-	attributeIdEncoded := url.QueryEscape(attributeID)
-	urlStr := a.client.http.RequestURL("/schema/ws/%s/trafficTypes/%s/%s", workspaceID, trafficTypeID, attributeIdEncoded)
+	//attributeIdEncoded := url.QueryEscape(attributeID)
+	urlStr := a.client.http.RequestURL("/schema/ws/%s/trafficTypes/%s/%s", workspaceID, trafficTypeID, attributeID)
 
 	// Execute the request
 	response, deleteErr := a.client.http.Delete(urlStr, nil, nil)

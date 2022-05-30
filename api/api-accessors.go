@@ -29,12 +29,12 @@ func (a *Attribute) GetDisplayName() string {
 	return *a.DisplayName
 }
 
-// GetID returns the ID field if it's non-nil, zero value otherwise.
-func (a *Attribute) GetID() string {
-	if a == nil || a.ID == nil {
+// GetIdentifier returns the Identifier field if it's non-nil, zero value otherwise.
+func (a *Attribute) GetIdentifier() string {
+	if a == nil || a.Identifier == nil {
 		return ""
 	}
-	return *a.ID
+	return *a.Identifier
 }
 
 // GetIsSearchable returns the IsSearchable field if it's non-nil, zero value otherwise.
@@ -59,6 +59,14 @@ func (a *Attribute) GetTrafficTypeID() string {
 		return ""
 	}
 	return *a.TrafficTypeID
+}
+
+// GetIsSearchable returns the IsSearchable field if it's non-nil, zero value otherwise.
+func (a *AttributeRequest) GetIsSearchable() bool {
+	if a == nil || a.IsSearchable == nil {
+		return false
+	}
+	return *a.IsSearchable
 }
 
 // GetID returns the ID field if it's non-nil, zero value otherwise.

@@ -35,6 +35,12 @@ func resourceSplitAttribute() *schema.Resource {
 				ValidateFunc: validation.IsUUID,
 			},
 
+			"identifier": {
+				Type:     schema.TypeString,
+				Required: true,
+				ForceNew: true,
+			},
+
 			"display_name": {
 				Type:     schema.TypeString,
 				Required: true,
@@ -51,7 +57,7 @@ func resourceSplitAttribute() *schema.Resource {
 				Type:         schema.TypeString,
 				Optional:     true,
 				ForceNew:     true,
-				ValidateFunc: validation.StringInSlice([]string{"string", "datetime", "number", "set"}, false),
+				ValidateFunc: validation.StringInSlice([]string{"STRING", "DATETIME", "NUMBER", "SET"}, false),
 			},
 
 			"is_searchable": {
@@ -81,7 +87,7 @@ func resourceSplitAttributeImport(ctx context.Context, d *schema.ResourceData, m
 		return nil, getErr
 	}
 
-	d.SetId(a.GetID())
+	d.SetId(a.GetIdentifier())
 	d.Set("workspace_id", workspaceID)
 	d.Set("traffic_type_id", trafficTypeID)
 	d.Set("display_name", a.GetDisplayName())
@@ -98,6 +104,13 @@ func resourceSplitAttributeCreate(ctx context.Context, d *schema.ResourceData, m
 	opts := &api.AttributeRequest{}
 	workspaceID := getWorkspaceID(d)
 	trafficTypeID := getTrafficTypeID(d)
+
+	opts.TrafficTypeID = trafficTypeID
+
+	if v, ok := d.GetOk("identifier"); ok {
+		opts.Identifier = v.(string)
+		log.Printf("[DEBUG] new attribute identifier is : %v", opts.Identifier)
+	}
 
 	if v, ok := d.GetOk("display_name"); ok {
 		opts.DisplayName = v.(string)
@@ -117,9 +130,9 @@ func resourceSplitAttributeCreate(ctx context.Context, d *schema.ResourceData, m
 	isSearchable := d.Get("is_searchable").(bool)
 	opts.IsSearchable = &isSearchable
 
-	log.Printf("[DEBUG] Creating attribute %v", opts.DisplayName)
+	log.Printf("[DEBUG] Creating attribute %v", opts.Identifier)
 
-	e, _, createErr := client.Attributes.Create(workspaceID, trafficTypeID, opts)
+	a, _, createErr := client.Attributes.Create(workspaceID, trafficTypeID, opts)
 	if createErr != nil {
 		diags = append(diags, diag.Diagnostic{
 			Severity: diag.Error,
@@ -129,11 +142,13 @@ func resourceSplitAttributeCreate(ctx context.Context, d *schema.ResourceData, m
 		return diags
 	}
 
-	log.Printf("[DEBUG] Created attribute %v", opts.DisplayName)
+	log.Printf("[DEBUG] Created attribute %v", a.GetIdentifier())
 
-	d.SetId(e.GetID())
-	d.Set("workspace_id", workspaceID)
-	d.Set("traffic_type_id", trafficTypeID)
+	d.SetId(a.GetIdentifier())
+	d.Set("workspace_id", a.GetOrganizationId())
+	d.Set("traffic_type_id", a.GetTrafficTypeID())
+
+	//time.Sleep(60 * time.Second)
 
 	return resourceSplitAttributeRead(ctx, d, meta)
 }
