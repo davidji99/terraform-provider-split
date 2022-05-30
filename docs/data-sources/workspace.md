@@ -13,7 +13,7 @@ Use this data source to get information about a Split workspace.
 ## Example Usage
 
 ```hcl-terraform
-data "split_environment" "default" {
+data "split_workspace" "default" {
   name = "default"
 }
 ```

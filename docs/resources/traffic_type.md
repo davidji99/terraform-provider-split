@@ -17,8 +17,12 @@ browser ID, etc. Essentially, any internal database key you're using to track wh
 ## Example Usage
 
 ```hcl-terraform
+data "split_workspace" "default" {
+  name = "default"
+}
+
 resource "split_traffic_type" "foobar" {
-  workspace_id = "some_workspace_id"
+  workspace_id = data.split_workspace.default.id
   name = "name_of_my_traffic_type"
 }
 ```
