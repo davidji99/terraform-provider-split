@@ -270,6 +270,100 @@ func (s *SegmentListResult) HasObjects() bool {
 	return true
 }
 
+// GetCreationTime returns the CreationTime field if it's non-nil, zero value otherwise.
+func (s *Split) GetCreationTime() int64 {
+	if s == nil || s.CreationTime == nil {
+		return 0
+	}
+	return *s.CreationTime
+}
+
+// GetDescription returns the Description field if it's non-nil, zero value otherwise.
+func (s *Split) GetDescription() string {
+	if s == nil || s.Description == nil {
+		return ""
+	}
+	return *s.Description
+}
+
+// GetID returns the ID field if it's non-nil, zero value otherwise.
+func (s *Split) GetID() string {
+	if s == nil || s.ID == nil {
+		return ""
+	}
+	return *s.ID
+}
+
+// GetName returns the Name field if it's non-nil, zero value otherwise.
+func (s *Split) GetName() string {
+	if s == nil || s.Name == nil {
+		return ""
+	}
+	return *s.Name
+}
+
+// GetRolloutStatus returns the RolloutStatus field.
+func (s *Split) GetRolloutStatus() *SplitRolloutStatus {
+	if s == nil {
+		return nil
+	}
+	return s.RolloutStatus
+}
+
+// GetRolloutStatusTimestamp returns the RolloutStatusTimestamp field if it's non-nil, zero value otherwise.
+func (s *Split) GetRolloutStatusTimestamp() int64 {
+	if s == nil || s.RolloutStatusTimestamp == nil {
+		return 0
+	}
+	return *s.RolloutStatusTimestamp
+}
+
+// HasTags checks if Split has any Tags.
+func (s *Split) HasTags() bool {
+	if s == nil || s.Tags == nil {
+		return false
+	}
+	if len(s.Tags) == 0 {
+		return false
+	}
+	return true
+}
+
+// GetTrafficType returns the TrafficType field.
+func (s *Split) GetTrafficType() *TrafficType {
+	if s == nil {
+		return nil
+	}
+	return s.TrafficType
+}
+
+// GetID returns the ID field if it's non-nil, zero value otherwise.
+func (s *SplitRolloutStatus) GetID() string {
+	if s == nil || s.ID == nil {
+		return ""
+	}
+	return *s.ID
+}
+
+// GetName returns the Name field if it's non-nil, zero value otherwise.
+func (s *SplitRolloutStatus) GetName() string {
+	if s == nil || s.Name == nil {
+		return ""
+	}
+	return *s.Name
+}
+
+// HasObjects checks if Splits has any Objects.
+func (s *Splits) HasObjects() bool {
+	if s == nil || s.Objects == nil {
+		return false
+	}
+	if len(s.Objects) == 0 {
+		return false
+	}
+	return true
+}
+
 // GetName returns the Name field if it's non-nil, zero value otherwise.
 func (t *Tag) GetName() string {
 	if t == nil || t.Name == nil {
