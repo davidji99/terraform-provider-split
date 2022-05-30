@@ -12,11 +12,17 @@ import (
 type TrafficTypesService service
 
 type TrafficType struct {
-	Name               *string    `json:"name"`
-	Type               *string    `json:"type"`
-	ID                 *string    `json:"id"`
-	DisplayAttributeID *string    `json:"displayAttributeId"`
-	Workspace          *Workspace `json:"workspace"`
+	Name               *string    `json:"name,omitempty"`
+	Type               *string    `json:"type,omitempty"`
+	ID                 *string    `json:"id,omitempty"`
+	DisplayAttributeID *string    `json:"displayAttributeId,omitempty"`
+	Workspace          *Workspace `json:"workspace,omitempty"`
+}
+
+type TrafficTypeRequest struct {
+	// Name must begin with a letter (a-z or A-Z) and can only contain letters, numbers, hyphens and underscores
+	// (a-z, A-Z, 0-9, -, _).
+	Name string `json:"name"`
 }
 
 // List all traffic types.
@@ -62,4 +68,29 @@ func (t *TrafficTypesService) FindByName(workspaceID, trafficTypeName string) (*
 	}
 
 	return nil, nil, fmt.Errorf("traffic type [%s] not found", trafficTypeName)
+}
+
+// Create a traffic type.
+//
+// Reference: https://docs.split.io/reference/create-traffic-types
+func (t *TrafficTypesService) Create(workspaceID string, opts *TrafficTypeRequest) (*TrafficType, *simpleresty.Response, error) {
+	var result TrafficType
+	urlStr := t.client.http.RequestURL("/trafficTypes/ws/%s", workspaceID)
+
+	// Execute the request
+	response, createErr := t.client.http.Post(urlStr, &result, opts)
+
+	return &result, response, createErr
+}
+
+// Delete a traffic type.
+//
+// Reference: https://docs.split.io/reference/delete-trafic-type
+func (t *TrafficTypesService) Delete(trafficTypeID string) (*simpleresty.Response, error) {
+	urlStr := t.client.http.RequestURL("/trafficTypes/%s", trafficTypeID)
+
+	// Execute the request
+	response, deleteErr := t.client.http.Delete(urlStr, nil, nil)
+
+	return response, deleteErr
 }

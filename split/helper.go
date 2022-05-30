@@ -19,6 +19,18 @@ func getWorkspaceID(d *schema.ResourceData) string {
 	return workspaceID
 }
 
+// getTrafficTypeID extracts the traffic type ID attribute generically from a Split resource.
+func getTrafficTypeID(d *schema.ResourceData) string {
+	var trafficTypeID string
+	if v, ok := d.GetOk("traffic_type_id"); ok {
+		vs := v.(string)
+		log.Printf("[DEBUG] traffic_type_id: %s", vs)
+		trafficTypeID = vs
+	}
+
+	return trafficTypeID
+}
+
 func parseCompositeID(id string, numOfSplits int) ([]string, error) {
 	parts := strings.SplitN(id, ":", numOfSplits)
 
