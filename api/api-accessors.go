@@ -471,6 +471,22 @@ func (w *Workspace) GetType() string {
 	return *w.Type
 }
 
+// GetName returns the Name field if it's non-nil, zero value otherwise.
+func (w *WorkspaceRequest) GetName() string {
+	if w == nil || w.Name == nil {
+		return ""
+	}
+	return *w.Name
+}
+
+// GetRequiresTitleAndComments returns the RequiresTitleAndComments field if it's non-nil, zero value otherwise.
+func (w *WorkspaceRequest) GetRequiresTitleAndComments() bool {
+	if w == nil || w.RequiresTitleAndComments == nil {
+		return false
+	}
+	return *w.RequiresTitleAndComments
+}
+
 // HasObjects checks if Workspaces has any Objects.
 func (w *Workspaces) HasObjects() bool {
 	if w == nil || w.Objects == nil {
