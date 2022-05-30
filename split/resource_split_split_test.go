@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/acctest"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"regexp"
 	"testing"
 )
 
@@ -41,6 +42,22 @@ func TestAccSplitSplit_Basic(t *testing.T) {
 					resource.TestCheckResourceAttrSet(
 						"split_split.foobar", "traffic_type_id"),
 				),
+			},
+		},
+	})
+}
+
+func TestAccSplitSplit_InvalidName(t *testing.T) {
+	workspaceID := testAccConfig.GetWorkspaceIDorSkip(t)
+	trafficTypeName := fmt.Sprintf("tt-tftest-%s", acctest.RandString(10))
+
+	resource.Test(t, resource.TestCase{
+		PreCheck:          func() { testAccPreCheck(t) },
+		ProviderFactories: testAccProviderFactories,
+		Steps: []resource.TestStep{
+			{
+				Config:      testAccCheckSplitSplit_basic(workspaceID, trafficTypeName, "1invalidname", "my split description"),
+				ExpectError: regexp.MustCompile(`Name must start with a letter and can contain hyphens, underscores, letters, and numbers`),
 			},
 		},
 	})

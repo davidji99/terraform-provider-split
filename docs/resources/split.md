@@ -36,7 +36,7 @@ The following arguments are supported:
 
 * `workspace_id` - (Required) `<string>` The UUID of the workspace.
 * `traffic_type_id` - (Required) `<string>` The UUID of the traffic type.
-* `name` - (Required) `<string>` Name of Split.
+* `name` - (Required) `<string>` Name of Split. Name must start with a letter and can contain hyphens, underscores, letters, and numbers
 * `description` - (Optional) `<string>` Description of Split.
 
 ## Attributes Reference

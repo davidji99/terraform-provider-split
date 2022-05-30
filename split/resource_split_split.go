@@ -8,6 +8,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
 	"log"
+	"regexp"
 )
 
 func resourceSplitSplit() *schema.Resource {
@@ -40,6 +41,8 @@ func resourceSplitSplit() *schema.Resource {
 				Type:     schema.TypeString,
 				Required: true,
 				ForceNew: true,
+				ValidateFunc: validation.StringMatch(regexp.MustCompile(`^[a-zA-Z][a-zA-Z-_\d]+$`),
+					"Name must start with a letter and can contain hyphens, underscores, letters, and numbers"),
 			},
 
 			"description": {
