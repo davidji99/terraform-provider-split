@@ -69,6 +69,41 @@ func (a *AttributeRequest) GetIsSearchable() bool {
 	return *a.IsSearchable
 }
 
+// GetSize returns the Size field if it's non-nil, zero value otherwise.
+func (b *Bucket) GetSize() int {
+	if b == nil || b.Size == nil {
+		return 0
+	}
+	return *b.Size
+}
+
+// GetTreatment returns the Treatment field if it's non-nil, zero value otherwise.
+func (b *Bucket) GetTreatment() string {
+	if b == nil || b.Treatment == nil {
+		return ""
+	}
+	return *b.Treatment
+}
+
+// GetCombiner returns the Combiner field if it's non-nil, zero value otherwise.
+func (c *Condition) GetCombiner() string {
+	if c == nil || c.Combiner == nil {
+		return ""
+	}
+	return *c.Combiner
+}
+
+// HasMatchers checks if Condition has any Matchers.
+func (c *Condition) HasMatchers() bool {
+	if c == nil || c.Matchers == nil {
+		return false
+	}
+	if len(c.Matchers) == 0 {
+		return false
+	}
+	return true
+}
+
 // GetID returns the ID field if it's non-nil, zero value otherwise.
 func (e *Environment) GetID() string {
 	if e == nil || e.ID == nil {
@@ -208,6 +243,84 @@ func (g *GroupListResult) GetPreviousMarker() string {
 	return *g.PreviousMarker
 }
 
+// GetAttribute returns the Attribute field if it's non-nil, zero value otherwise.
+func (m *Matcher) GetAttribute() string {
+	if m == nil || m.Attribute == nil {
+		return ""
+	}
+	return *m.Attribute
+}
+
+// GetBool returns the Bool field if it's non-nil, zero value otherwise.
+func (m *Matcher) GetBool() bool {
+	if m == nil || m.Bool == nil {
+		return false
+	}
+	return *m.Bool
+}
+
+// GetDate returns the Date field if it's non-nil, zero value otherwise.
+func (m *Matcher) GetDate() int {
+	if m == nil || m.Date == nil {
+		return 0
+	}
+	return *m.Date
+}
+
+// GetNegate returns the Negate field if it's non-nil, zero value otherwise.
+func (m *Matcher) GetNegate() bool {
+	if m == nil || m.Negate == nil {
+		return false
+	}
+	return *m.Negate
+}
+
+// GetNumber returns the Number field if it's non-nil, zero value otherwise.
+func (m *Matcher) GetNumber() int {
+	if m == nil || m.Number == nil {
+		return 0
+	}
+	return *m.Number
+}
+
+// GetString returns the String field if it's non-nil, zero value otherwise.
+func (m *Matcher) GetString() string {
+	if m == nil || m.String == nil {
+		return ""
+	}
+	return *m.String
+}
+
+// HasStrings checks if Matcher has any Strings.
+func (m *Matcher) HasStrings() bool {
+	if m == nil || m.Strings == nil {
+		return false
+	}
+	if len(m.Strings) == 0 {
+		return false
+	}
+	return true
+}
+
+// HasBuckets checks if Rule has any Buckets.
+func (r *Rule) HasBuckets() bool {
+	if r == nil || r.Buckets == nil {
+		return false
+	}
+	if len(r.Buckets) == 0 {
+		return false
+	}
+	return true
+}
+
+// GetCondition returns the Condition field.
+func (r *Rule) GetCondition() *Condition {
+	if r == nil {
+		return nil
+	}
+	return r.Condition
+}
+
 // GetCreationTime returns the CreationTime field if it's non-nil, zero value otherwise.
 func (s *Segment) GetCreationTime() int64 {
 	if s == nil || s.CreationTime == nil {
@@ -337,6 +450,147 @@ func (s *Split) GetTrafficType() *TrafficType {
 	return s.TrafficType
 }
 
+// GetCreationTIme returns the CreationTIme field if it's non-nil, zero value otherwise.
+func (s *SplitDefinition) GetCreationTIme() int {
+	if s == nil || s.CreationTIme == nil {
+		return 0
+	}
+	return *s.CreationTIme
+}
+
+// HasDefaultRule checks if SplitDefinition has any DefaultRule.
+func (s *SplitDefinition) HasDefaultRule() bool {
+	if s == nil || s.DefaultRule == nil {
+		return false
+	}
+	if len(s.DefaultRule) == 0 {
+		return false
+	}
+	return true
+}
+
+// GetDefaultTreatment returns the DefaultTreatment field if it's non-nil, zero value otherwise.
+func (s *SplitDefinition) GetDefaultTreatment() string {
+	if s == nil || s.DefaultTreatment == nil {
+		return ""
+	}
+	return *s.DefaultTreatment
+}
+
+// GetEnvironment returns the Environment field.
+func (s *SplitDefinition) GetEnvironment() *Environment {
+	if s == nil {
+		return nil
+	}
+	return s.Environment
+}
+
+// GetKilled returns the Killed field if it's non-nil, zero value otherwise.
+func (s *SplitDefinition) GetKilled() bool {
+	if s == nil || s.Killed == nil {
+		return false
+	}
+	return *s.Killed
+}
+
+// GetLastUpdateTime returns the LastUpdateTime field if it's non-nil, zero value otherwise.
+func (s *SplitDefinition) GetLastUpdateTime() int {
+	if s == nil || s.LastUpdateTime == nil {
+		return 0
+	}
+	return *s.LastUpdateTime
+}
+
+// GetName returns the Name field if it's non-nil, zero value otherwise.
+func (s *SplitDefinition) GetName() string {
+	if s == nil || s.Name == nil {
+		return ""
+	}
+	return *s.Name
+}
+
+// HasRules checks if SplitDefinition has any Rules.
+func (s *SplitDefinition) HasRules() bool {
+	if s == nil || s.Rules == nil {
+		return false
+	}
+	if len(s.Rules) == 0 {
+		return false
+	}
+	return true
+}
+
+// GetTrafficAllocation returns the TrafficAllocation field if it's non-nil, zero value otherwise.
+func (s *SplitDefinition) GetTrafficAllocation() int {
+	if s == nil || s.TrafficAllocation == nil {
+		return 0
+	}
+	return *s.TrafficAllocation
+}
+
+// GetTrafficType returns the TrafficType field.
+func (s *SplitDefinition) GetTrafficType() *TrafficType {
+	if s == nil {
+		return nil
+	}
+	return s.TrafficType
+}
+
+// HasTreatments checks if SplitDefinition has any Treatments.
+func (s *SplitDefinition) HasTreatments() bool {
+	if s == nil || s.Treatments == nil {
+		return false
+	}
+	if len(s.Treatments) == 0 {
+		return false
+	}
+	return true
+}
+
+// HasDefaultRule checks if SplitDefinitionRequest has any DefaultRule.
+func (s *SplitDefinitionRequest) HasDefaultRule() bool {
+	if s == nil || s.DefaultRule == nil {
+		return false
+	}
+	if len(s.DefaultRule) == 0 {
+		return false
+	}
+	return true
+}
+
+// HasRules checks if SplitDefinitionRequest has any Rules.
+func (s *SplitDefinitionRequest) HasRules() bool {
+	if s == nil || s.Rules == nil {
+		return false
+	}
+	if len(s.Rules) == 0 {
+		return false
+	}
+	return true
+}
+
+// HasTreatments checks if SplitDefinitionRequest has any Treatments.
+func (s *SplitDefinitionRequest) HasTreatments() bool {
+	if s == nil || s.Treatments == nil {
+		return false
+	}
+	if len(s.Treatments) == 0 {
+		return false
+	}
+	return true
+}
+
+// HasObjects checks if SplitDefinitions has any Objects.
+func (s *SplitDefinitions) HasObjects() bool {
+	if s == nil || s.Objects == nil {
+		return false
+	}
+	if len(s.Objects) == 0 {
+		return false
+	}
+	return true
+}
+
 // GetID returns the ID field if it's non-nil, zero value otherwise.
 func (s *SplitRolloutStatus) GetID() string {
 	if s == nil || s.ID == nil {
@@ -410,6 +664,49 @@ func (t *TrafficType) GetWorkspace() *Workspace {
 		return nil
 	}
 	return t.Workspace
+}
+
+// GetConfigurations returns the Configurations field if it's non-nil, zero value otherwise.
+func (t *Treatment) GetConfigurations() string {
+	if t == nil || t.Configurations == nil {
+		return ""
+	}
+	return *t.Configurations
+}
+
+// GetDescription returns the Description field if it's non-nil, zero value otherwise.
+func (t *Treatment) GetDescription() string {
+	if t == nil || t.Description == nil {
+		return ""
+	}
+	return *t.Description
+}
+
+// GetKeys returns the Keys field if it's non-nil, zero value otherwise.
+func (t *Treatment) GetKeys() string {
+	if t == nil || t.Keys == nil {
+		return ""
+	}
+	return *t.Keys
+}
+
+// GetName returns the Name field if it's non-nil, zero value otherwise.
+func (t *Treatment) GetName() string {
+	if t == nil || t.Name == nil {
+		return ""
+	}
+	return *t.Name
+}
+
+// HasSegment checks if Treatment has any Segment.
+func (t *Treatment) HasSegment() bool {
+	if t == nil || t.Segment == nil {
+		return false
+	}
+	if len(t.Segment) == 0 {
+		return false
+	}
+	return true
 }
 
 // GetEmail returns the Email field if it's non-nil, zero value otherwise.
