@@ -41,6 +41,7 @@ type Client struct {
 	Groups       *GroupsService
 	TrafficTypes *TrafficTypesService
 	Segments     *SegmentsService
+	Splits       *SplitsService
 	Users        *UsersService
 	Workspaces   *WorkspacesService
 }
@@ -55,6 +56,15 @@ type GenericListResult struct {
 	Offset     *int `json:"offset"`
 	Limit      *int `json:"limit"`
 	TotalCount *int `json:"totalCount"`
+}
+
+// GenericListQueryParams are parameters for any resource.
+type GenericListQueryParams struct {
+	// The offset to retrieve. Useful for pagination
+	Offset int `url:"offset,omitempty"`
+
+	// The maximum limit to return per call. Max=20-50.
+	Limit int `url:"limit,omitempty"`
 }
 
 // New constructs a new Client.
@@ -94,6 +104,7 @@ func (c *Client) injectServices() {
 	c.Groups = (*GroupsService)(&c.common)
 	c.TrafficTypes = (*TrafficTypesService)(&c.common)
 	c.Segments = (*SegmentsService)(&c.common)
+	c.Splits = (*SplitsService)(&c.common)
 	c.Users = (*UsersService)(&c.common)
 	c.Workspaces = (*WorkspacesService)(&c.common)
 }

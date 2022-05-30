@@ -40,11 +40,7 @@ type workspaceUpdateRequestFull struct {
 
 // WorkspaceListQueryParams represents query parameters when retrieving all workspaces.
 type WorkspaceListQueryParams struct {
-	// The offset to retrieve. Useful for pagination
-	Offset int `url:"offset,omitempty"`
-
-	// The maximum limit to return per call. Max=20.
-	Limit int `url:"limit,omitempty"`
+	GenericListQueryParams
 
 	// Filter workspaces by name.
 	Name string `url:"name,omitempty"`

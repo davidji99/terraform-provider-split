@@ -46,6 +46,7 @@ func New() *schema.Provider {
 			"split_environment":  resourceSplitEnvironment(),
 			"split_group":        resourceSplitGroup(),
 			"split_segment":      resourceSplitSegment(),
+			"split_split":        resourceSplitSplit(),
 			"split_traffic_type": resourceSplitTrafficType(),
 			"split_user":         resourceSplitUser(),
 			"split_workspace":    resourceSplitWorkspace(),
