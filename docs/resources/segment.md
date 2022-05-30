@@ -15,7 +15,7 @@ fixed or specific groups of users that you can easily identify, like a whitelist
 ## Example Usage
 
 ```hcl-terraform
-data "split_environment" "default" {
+data "split_workspace" "default" {
   name = "default"
 }
 
@@ -25,7 +25,7 @@ data "split_traffic_type" "user" {
 }
 
 resource "split_segment" "foobar" {
-  workspace_id = data.split_environment.default.id
+  workspace_id = data.split_workspace.default.id
   traffic_type_id = data.split_traffic_type.user.id
   name = "name_of_my_segment"
   description = "description_of_my_segment"

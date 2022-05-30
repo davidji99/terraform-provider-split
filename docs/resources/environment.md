@@ -14,12 +14,12 @@ Environments allow you to manage your splits throughout your development lifecyc
 ## Example Usage
 
 ```hcl-terraform
-data "split_environment" "default" {
+data "split_workspace" "default" {
   name = "default"
 }
 
 resource "split_environment" "foobar" {
-  workspace_id = data.split_environment.default.id
+  workspace_id = data.split_workspace.default.id
   name = "production-canary"
   production = true
 }
