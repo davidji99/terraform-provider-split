@@ -302,6 +302,14 @@ func (m *Matcher) HasStrings() bool {
 	return true
 }
 
+// GetType returns the Type field if it's non-nil, zero value otherwise.
+func (m *Matcher) GetType() string {
+	if m == nil || m.Type == nil {
+		return ""
+	}
+	return *m.Type
+}
+
 // HasBuckets checks if Rule has any Buckets.
 func (r *Rule) HasBuckets() bool {
 	if r == nil || r.Buckets == nil {

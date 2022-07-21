@@ -26,7 +26,7 @@ type SplitDefinition struct {
 	LastUpdateTime    *int         `json:"lastUpdateTime"`
 }
 
-// SplitDefinitionRequest creates or full updates a split definition.
+// SplitDefinitionRequest creates or updates a split definition.
 type SplitDefinitionRequest struct {
 	Treatments       []Treatment `json:"treatments"`
 	DefaultTreatment string      `json:"defaultTreatment"`
@@ -49,8 +49,8 @@ type Treatment struct {
 	Name           *string  `json:"name"`
 	Configurations *string  `json:"configurations"`
 	Description    *string  `json:"description"`
-	Keys           *string  `json:"keys"`
-	Segment        []string `json:"segment"`
+	Keys           *string  `json:"keys,omitempty"`
+	Segment        []string `json:"segment,omitempty"`
 }
 
 // Bucket represents a sticky distribution of customers into treatments of a Split.
@@ -70,7 +70,7 @@ type Condition struct {
 // Matcher represents the logic for selecting a specific subset of your customer population.
 type Matcher struct {
 	Negate    *bool       `json:"negate,omitempty"`
-	Type      interface{} `json:"type,omitempty"`
+	Type      *string     `json:"type,omitempty"`
 	Attribute *string     `json:"attribute,omitempty"`
 	String    *string     `json:"string,omitempty"`
 	Bool      *bool       `json:"bool,omitempty"`
@@ -100,9 +100,9 @@ func (s *SplitsService) ListDefinitions(workspaceId, environmentId string, opts 
 // GetDefinition retrieves a Split Definition given the name and the environment.
 //
 // Reference: https://docs.split.io/reference/get-split-definition-in-environment
-func (s *SplitsService) GetDefinition(workspaceId, environmentId, splitName string) (*SplitDefinition, *simpleresty.Response, error) {
+func (s *SplitsService) GetDefinition(workspaceId, splitName, environmentId string) (*SplitDefinition, *simpleresty.Response, error) {
 	var result SplitDefinition
-	urlStr := s.client.http.RequestURL("/splits/ws/%s/%s/environments/%s", splitName, workspaceId, environmentId)
+	urlStr := s.client.http.RequestURL("/splits/ws/%s/%s/environments/%s", workspaceId, splitName, environmentId)
 
 	// Execute the request
 	response, getErr := s.client.http.Get(urlStr, &result, nil)
@@ -113,9 +113,9 @@ func (s *SplitsService) GetDefinition(workspaceId, environmentId, splitName stri
 // CreateDefinition configures a Split Definition for a specific environment.
 //
 // Reference: https://docs.split.io/reference/create-split-definition-in-environment
-func (s *SplitsService) CreateDefinition(workspaceId, environmentId, splitName string, opts *SplitDefinitionRequest) (*SplitDefinition, *simpleresty.Response, error) {
+func (s *SplitsService) CreateDefinition(workspaceId, splitName, environmentId string, opts *SplitDefinitionRequest) (*SplitDefinition, *simpleresty.Response, error) {
 	var result SplitDefinition
-	urlStr := s.client.http.RequestURL("/splits/ws/%s/%s/environments/%s", splitName, workspaceId, environmentId)
+	urlStr := s.client.http.RequestURL("/splits/ws/%s/%s/environments/%s", workspaceId, splitName, environmentId)
 
 	// Execute the request
 	response, createErr := s.client.http.Post(urlStr, &result, opts)
@@ -126,9 +126,9 @@ func (s *SplitsService) CreateDefinition(workspaceId, environmentId, splitName s
 // UpdateDefinitionFull performs a full update of a Split Definition for a specific environment.
 //
 // Reference: https://docs.split.io/reference/full-update-split-definition-in-environment
-func (s *SplitsService) UpdateDefinitionFull(workspaceId, environmentId, splitName string, opts *SplitDefinitionRequest) (*SplitDefinition, *simpleresty.Response, error) {
+func (s *SplitsService) UpdateDefinitionFull(workspaceId, splitName, environmentId string, opts *SplitDefinitionRequest) (*SplitDefinition, *simpleresty.Response, error) {
 	var result SplitDefinition
-	urlStr := s.client.http.RequestURL("/splits/ws/%s/%s/environments/%s", splitName, workspaceId, environmentId)
+	urlStr := s.client.http.RequestURL("/splits/ws/%s/%s/environments/%s", workspaceId, splitName, environmentId)
 
 	// Execute the request
 	response, createErr := s.client.http.Put(urlStr, &result, opts)
@@ -139,8 +139,8 @@ func (s *SplitsService) UpdateDefinitionFull(workspaceId, environmentId, splitNa
 // RemoveDefinition unconfigures a Split Definition for a specific environment.
 //
 // Reference: https://docs.split.io/reference/remove-split-definition-from-environment
-func (s *SplitsService) RemoveDefinition(workspaceId, environmentId, splitName string) (*simpleresty.Response, error) {
-	urlStr := s.client.http.RequestURL("/splits/ws/%s/%s/environments/%s", splitName, workspaceId, environmentId)
+func (s *SplitsService) RemoveDefinition(workspaceId, splitName, environmentId string) (*simpleresty.Response, error) {
+	urlStr := s.client.http.RequestURL("/splits/ws/%s/%s/environments/%s", workspaceId, splitName, environmentId)
 
 	// Execute the request
 	response, createErr := s.client.http.Delete(urlStr, nil, nil)
