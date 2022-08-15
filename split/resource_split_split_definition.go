@@ -170,15 +170,15 @@ func resourceSplitSplitDefinitionImport(ctx context.Context, d *schema.ResourceD
 	}
 
 	workspaceID := importID[0]
-	splitID := importID[1]
+	splitName := importID[1]
 	environmentID := importID[2]
 
-	sd, _, getErr := client.Splits.GetDefinition(workspaceID, splitID, environmentID)
+	sd, _, getErr := client.Splits.GetDefinition(workspaceID, splitName, environmentID)
 	if getErr != nil {
 		return nil, getErr
 	}
 
-	d.SetId(sd.GetName())
+	d.SetId(sd.GetID())
 	d.Set("workspace_id", workspaceID)
 	d.Set("split_name", sd.GetName())
 	d.Set("environment_id", sd.GetEnvironment().GetID())
@@ -219,7 +219,7 @@ func resourceSplitSplitDefinitionCreate(ctx context.Context, d *schema.ResourceD
 
 	log.Printf("[DEBUG] Created definition on split [%v]", splitName)
 
-	d.SetId(sd.GetName())
+	d.SetId(sd.GetID())
 
 	return resourceSplitSplitDefinitionRead(ctx, d, meta)
 }
@@ -231,10 +231,11 @@ func resourceSplitSplitDefinitionUpdate(ctx context.Context, d *schema.ResourceD
 	opts := constructSplitDefinitionRequestOpts(d)
 	workspaceID := getWorkspaceID(d)
 	environmentID := getEnvironmentID(d)
+	splitName := getSplitName(d)
 
 	log.Printf("[DEBUG] Updating split definition %v", d.Id())
 
-	_, _, updateErr := client.Splits.UpdateDefinitionFull(workspaceID, d.Id(), environmentID, opts)
+	_, _, updateErr := client.Splits.UpdateDefinitionFull(workspaceID, splitName, environmentID, opts)
 	if updateErr != nil {
 		diags = append(diags, diag.Diagnostic{
 			Severity: diag.Error,
@@ -255,8 +256,9 @@ func resourceSplitSplitDefinitionRead(ctx context.Context, d *schema.ResourceDat
 
 	workspaceID := getWorkspaceID(d)
 	environmentID := getEnvironmentID(d)
+	splitName := getSplitName(d)
 
-	sd, _, getErr := client.Splits.GetDefinition(workspaceID, d.Id(), environmentID)
+	sd, _, getErr := client.Splits.GetDefinition(workspaceID, splitName, environmentID)
 	if getErr != nil {
 		diags = append(diags, diag.Diagnostic{
 			Severity: diag.Error,
@@ -289,10 +291,11 @@ func resourceSplitSplitDefinitionDelete(ctx context.Context, d *schema.ResourceD
 
 	workspaceID := getWorkspaceID(d)
 	envID := getEnvironmentID(d)
+	splitName := getSplitName(d)
 
 	log.Printf("[DEBUG] Deleting split definition %s", d.Id())
 
-	_, deleteErr := client.Splits.RemoveDefinition(workspaceID, d.Id(), envID)
+	_, deleteErr := client.Splits.RemoveDefinition(workspaceID, splitName, envID)
 	if deleteErr != nil {
 		diags = append(diags, diag.Diagnostic{
 			Severity: diag.Error,

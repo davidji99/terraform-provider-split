@@ -13,6 +13,7 @@ type SplitDefinitions struct {
 
 // SplitDefinition is the configuration of a Split in a specific environment such as production or staging.
 type SplitDefinition struct {
+	ID                *string      `json:"id"`
 	Name              *string      `json:"name"`
 	Environment       *Environment `json:"environment"`
 	TrafficType       *TrafficType `json:"trafficType"`

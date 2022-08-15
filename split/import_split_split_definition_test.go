@@ -42,7 +42,7 @@ func testAccSplitSplitDefinitionImportStateIDFunc(resourceName string) resource.
 			return "", fmt.Errorf("[ERROR] Not found: %s", resourceName)
 		}
 
-		return fmt.Sprintf("%s:%s:%s", rs.Primary.Attributes["workspace_id"], rs.Primary.Attributes["id"],
+		return fmt.Sprintf("%s:%s:%s", rs.Primary.Attributes["workspace_id"], rs.Primary.Attributes["split_name"],
 			rs.Primary.Attributes["environment_id"]), nil
 	}
 }

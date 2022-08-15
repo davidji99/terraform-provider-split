@@ -493,6 +493,14 @@ func (s *SplitDefinition) GetEnvironment() *Environment {
 	return s.Environment
 }
 
+// GetID returns the ID field if it's non-nil, zero value otherwise.
+func (s *SplitDefinition) GetID() string {
+	if s == nil || s.ID == nil {
+		return ""
+	}
+	return *s.ID
+}
+
 // GetKilled returns the Killed field if it's non-nil, zero value otherwise.
 func (s *SplitDefinition) GetKilled() bool {
 	if s == nil || s.Killed == nil {
