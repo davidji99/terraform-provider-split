@@ -15,6 +15,8 @@ const (
 	TestConfigSplitTrafficTypeName
 	TestConfigSplitWorkspaceID
 	TestConfigSplitWorkspaceName
+	TestConfigSplitEnvironmentID
+	TestConfigSplitTrafficTypeID
 	TestConfigSplitUserEmail
 	TestConfigAcceptanceTestKey
 )
@@ -22,10 +24,12 @@ const (
 var testConfigKeyToEnvName = map[TestConfigKey]string{
 	TestConfigSplitAPIKey:          "SPLIT_API_KEY",
 	TestConfigSplitTrafficTypeName: "SPLIT_TRAFFIC_TYPE_NAME",
+	TestConfigSplitTrafficTypeID:   "SPLIT_TRAFFIC_TYPE_ID",
 	TestConfigSplitWorkspaceID:     "SPLIT_WORKSPACE_ID",
 	TestConfigSplitWorkspaceName:   "SPLIT_WORKSPACE_NAME",
+	TestConfigSplitEnvironmentID:   "SPLIT_ENVIRONMENT_ID",
 	TestConfigSplitUserEmail:       "SPLIT_USER_EMAIL",
-	TestConfigAcceptanceTestKey:    resource.TestEnvVar,
+	TestConfigAcceptanceTestKey:    resource.EnvTfAcc,
 }
 
 func (k TestConfigKey) String() (name string) {
@@ -78,6 +82,14 @@ func (t *TestConfig) SkipUnlessAccTest(testing *testing.T) {
 
 func (t *TestConfig) GetWorkspaceIDorSkip(testing *testing.T) (val string) {
 	return t.GetOrSkip(testing, TestConfigSplitWorkspaceID)
+}
+
+func (t *TestConfig) GetEnvironmentIDorSkip(testing *testing.T) (val string) {
+	return t.GetOrSkip(testing, TestConfigSplitEnvironmentID)
+}
+
+func (t *TestConfig) GetTrafficTypeIDorSkip(testing *testing.T) (val string) {
+	return t.GetOrSkip(testing, TestConfigSplitTrafficTypeID)
 }
 
 func (t *TestConfig) GetWorkspaceNameorSkip(testing *testing.T) (val string) {
