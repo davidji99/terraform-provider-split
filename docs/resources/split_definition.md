@@ -113,14 +113,14 @@ are placed in specific treatments or, based on the percentages you decide, we’
 customers in the subset between your treatments. This attribute block supports the following:
 
 * `bucket` - (Required) `<block>` List of treatments.
-  * `treatment` - (Required) `<string>` Name of a valid Treatment.
-  * `size` - (Required) `<integer>` Treatment size.
+    * `treatment` - (Required) `<string>` Name of a valid Treatment.
+    * `size` - (Required) `<integer>` Treatment size.
 * `condition` - (Required) `<block>` Rule conditions.
-  * `combiner` - (Required) `<string>` rule condition combiner.
-  * `matcher` - (Required) `<block>` rule condition matcher.
-    * `type` - (Required) `<string>` rule condition matcher type.
-    * `attribute` - (Required) `<string>` rule condition matcher type.
-    * `strings` - (Required) `<list(string)>` rule condition matcher type.
+    * `combiner` - (Required) `<string>` rule condition combiner.
+    * `matcher` - (Required) `<block>` rule condition matcher.
+        * `type` - (Required) `<string>` rule condition matcher type.
+        * `attribute` - (Required) `<string>` rule condition matcher type.
+        * `strings` - (Required) `<list(string)>` rule condition matcher type.
 
 It is recommended to view the UI in order to determine what are some of the possible attribute values.
 
