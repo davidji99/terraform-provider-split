@@ -42,10 +42,10 @@ n/a
 ## Import
 
 An existing environment can be imported using the combination of the workspace UUID
-and environment name separated by a colon (':').
+and environment ID separated by a colon (':').
 
 For example:
 
 ```shell script
-$ terraform import split_environment.foobar "0b46d8f7-9435-4f74-a770-3fcb22fbbfe6:production-canary"
+$ terraform import split_environment.foobar "0b46d8f7-9435-4f74-a770-3fcb22fbbfe6:110b3876-1d38-11ed-861d-0242ac120002"
 ```

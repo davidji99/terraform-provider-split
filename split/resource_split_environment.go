@@ -53,28 +53,18 @@ func resourceSplitEnvironmentImport(ctx context.Context, d *schema.ResourceData,
 	}
 
 	workspaceID := importID[0]
-	envName := importID[1]
+	envID := importID[1]
 
-	envs, _, getErr := client.Environments.List(workspaceID)
+	e, _, getErr := client.Environments.FindByID(workspaceID, envID)
 	if getErr != nil {
 		return nil, getErr
 	}
 
-	notFound := true
-	for _, e := range envs {
-		if e.GetName() == envName {
-			notFound = false
-			d.SetId(fmt.Sprintf("%s:%s", workspaceID, e.GetID()))
+	d.SetId(e.GetID())
 
-			d.Set("workspace_id", workspaceID)
-			d.Set("name", e.GetName())
-			d.Set("production", e.GetProduction())
-		}
-	}
-
-	if notFound {
-		return nil, fmt.Errorf("could not find environment [%s]", envName)
-	}
+	d.Set("workspace_id", workspaceID)
+	d.Set("name", e.GetName())
+	d.Set("production", e.GetProduction())
 
 	return []*schema.ResourceData{d}, nil
 }
@@ -109,7 +99,7 @@ func resourceSplitEnvironmentCreate(ctx context.Context, d *schema.ResourceData,
 
 	log.Printf("[DEBUG] Created Environment named %v", opts.GetName())
 
-	d.SetId(fmt.Sprintf("%s:%s", workspaceID, e.GetID()))
+	d.SetId(e.GetID())
 
 	return resourceSplitEnvironmentRead(ctx, d, meta)
 }
@@ -118,30 +108,17 @@ func resourceSplitEnvironmentRead(ctx context.Context, d *schema.ResourceData, m
 	var diags diag.Diagnostics
 	client := meta.(*Config).API
 
-	result, parseErr := parseCompositeID(d.Id(), 2)
-	if parseErr != nil {
-		diags = append(diags, diag.Diagnostic{
-			Severity: diag.Error,
-			Summary:  "unable to parse resource ID during state refresh",
-			Detail:   parseErr.Error(),
-		})
-		return diags
-	}
-
-	workspaceID := result[0]
-	envID := result[1]
-
-	e, _, getErr := client.Environments.FindByID(workspaceID, envID)
+	e, _, getErr := client.Environments.FindByID(getWorkspaceID(d), d.Id())
 	if getErr != nil {
 		diags = append(diags, diag.Diagnostic{
 			Severity: diag.Error,
-			Summary:  fmt.Sprintf("unable to fetch environment %s", envID),
+			Summary:  fmt.Sprintf("unable to fetch environment %s", d.Id()),
 			Detail:   getErr.Error(),
 		})
 		return diags
 	}
 
-	d.Set("workspace_id", workspaceID)
+	d.Set("workspace_id", getWorkspaceID(d))
 	d.Set("name", e.GetName())
 	d.Set("production", e.GetProduction())
 
@@ -152,19 +129,6 @@ func resourceSplitEnvironmentUpdate(ctx context.Context, d *schema.ResourceData,
 	var diags diag.Diagnostics
 	client := meta.(*Config).API
 	opts := &api.EnvironmentRequest{}
-
-	result, parseErr := parseCompositeID(d.Id(), 2)
-	if parseErr != nil {
-		diags = append(diags, diag.Diagnostic{
-			Severity: diag.Error,
-			Summary:  "unable to parse resource ID during resource update",
-			Detail:   parseErr.Error(),
-		})
-		return diags
-	}
-
-	workspaceID := result[0]
-	envID := result[1]
 
 	if ok := d.HasChange("name"); ok {
 		vs := d.Get("name").(string)
@@ -178,11 +142,11 @@ func resourceSplitEnvironmentUpdate(ctx context.Context, d *schema.ResourceData,
 
 	log.Printf("[DEBUG] Updating environment")
 
-	_, _, updateErr := client.Environments.Update(workspaceID, envID, opts)
+	_, _, updateErr := client.Environments.Update(getWorkspaceID(d), d.Id(), opts)
 	if updateErr != nil {
 		diags = append(diags, diag.Diagnostic{
 			Severity: diag.Error,
-			Summary:  fmt.Sprintf("unable to update environment %s", envID),
+			Summary:  fmt.Sprintf("unable to update environment %s", d.Id()),
 			Detail:   updateErr.Error(),
 		})
 		return diags
@@ -200,31 +164,18 @@ func resourceSplitEnvironmentDelete(ctx context.Context, d *schema.ResourceData,
 	if !config.RemoveEnvFromStateOnly {
 		client := config.API
 
-		result, parseErr := parseCompositeID(d.Id(), 2)
-		if parseErr != nil {
-			diags = append(diags, diag.Diagnostic{
-				Severity: diag.Error,
-				Summary:  "unable to parse resource ID during deletion",
-				Detail:   parseErr.Error(),
-			})
-			return diags
-		}
-
-		workspaceID := result[0]
-		envID := result[1]
-
-		log.Printf("[DEBUG] Deleting Environment %s", envID)
-		_, deleteErr := client.Environments.Delete(workspaceID, envID)
+		log.Printf("[DEBUG] Deleting Environment %s", d.Id())
+		_, deleteErr := client.Environments.Delete(getWorkspaceID(d), d.Id())
 		if deleteErr != nil {
 			diags = append(diags, diag.Diagnostic{
 				Severity: diag.Error,
-				Summary:  fmt.Sprintf("unable to delete environment %s", envID),
+				Summary:  fmt.Sprintf("unable to delete environment %s", d.Id()),
 				Detail:   deleteErr.Error(),
 			})
 			return diags
 		}
 
-		log.Printf("[DEBUG] Deleted Environment %s", envID)
+		log.Printf("[DEBUG] Deleted Environment %s", d.Id())
 	}
 
 	d.SetId("")
