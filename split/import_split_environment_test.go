@@ -38,6 +38,6 @@ func testAccSplitEnvironmentImportStateIDFunc(resourceName string) resource.Impo
 			return "", fmt.Errorf("[ERROR] Not found: %s", resourceName)
 		}
 
-		return fmt.Sprintf("%s:%s", rs.Primary.Attributes["workspace_id"], rs.Primary.Attributes["name"]), nil
+		return fmt.Sprintf("%s:%s", rs.Primary.Attributes["workspace_id"], rs.Primary.Attributes["id"]), nil
 	}
 }
