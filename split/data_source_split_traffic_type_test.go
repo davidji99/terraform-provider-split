@@ -14,7 +14,7 @@ func TestAccDatasourceSplitTrafficType_Basic(t *testing.T) {
 		PreCheck: func() {
 			testAccPreCheck(t)
 		},
-		Providers: testAccProviders,
+		ProviderFactories: testAccProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccCheckSplitTrafficTypeDataSource_Basic(workspaceID, name),

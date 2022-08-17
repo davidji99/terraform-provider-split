@@ -72,6 +72,25 @@ func (e *EnvironmentsService) FindByID(workspaceID, envID string) (*Environment,
 	return nil, nil, fmt.Errorf("environment [%s] not found", envID)
 }
 
+// FindByName retrieves an environment by its name.
+//
+// Note: this method uses the List() method to first return all environments and then look for the target environment
+// by an name. The Split APIv2 does not provide a GET#show endpoint for environments unfortunately.
+func (e *EnvironmentsService) FindByName(workspaceID, envName string) (*Environment, *simpleresty.Response, error) {
+	envs, listResponse, listErr := e.List(workspaceID)
+	if listErr != nil {
+		return nil, listResponse, listErr
+	}
+
+	for _, e := range envs {
+		if e.GetName() == envName {
+			return e, nil, nil
+		}
+	}
+
+	return nil, nil, fmt.Errorf("environment [%s] not found", envName)
+}
+
 // Create an environment.
 //
 // Reference: https://docs.split.io/reference#create-environment
