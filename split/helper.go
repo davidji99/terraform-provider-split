@@ -59,8 +59,8 @@ func parseCompositeID(id string, numOfSplits int) ([]string, error) {
 	parts := strings.SplitN(id, ":", numOfSplits)
 
 	if len(parts) != numOfSplits {
-		return nil, fmt.Errorf("Error: import composite ID requires %d parts separated by a colon (x:y). "+
-			"Please check resource documentation for more information.", numOfSplits)
+		return nil, fmt.Errorf("error: import composite ID requires %d parts separated by a colon (x:y). "+
+			"Please check resource documentation for more information", numOfSplits)
 	}
 	return parts, nil
 }

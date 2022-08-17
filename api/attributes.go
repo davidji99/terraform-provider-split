@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/davidji99/simpleresty"
+	"net/url"
 )
 
 // AttributesService handles communication with the attributes related
@@ -14,23 +15,25 @@ type AttributesService service
 
 // Attribute represents an attribute in Split.
 type Attribute struct {
-	Identifier     *string `json:"id"` // this is different from the usually computed ID.
-	OrganizationId *string `json:"organizationId"`
-	TrafficTypeID  *string `json:"trafficTypeId"`
-	DisplayName    *string `json:"displayName"`
-	Description    *string `json:"description"`
-	DataType       *string `json:"dataType"` // (Optional) The data type of the attribute used for display formatting, defaults to displaying the raw string. Must be one of: null, "string", "datetime", "number", "set"
-	IsSearchable   *bool   `json:"isSearchable"`
+	ID              *string  `json:"id"` // this is different from the usually computed ID.
+	OrganizationId  *string  `json:"organizationId"`
+	TrafficTypeID   *string  `json:"trafficTypeId"`
+	DisplayName     *string  `json:"displayName"`
+	Description     *string  `json:"description"`
+	DataType        *string  `json:"dataType"` // (Optional) The data type of the attribute used for display formatting, defaults to displaying the raw string. Must be one of: null, "string", "datetime", "number", "set"
+	IsSearchable    *bool    `json:"isSearchable"`
+	SuggestedValues []string `json:"suggestedValues"`
 }
 
 // AttributeRequest represents a request to create an attribute.
 type AttributeRequest struct {
-	Identifier    string `json:"id"`
-	DisplayName   string `json:"displayName"`
-	Description   string `json:"description"`
-	TrafficTypeID string `json:"trafficTypeId"`
-	IsSearchable  *bool  `json:"isSearchable,omitempty"`
-	DataType      string `json:"dataType,omitempty"`
+	Identifier      *string  `json:"id,omitempty"`
+	DisplayName     *string  `json:"displayName,omitempty"`
+	Description     *string  `json:"description,omitempty"`
+	TrafficTypeID   *string  `json:"trafficTypeId,omitempty"`
+	IsSearchable    *bool    `json:"isSearchable,omitempty"`
+	DataType        *string  `json:"dataType,omitempty"`
+	SuggestedValues []string `json:"suggestedValues,omitempty"`
 }
 
 // List all attributes for a traffic type.
@@ -55,7 +58,7 @@ func (a *AttributesService) FindByID(workspaceID, trafficTypeID, attributeID str
 	}
 
 	for _, a := range attributes {
-		if a.GetIdentifier() == attributeID {
+		if a.GetID() == attributeID {
 			return a, nil, nil
 		}
 	}
@@ -76,12 +79,26 @@ func (a *AttributesService) Create(workspaceID, trafficTypeID string, opts *Attr
 	return &result, response, createErr
 }
 
+// Update an attribute.
+//
+// Reference: https://docs.split.io/reference/update-attribute
+func (a *AttributesService) Update(workspaceID, trafficTypeID, attributeID string, opts *AttributeRequest) (*Attribute, *simpleresty.Response, error) {
+	var result Attribute
+	attributeIdEncoded := url.QueryEscape(attributeID)
+	urlStr := a.client.http.RequestURL("/schema/ws/%s/trafficTypes/%s/%s", workspaceID, trafficTypeID, attributeIdEncoded)
+
+	// Execute the request
+	response, createErr := a.client.patch(urlStr, &result, opts)
+
+	return &result, response, createErr
+}
+
 // Delete an attribute.
 //
 // Reference: https://docs.split.io/reference/delete-attribute
 func (a *AttributesService) Delete(workspaceID, trafficTypeID, attributeID string) (*simpleresty.Response, error) {
-	//attributeIdEncoded := url.QueryEscape(attributeID)
-	urlStr := a.client.http.RequestURL("/schema/ws/%s/trafficTypes/%s/%s", workspaceID, trafficTypeID, attributeID)
+	attributeIdEncoded := url.QueryEscape(attributeID)
+	urlStr := a.client.http.RequestURL("/schema/ws/%s/trafficTypes/%s/%s", workspaceID, trafficTypeID, attributeIdEncoded)
 
 	// Execute the request
 	response, deleteErr := a.client.delete(urlStr, nil, nil)
