@@ -13,7 +13,7 @@ func TestAccDatasourceSplitWorkspace_Basic(t *testing.T) {
 		PreCheck: func() {
 			testAccPreCheck(t)
 		},
-		Providers: testAccProviders,
+		ProviderFactories: testAccProviderFactories,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccCheckSplitWorkspaceDataSource_Basic(name),
