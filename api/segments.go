@@ -1,6 +1,10 @@
 package api
 
-import "github.com/davidji99/simpleresty"
+import (
+	"fmt"
+
+	"github.com/davidji99/simpleresty"
+)
 
 // SegmentsService handles communication with the segment related
 // methods of the Split.io APIv2.
@@ -36,9 +40,7 @@ type SegmentRequest struct {
 func (s *SegmentsService) List(workspaceID string) (*SegmentListResult, *simpleresty.Response, error) {
 	var result SegmentListResult
 	urlStr := s.client.http.RequestURL("/segments/ws/%s", workspaceID)
-
-	// Execute the request
-	response, getErr := s.client.http.Get(urlStr, &result, nil)
+	response, getErr := s.client.get(urlStr, &result, nil)
 
 	return &result, response, getErr
 }
@@ -48,10 +50,9 @@ func (s *SegmentsService) List(workspaceID string) (*SegmentListResult, *simpler
 // Reference: n/a
 func (s *SegmentsService) Get(workspaceID, name string) (*Segment, *simpleresty.Response, error) {
 	var result Segment
-	urlStr := s.client.http.RequestURL("/segments/ws/%s/%s", workspaceID, name)
+	urlStr := fmt.Sprintf("/segments/ws/%s/%s", workspaceID, name)
 
-	// Execute the request
-	response, getErr := s.client.http.Get(urlStr, &result, nil)
+	response, getErr := s.client.get(urlStr, &result, nil)
 
 	return &result, response, getErr
 }
@@ -64,7 +65,7 @@ func (s *SegmentsService) Create(workspaceID, trafficTypeID string, opts *Segmen
 	urlStr := s.client.http.RequestURL("/segments/ws/%s/trafficTypes/%s", workspaceID, trafficTypeID)
 
 	// Execute the request
-	response, createErr := s.client.http.Post(urlStr, &result, opts)
+	response, createErr := s.client.post(urlStr, &result, opts)
 
 	return &result, response, createErr
 }
@@ -83,7 +84,7 @@ func (s *SegmentsService) Delete(workspaceID, segmentName string) (*simpleresty.
 	urlStr := s.client.http.RequestURL("/segments/ws/%s/%s", workspaceID, segmentName)
 
 	// Execute the request
-	response, deleteErr := s.client.http.Delete(urlStr, nil, nil)
+	response, deleteErr := s.client.delete(urlStr, nil, nil)
 
 	return response, deleteErr
 }
@@ -96,7 +97,7 @@ func (s *SegmentsService) Activate(environmentID, segmentName string) (*Segment,
 	urlStr := s.client.http.RequestURL("/segments/%s/%s", environmentID, segmentName)
 
 	// Execute the request
-	response, err := s.client.http.Post(urlStr, &result, nil)
+	response, err := s.client.post(urlStr, &result, nil)
 
 	return &result, response, err
 }
@@ -109,7 +110,7 @@ func (s *SegmentsService) Deactivate(environmentID, segmentName string) (*Segmen
 	urlStr := s.client.http.RequestURL("/segments/%s/%s", environmentID, segmentName)
 
 	// Execute the request
-	response, err := s.client.http.Delete(urlStr, &result, nil)
+	response, err := s.client.delete(urlStr, &result, nil)
 
 	return &result, response, err
 }

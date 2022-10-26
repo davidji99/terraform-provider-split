@@ -1,6 +1,8 @@
 package api
 
-import "github.com/davidji99/simpleresty"
+import (
+	"github.com/davidji99/simpleresty"
+)
 
 // UsersService handles communication with the user related
 // methods of the Split.io APIv2.
@@ -76,7 +78,7 @@ func (u *UsersService) List(opts *UserListOpts) (*UserListResult, *simpleresty.R
 	}
 
 	// Execute the request
-	response, getErr := u.client.http.Get(urlStr, &result, nil)
+	response, getErr := u.client.get(urlStr, &result, nil)
 
 	return &result, response, getErr
 }
@@ -87,9 +89,7 @@ func (u *UsersService) List(opts *UserListOpts) (*UserListResult, *simpleresty.R
 func (u *UsersService) Get(id string) (*User, *simpleresty.Response, error) {
 	var result User
 	urlStr := u.client.http.RequestURL("/users/%s", id)
-
-	// Execute the request
-	response, getErr := u.client.http.Get(urlStr, &result, nil)
+	response, getErr := u.client.get(urlStr, &result, nil)
 
 	return &result, response, getErr
 }
@@ -102,7 +102,7 @@ func (u *UsersService) Invite(opts *UserCreateRequest) (*User, *simpleresty.Resp
 	urlStr := u.client.http.RequestURL("/users")
 
 	// Execute the request
-	response, err := u.client.http.Post(urlStr, &result, opts)
+	response, err := u.client.post(urlStr, &result, opts)
 
 	return &result, response, err
 }
@@ -115,7 +115,7 @@ func (u *UsersService) Update(id string, opts *UserUpdateRequest) (*User, *simpl
 	urlStr := u.client.http.RequestURL("/users/%s", id)
 
 	// Execute the request
-	response, err := u.client.http.Put(urlStr, &result, opts)
+	response, err := u.client.put(urlStr, &result, opts)
 
 	return &result, response, err
 }
@@ -128,7 +128,7 @@ func (u *UsersService) Update(id string, opts *UserUpdateRequest) (*User, *simpl
 //	urlStr := s.client.http.RequestURL("/users/%s", id)
 //
 //	// Execute the request
-//	response, err := s.client.http.Put(urlStr, &result, opts)
+//	response, err := s.client.put(urlStr, &result, opts)
 //
 //	return &result, response, err
 //}
@@ -141,7 +141,7 @@ func (u *UsersService) DeletePendingUser(id string) (*simpleresty.Response, erro
 	urlStr := u.client.http.RequestURL("/users/%s", id)
 
 	// Execute the request
-	response, deleteErr := u.client.http.Delete(urlStr, nil, nil)
+	response, deleteErr := u.client.delete(urlStr, nil, nil)
 
 	return response, deleteErr
 }

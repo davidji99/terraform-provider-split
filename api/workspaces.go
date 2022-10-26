@@ -2,6 +2,7 @@ package api
 
 import (
 	"fmt"
+
 	"github.com/davidji99/simpleresty"
 )
 
@@ -54,13 +55,14 @@ type WorkspaceListQueryParams struct {
 // Reference: https://docs.split.io/reference#get-workspaces
 func (w *WorkspacesService) List(opts ...interface{}) (*Workspaces, *simpleresty.Response, error) {
 	var result *Workspaces
+	//
 	urlStr, err := w.client.http.RequestURLWithQueryParams("/workspaces", opts...)
 	if err != nil {
 		return nil, nil, err
 	}
 
 	// Execute the request
-	response, getErr := w.client.http.Get(urlStr, &result, nil)
+	response, getErr := w.client.get(urlStr, &result, nil)
 
 	return result, response, getErr
 }
@@ -117,7 +119,7 @@ func (w *WorkspacesService) Create(opts *WorkspaceRequest) (*Workspace, *simpler
 	urlStr := w.client.http.RequestURL("/workspaces")
 
 	// Execute the request
-	response, createErr := w.client.http.Post(urlStr, &result, opts)
+	response, createErr := w.client.post(urlStr, &result, opts)
 
 	return &result, response, createErr
 }
@@ -147,7 +149,7 @@ func (w *WorkspacesService) Update(id string, opts *WorkspaceRequest) (*Workspac
 	}
 
 	// Execute the request
-	response, updateErr := w.client.http.Patch(urlStr, &result, optsFull)
+	response, updateErr := w.client.patch(urlStr, &result, optsFull)
 
 	return &result, response, updateErr
 }
@@ -159,7 +161,7 @@ func (w *WorkspacesService) Delete(id string) (*simpleresty.Response, error) {
 	urlStr := w.client.http.RequestURL("/workspaces/%s", id)
 
 	// Execute the request
-	response, deleteErr := w.client.http.Delete(urlStr, nil, nil)
+	response, deleteErr := w.client.delete(urlStr, nil, nil)
 
 	return response, deleteErr
 }

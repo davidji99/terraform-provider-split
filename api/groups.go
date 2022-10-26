@@ -1,6 +1,8 @@
 package api
 
-import "github.com/davidji99/simpleresty"
+import (
+	"github.com/davidji99/simpleresty"
+)
 
 // GroupsService handles communication with the group related
 // methods of the Split.io APIv2.
@@ -42,13 +44,14 @@ type GroupRequest struct {
 // Reference: https://docs.split.io/reference#list-groups
 func (g *GroupsService) List(opts *GroupListOpts) (*GroupListResult, *simpleresty.Response, error) {
 	var result GroupListResult
+	//Here I have a problem with the RequestURLWithParams, TBD
 	urlStr, urlStrErr := g.client.http.RequestURLWithQueryParams("/groups", opts)
 	if urlStrErr != nil {
 		return nil, nil, urlStrErr
 	}
 
 	// Execute the request
-	response, getErr := g.client.http.Get(urlStr, &result, nil)
+	response, getErr := g.client.get(urlStr, &result, nil)
 
 	return &result, response, getErr
 }
@@ -60,8 +63,7 @@ func (g *GroupsService) Get(id string) (*Group, *simpleresty.Response, error) {
 	var result Group
 	urlStr := g.client.http.RequestURL("/groups/%s", id)
 
-	// Execute the request
-	response, getErr := g.client.http.Get(urlStr, &result, nil)
+	response, getErr := g.client.get(urlStr, &result, nil)
 
 	return &result, response, getErr
 }
@@ -74,7 +76,7 @@ func (g *GroupsService) Create(opts *GroupRequest) (*Group, *simpleresty.Respons
 	urlStr := g.client.http.RequestURL("/groups")
 
 	// Execute the request
-	response, getErr := g.client.http.Post(urlStr, &result, opts)
+	response, getErr := g.client.post(urlStr, &result, opts)
 
 	return &result, response, getErr
 }
@@ -87,7 +89,7 @@ func (g *GroupsService) Update(id string, opts *GroupRequest) (*Group, *simplere
 	urlStr := g.client.http.RequestURL("/groups/%s", id)
 
 	// Execute the request
-	response, getErr := g.client.http.Put(urlStr, &result, opts)
+	response, getErr := g.client.put(urlStr, &result, opts)
 
 	return &result, response, getErr
 }
@@ -99,7 +101,7 @@ func (g *GroupsService) Delete(id string) (*simpleresty.Response, error) {
 	urlStr := g.client.http.RequestURL("/groups/%s", id)
 
 	// Execute the request
-	response, getErr := g.client.http.Delete(urlStr, nil, nil)
+	response, getErr := g.client.delete(urlStr, nil, nil)
 
 	return response, getErr
 }

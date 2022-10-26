@@ -2,8 +2,11 @@ package api
 
 import (
 	"fmt"
-	"github.com/davidji99/simpleresty"
+	"log"
+	"strconv"
 	"time"
+
+	"github.com/davidji99/simpleresty"
 )
 
 const (
@@ -121,4 +124,61 @@ func (c *Client) setHeaders() {
 	if c.config.CustomHTTPHeaders != nil {
 		c.http.SetHeaders(c.config.CustomHTTPHeaders)
 	}
+}
+
+func (c *Client) checkRateLimit(resp *simpleresty.Response) bool {
+	if resp.StatusCode == 429 {
+		remainingOrgSeconds, _ := strconv.Atoi((resp.Resp.Header().Get("X-RateLimit-Reset-Seconds-Org")))
+		timeToSleep, _ := strconv.Atoi(resp.Resp.Header().Get("X-RateLimit-Reset-Seconds-IP"))
+		if remainingOrgSeconds != 0 {
+			// Got rate-limit by Organization
+			timeToSleep = remainingOrgSeconds
+		}
+		// Got rate-limit by IP-addr
+		log.Printf("[DEBUG] Got rate-limited, sleeping for %d seconds", timeToSleep)
+		time.Sleep(time.Duration(timeToSleep) * time.Second)
+		return true
+	}
+	return false
+}
+
+func (c *Client) get(url string, r, body interface{}) (*simpleresty.Response, error) {
+	response, getErr := c.http.Get(url, &r, body)
+	if c.checkRateLimit(response) {
+		c.get(url, &r, body)
+	}
+	return response, getErr
+}
+
+func (c *Client) post(url string, r, opts interface{}) (*simpleresty.Response, error) {
+	response, getErr := c.http.Post(url, &r, opts)
+	if c.checkRateLimit(response) {
+		c.post(url, &r, opts)
+	}
+	return response, getErr
+}
+
+func (c *Client) put(url string, r, opts interface{}) (*simpleresty.Response, error) {
+	response, getErr := c.http.Put(url, &r, opts)
+	if c.checkRateLimit(response) {
+		c.put(url, &r, opts)
+	}
+
+	return response, getErr
+}
+
+func (c *Client) patch(url string, r, opts interface{}) (*simpleresty.Response, error) {
+	response, getErr := c.http.Patch(url, &r, opts)
+	if c.checkRateLimit(response) {
+		c.patch(url, &r, opts)
+	}
+	return response, getErr
+}
+
+func (c *Client) delete(url string, r, opts interface{}) (*simpleresty.Response, error) {
+	response, getErr := c.http.Delete(url, &r, opts)
+	if c.checkRateLimit(response) {
+		c.delete(url, &r, opts)
+	}
+	return response, getErr
 }
