@@ -145,7 +145,7 @@ func (c *Client) checkRateLimit(resp *simpleresty.Response) bool {
 func (c *Client) get(url string, r, body interface{}) (*simpleresty.Response, error) {
 	response, getErr := c.http.Get(url, &r, body)
 	if c.checkRateLimit(response) {
-		c.get(url, &r, body)
+		response, getErr = c.get(url, &r, body)
 	}
 	return response, getErr
 }
@@ -153,7 +153,7 @@ func (c *Client) get(url string, r, body interface{}) (*simpleresty.Response, er
 func (c *Client) post(url string, r, opts interface{}) (*simpleresty.Response, error) {
 	response, getErr := c.http.Post(url, &r, opts)
 	if c.checkRateLimit(response) {
-		c.post(url, &r, opts)
+		response, getErr = c.post(url, &r, opts)
 	}
 	return response, getErr
 }
@@ -161,7 +161,7 @@ func (c *Client) post(url string, r, opts interface{}) (*simpleresty.Response, e
 func (c *Client) put(url string, r, opts interface{}) (*simpleresty.Response, error) {
 	response, getErr := c.http.Put(url, &r, opts)
 	if c.checkRateLimit(response) {
-		c.put(url, &r, opts)
+		response, getErr = c.put(url, &r, opts)
 	}
 
 	return response, getErr
@@ -170,7 +170,7 @@ func (c *Client) put(url string, r, opts interface{}) (*simpleresty.Response, er
 func (c *Client) patch(url string, r, opts interface{}) (*simpleresty.Response, error) {
 	response, getErr := c.http.Patch(url, &r, opts)
 	if c.checkRateLimit(response) {
-		c.patch(url, &r, opts)
+		response, getErr = c.patch(url, &r, opts)
 	}
 	return response, getErr
 }
@@ -178,7 +178,7 @@ func (c *Client) patch(url string, r, opts interface{}) (*simpleresty.Response, 
 func (c *Client) delete(url string, r, opts interface{}) (*simpleresty.Response, error) {
 	response, getErr := c.http.Delete(url, &r, opts)
 	if c.checkRateLimit(response) {
-		c.delete(url, &r, opts)
+		response, getErr = c.delete(url, &r, opts)
 	}
 	return response, getErr
 }
