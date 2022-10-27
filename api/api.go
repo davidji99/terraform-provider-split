@@ -29,6 +29,8 @@ const (
 	UserStatusPending     = "PENDING"
 	UserStatusActive      = "ACTIVE"
 	UserStatusDeactivated = "DEACTIVATED"
+
+	timeoutError = "reached maximum client timeout"
 )
 
 // Client manages communication with Sendgrid APIs.
@@ -166,8 +168,7 @@ func (c *Client) get(url string, r, body interface{}) (*simpleresty.Response, er
 		}
 		return response, getErr
 	}
-	timeoutError := errors.New("max timeout is reached, aborting")
-	return nil, timeoutError
+	return nil, errors.New(timeoutError)
 }
 
 func (c *Client) post(url string, r, opts interface{}) (*simpleresty.Response, error) {
@@ -178,8 +179,7 @@ func (c *Client) post(url string, r, opts interface{}) (*simpleresty.Response, e
 		}
 		return response, getErr
 	}
-	timeoutError := errors.New("reached maximum client timeout")
-	return nil, timeoutError
+	return nil, errors.New(timeoutError)
 }
 
 func (c *Client) put(url string, r, opts interface{}) (*simpleresty.Response, error) {
@@ -190,8 +190,7 @@ func (c *Client) put(url string, r, opts interface{}) (*simpleresty.Response, er
 		}
 		return response, getErr
 	}
-	timeoutError := errors.New("max timeout is reached, aborting")
-	return nil, timeoutError
+	return nil, errors.New(timeoutError)
 }
 
 func (c *Client) patch(url string, r, opts interface{}) (*simpleresty.Response, error) {
@@ -202,8 +201,7 @@ func (c *Client) patch(url string, r, opts interface{}) (*simpleresty.Response, 
 		}
 		return response, getErr
 	}
-	timeoutError := errors.New("max timeout is reached, aborting")
-	return nil, timeoutError
+	return nil, errors.New(timeoutError)
 }
 
 func (c *Client) delete(url string, r, opts interface{}) (*simpleresty.Response, error) {
@@ -214,6 +212,5 @@ func (c *Client) delete(url string, r, opts interface{}) (*simpleresty.Response,
 		}
 		return response, getErr
 	}
-	timeoutError := errors.New("max timeout is reached, aborting")
-	return nil, timeoutError
+	return nil, errors.New(timeoutError)
 }
