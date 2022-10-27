@@ -138,8 +138,14 @@ resource "split_split_definition" "foobar" {
 
 	default_rule {
 		treatment = "treatment_123"
-		size = 100
+		size = 60
 	}
+
+	default_rule {
+		treatment = "treatment_123"
+		size = 40
+	}
+
 	rule {
 		bucket {
 			treatment = "treatment_123"

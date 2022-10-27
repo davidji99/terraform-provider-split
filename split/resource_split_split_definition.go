@@ -76,7 +76,7 @@ func resourceSplitSplitDefinition() *schema.Resource {
 			"default_rule": {
 				Type:     schema.TypeList,
 				Required: true,
-				MaxItems: 1,
+				MinItems: 1,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"treatment": {
@@ -348,11 +348,12 @@ func constructSplitDefinitionRequestOpts(d *schema.ResourceData) *api.SplitDefin
 	}
 
 	if v, ok := d.GetOk("default_rule"); ok {
+		defaultRules := make([]api.Bucket, 0)
 		vL := v.([]interface{})
-		var treatment string
-		var size int
 
 		for _, v := range vL {
+			var treatment string
+			var size int
 			vt := v.(map[string]interface{})
 
 			if v, ok := vt["treatment"].(string); ok {
@@ -362,14 +363,10 @@ func constructSplitDefinitionRequestOpts(d *schema.ResourceData) *api.SplitDefin
 			if v, ok := vt["size"].(int); ok {
 				size = v
 			}
+			defaultRules = append(defaultRules, api.Bucket{Treatment: &treatment, Size: &size})
 		}
 
-		opts.DefaultRule = []api.Bucket{
-			{
-				Treatment: &treatment,
-				Size:      &size,
-			},
-		}
+		opts.DefaultRule = defaultRules
 		log.Printf("[DEBUG] new split definition default_rule is : %v", opts.DefaultRule)
 	}
 
