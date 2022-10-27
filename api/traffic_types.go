@@ -2,6 +2,7 @@ package api
 
 import (
 	"fmt"
+
 	"github.com/davidji99/simpleresty"
 )
 
@@ -31,9 +32,7 @@ type TrafficTypeRequest struct {
 func (t *TrafficTypesService) List(workspaceID string) ([]*TrafficType, *simpleresty.Response, error) {
 	var result []*TrafficType
 	urlStr := t.client.http.RequestURL("/trafficTypes/ws/%s", workspaceID)
-
-	// Execute the request
-	response, getErr := t.client.http.Get(urlStr, &result, nil)
+	response, getErr := t.client.get(urlStr, &result, nil)
 
 	return result, response, getErr
 }
@@ -78,7 +77,7 @@ func (t *TrafficTypesService) Create(workspaceID string, opts *TrafficTypeReques
 	urlStr := t.client.http.RequestURL("/trafficTypes/ws/%s", workspaceID)
 
 	// Execute the request
-	response, createErr := t.client.http.Post(urlStr, &result, opts)
+	response, createErr := t.client.post(urlStr, &result, opts)
 
 	return &result, response, createErr
 }
@@ -90,7 +89,7 @@ func (t *TrafficTypesService) Delete(trafficTypeID string) (*simpleresty.Respons
 	urlStr := t.client.http.RequestURL("/trafficTypes/%s", trafficTypeID)
 
 	// Execute the request
-	response, deleteErr := t.client.http.Delete(urlStr, nil, nil)
+	response, deleteErr := t.client.delete(urlStr, nil, nil)
 
 	return response, deleteErr
 }

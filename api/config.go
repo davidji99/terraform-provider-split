@@ -19,9 +19,12 @@ type Config struct {
 
 	// APIKey
 	APIKey string
+
+	// ClientTimeout
+	ClientTimeout int
 }
 
-// parseOptions parses the supplied options functions.
+// ParseOptions parses the supplied options functions.
 func (c *Config) ParseOptions(opts ...Option) error {
 	// Range over each options function and apply it to our API type to
 	// configure it. Options functions are applied in order, with any

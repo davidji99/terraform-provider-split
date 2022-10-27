@@ -2,6 +2,7 @@ package api
 
 import (
 	"fmt"
+
 	"github.com/davidji99/simpleresty"
 )
 
@@ -39,8 +40,7 @@ func (a *AttributesService) List(workspaceID, trafficTypeID string) ([]*Attribut
 	var result []*Attribute
 	urlStr := a.client.http.RequestURL("/schema/ws/%s/trafficTypes/%s", workspaceID, trafficTypeID)
 
-	// Execute the request
-	response, listErr := a.client.http.Get(urlStr, &result, nil)
+	response, listErr := a.client.get(urlStr, &result, nil)
 
 	return result, response, listErr
 }
@@ -71,7 +71,7 @@ func (a *AttributesService) Create(workspaceID, trafficTypeID string, opts *Attr
 	urlStr := a.client.http.RequestURL("/schema/ws/%s/trafficTypes/%s", workspaceID, trafficTypeID)
 
 	// Execute the request
-	response, createErr := a.client.http.Post(urlStr, &result, opts)
+	response, createErr := a.client.post(urlStr, &result, opts)
 
 	return &result, response, createErr
 }
@@ -84,7 +84,7 @@ func (a *AttributesService) Delete(workspaceID, trafficTypeID, attributeID strin
 	urlStr := a.client.http.RequestURL("/schema/ws/%s/trafficTypes/%s/%s", workspaceID, trafficTypeID, attributeID)
 
 	// Execute the request
-	response, deleteErr := a.client.http.Delete(urlStr, nil, nil)
+	response, deleteErr := a.client.delete(urlStr, nil, nil)
 
 	return response, deleteErr
 }

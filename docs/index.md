@@ -76,3 +76,5 @@ The following arguments are supported:
 * `remove_environment_from_state_only` - (Optional) Configure `split_environment` to only remove the resource from
   state upon deletion. This is to address out-of-band, UI based prerequisites Split has when deleting an environment.
   Defaults to `false`.
+
+* `client_timeout` - (Optional) Configure client timeout before aborting. This is to address the client retrying forever. It's expressed in an integer that represents seconds. Defaults to `300`, which means 5 minutes

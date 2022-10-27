@@ -2,6 +2,7 @@ package api
 
 import (
 	"fmt"
+
 	"github.com/davidji99/simpleresty"
 )
 
@@ -87,13 +88,14 @@ type Matcher struct {
 // Reference: https://docs.split.io/reference/lists-split-definitions-in-environment
 func (s *SplitsService) ListDefinitions(workspaceId, environmentId string, opts ...interface{}) (*SplitDefinitions, *simpleresty.Response, error) {
 	var result SplitDefinitions
+	// Here I have a problem with el requestURLWITHQUERy...
 	urlStr, err := s.client.http.RequestURLWithQueryParams(fmt.Sprintf("/splits/ws/%s/environments/%s", workspaceId, environmentId), opts...)
 	if err != nil {
 		return nil, nil, err
 	}
 
 	// Execute the request
-	response, getErr := s.client.http.Get(urlStr, &result, nil)
+	response, getErr := s.client.get(urlStr, &result, nil)
 
 	return &result, response, getErr
 }
@@ -104,9 +106,7 @@ func (s *SplitsService) ListDefinitions(workspaceId, environmentId string, opts 
 func (s *SplitsService) GetDefinition(workspaceId, splitName, environmentId string) (*SplitDefinition, *simpleresty.Response, error) {
 	var result SplitDefinition
 	urlStr := s.client.http.RequestURL("/splits/ws/%s/%s/environments/%s", workspaceId, splitName, environmentId)
-
-	// Execute the request
-	response, getErr := s.client.http.Get(urlStr, &result, nil)
+	response, getErr := s.client.get(urlStr, &result, nil)
 
 	return &result, response, getErr
 }
@@ -119,7 +119,7 @@ func (s *SplitsService) CreateDefinition(workspaceId, splitName, environmentId s
 	urlStr := s.client.http.RequestURL("/splits/ws/%s/%s/environments/%s", workspaceId, splitName, environmentId)
 
 	// Execute the request
-	response, createErr := s.client.http.Post(urlStr, &result, opts)
+	response, createErr := s.client.post(urlStr, &result, opts)
 
 	return &result, response, createErr
 }
@@ -132,7 +132,7 @@ func (s *SplitsService) UpdateDefinitionFull(workspaceId, splitName, environment
 	urlStr := s.client.http.RequestURL("/splits/ws/%s/%s/environments/%s", workspaceId, splitName, environmentId)
 
 	// Execute the request
-	response, createErr := s.client.http.Put(urlStr, &result, opts)
+	response, createErr := s.client.put(urlStr, &result, opts)
 
 	return &result, response, createErr
 }
@@ -144,7 +144,7 @@ func (s *SplitsService) RemoveDefinition(workspaceId, splitName, environmentId s
 	urlStr := s.client.http.RequestURL("/splits/ws/%s/%s/environments/%s", workspaceId, splitName, environmentId)
 
 	// Execute the request
-	response, createErr := s.client.http.Delete(urlStr, nil, nil)
+	response, createErr := s.client.delete(urlStr, nil, nil)
 
 	return response, createErr
 }

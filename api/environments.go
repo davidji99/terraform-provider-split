@@ -2,8 +2,9 @@ package api
 
 import (
 	"fmt"
-	"github.com/davidji99/simpleresty"
 	"strconv"
+
+	"github.com/davidji99/simpleresty"
 )
 
 // EnvironmentsService handles communication with the environments related
@@ -33,9 +34,7 @@ type EnvironmentRequest struct {
 func (e *EnvironmentsService) List(workspaceID string) ([]*Environment, *simpleresty.Response, error) {
 	var result []*Environment
 	urlStr := e.client.http.RequestURL("/environments/ws/%s", workspaceID)
-
-	// Execute the request
-	response, getErr := e.client.http.Get(urlStr, &result, nil)
+	response, getErr := e.client.get(urlStr, &result, nil)
 
 	return result, response, getErr
 }
@@ -46,9 +45,7 @@ func (e *EnvironmentsService) List(workspaceID string) ([]*Environment, *simpler
 func (e *EnvironmentsService) ListSegments(workspaceID string) (*SegmentListResult, *simpleresty.Response, error) {
 	var result SegmentListResult
 	urlStr := e.client.http.RequestURL("/segments/ws/%s", workspaceID)
-
-	// Execute the request
-	response, getErr := e.client.http.Get(urlStr, &result, nil)
+	response, getErr := e.client.get(urlStr, &result, nil)
 
 	return &result, response, getErr
 }
@@ -99,7 +96,7 @@ func (e *EnvironmentsService) Create(workspaceID string, opts *EnvironmentReques
 	urlStr := e.client.http.RequestURL("/environments/ws/%s", workspaceID)
 
 	// Execute the request
-	response, createErr := e.client.http.Post(urlStr, &result, opts)
+	response, createErr := e.client.post(urlStr, &result, opts)
 
 	return &result, response, createErr
 }
@@ -137,7 +134,7 @@ func (e *EnvironmentsService) Update(workspaceID, envID string, opts *Environmen
 	}
 
 	// Execute the request
-	response, getErr := e.client.http.Patch(urlStr, &result, reqBody)
+	response, getErr := e.client.patch(urlStr, &result, reqBody)
 
 	return &result, response, getErr
 }
@@ -152,7 +149,7 @@ func (e *EnvironmentsService) Update(workspaceID, envID string, opts *Environmen
 func (e *EnvironmentsService) Delete(workspaceID, envID string) (*simpleresty.Response, error) {
 	urlStr := e.client.http.RequestURL("/environments/ws/%s/%s", workspaceID, envID)
 	// Execute the request
-	response, getErr := e.client.http.Delete(urlStr, nil, nil)
+	response, getErr := e.client.delete(urlStr, nil, nil)
 
 	return response, getErr
 }

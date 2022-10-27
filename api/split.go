@@ -2,8 +2,9 @@ package api
 
 import (
 	"fmt"
-	"github.com/davidji99/simpleresty"
 	"net/url"
+
+	"github.com/davidji99/simpleresty"
 )
 
 // SplitsService handles communication with the segment related
@@ -58,7 +59,7 @@ func (s *SplitsService) List(workspaceId string, opts ...interface{}) (*Splits, 
 	}
 
 	// Execute the request
-	response, getErr := s.client.http.Get(urlStr, &result, nil)
+	response, getErr := s.client.get(urlStr, &result, nil)
 
 	return &result, response, getErr
 }
@@ -71,9 +72,7 @@ func (s *SplitsService) List(workspaceId string, opts ...interface{}) (*Splits, 
 func (s *SplitsService) Get(workspaceId, splitId string) (*Split, *simpleresty.Response, error) {
 	var result Split
 	urlStr := s.client.http.RequestURL("/splits/ws/%s/%s", workspaceId, splitId)
-
-	// Execute the request
-	response, getErr := s.client.http.Get(urlStr, &result, nil)
+	response, getErr := s.client.get(urlStr, &result, nil)
 
 	return &result, response, getErr
 }
@@ -86,7 +85,7 @@ func (s *SplitsService) Create(workspaceId, trafficTypeId string, opts *SplitCre
 	urlStr := s.client.http.RequestURL("/splits/ws/%s/trafficTypes/%s", workspaceId, trafficTypeId)
 
 	// Execute the request
-	response, createErr := s.client.http.Post(urlStr, &result, opts)
+	response, createErr := s.client.post(urlStr, &result, opts)
 
 	return &result, response, createErr
 }
@@ -101,7 +100,7 @@ func (s *SplitsService) UpdateDescription(workspaceId, splitName, description st
 	urlStr := s.client.http.RequestURL("/splits/ws/%s/%s/updateDescription", workspaceId, splitNameEncoded)
 
 	// Execute the request
-	response, updateErr := s.client.http.Put(urlStr, &result, description)
+	response, updateErr := s.client.put(urlStr, &result, description)
 
 	return &result, response, updateErr
 }
@@ -118,7 +117,7 @@ func (s *SplitsService) Delete(workspaceId, splitName string) (*simpleresty.Resp
 	urlStr := s.client.http.RequestURL("/splits/ws/%s/%s", workspaceId, splitNameEncoded)
 
 	// Execute the request
-	response, createErr := s.client.http.Delete(urlStr, nil, nil)
+	response, createErr := s.client.delete(urlStr, nil, nil)
 
 	return response, createErr
 }
