@@ -1,7 +1,6 @@
 package test
 
 import (
-	"fmt"
 	"os"
 	"testing"
 
@@ -59,7 +58,7 @@ func (t *TestConfig) GetOrSkip(testing *testing.T, keys ...TestConfigKey) (val s
 	t.SkipUnlessAccTest(testing)
 	val = t.Get(keys...)
 	if val == "" {
-		testing.Skip(fmt.Sprintf("skipping test: config %v not set", keys))
+		testing.Skipf("skipping test: config %v not set", keys)
 	}
 	return
 }
@@ -68,7 +67,7 @@ func (t *TestConfig) GetOrAbort(testing *testing.T, keys ...TestConfigKey) (val 
 	t.SkipUnlessAccTest(testing)
 	val = t.Get(keys...)
 	if val == "" {
-		testing.Fatal(fmt.Sprintf("stopping test: config %v must be set", keys))
+		testing.Fatalf("stopping test: config %v must be set", keys)
 	}
 	return
 }
@@ -76,7 +75,7 @@ func (t *TestConfig) GetOrAbort(testing *testing.T, keys ...TestConfigKey) (val 
 func (t *TestConfig) SkipUnlessAccTest(testing *testing.T) {
 	val := t.Get(TestConfigAcceptanceTestKey)
 	if val == "" {
-		testing.Skip(fmt.Sprintf("Acceptance tests skipped unless env '%s' set", TestConfigAcceptanceTestKey.String()))
+		testing.Skipf("Acceptance tests skipped unless env '%s' set", TestConfigAcceptanceTestKey.String())
 	}
 }
 
