@@ -2,12 +2,17 @@ package split
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"github.com/davidji99/terraform-provider-split/api"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
 	"log"
+)
+
+var (
+	errDefaultRuleSizeSum = "the sum of all default rule sizes must equal 100"
 )
 
 func resourceSplitSplitDefinition() *schema.Resource {
@@ -200,10 +205,19 @@ func resourceSplitSplitDefinitionCreate(ctx context.Context, d *schema.ResourceD
 	var diags diag.Diagnostics
 	client := meta.(*Config).API
 
-	opts := constructSplitDefinitionRequestOpts(d)
 	workspaceID := getWorkspaceID(d)
 	splitName := getSplitName(d)
 	environmentID := getEnvironmentID(d)
+
+	opts, optsErr := constructSplitDefinitionRequestOpts(d)
+	if optsErr != nil {
+		diags = append(diags, diag.Diagnostic{
+			Severity: diag.Error,
+			Summary:  fmt.Sprintf("Unable to construct definition for split %v", splitName),
+			Detail:   optsErr.Error(),
+		})
+		return diags
+	}
 
 	log.Printf("[DEBUG] Creating definition on split [%v]", splitName)
 
@@ -228,10 +242,18 @@ func resourceSplitSplitDefinitionUpdate(ctx context.Context, d *schema.ResourceD
 	var diags diag.Diagnostics
 	client := meta.(*Config).API
 
-	opts := constructSplitDefinitionRequestOpts(d)
 	workspaceID := getWorkspaceID(d)
 	environmentID := getEnvironmentID(d)
 	splitName := getSplitName(d)
+	opts, optsErr := constructSplitDefinitionRequestOpts(d)
+	if optsErr != nil {
+		diags = append(diags, diag.Diagnostic{
+			Severity: diag.Error,
+			Summary:  fmt.Sprintf("Unable to construct definition for split %v", splitName),
+			Detail:   optsErr.Error(),
+		})
+		return diags
+	}
 
 	log.Printf("[DEBUG] Updating split definition %v", d.Id())
 
@@ -312,7 +334,7 @@ func resourceSplitSplitDefinitionDelete(ctx context.Context, d *schema.ResourceD
 	return diags
 }
 
-func constructSplitDefinitionRequestOpts(d *schema.ResourceData) *api.SplitDefinitionRequest {
+func constructSplitDefinitionRequestOpts(d *schema.ResourceData) (*api.SplitDefinitionRequest, error) {
 	opts := &api.SplitDefinitionRequest{}
 
 	if v, ok := d.GetOk("default_treatment"); ok {
@@ -350,6 +372,7 @@ func constructSplitDefinitionRequestOpts(d *schema.ResourceData) *api.SplitDefin
 	if v, ok := d.GetOk("default_rule"); ok {
 		defaultRules := make([]api.Bucket, 0)
 		vL := v.([]interface{})
+		defaultRuleSizeSum := 0
 
 		for _, v := range vL {
 			var treatment string
@@ -362,8 +385,14 @@ func constructSplitDefinitionRequestOpts(d *schema.ResourceData) *api.SplitDefin
 
 			if v, ok := vt["size"].(int); ok {
 				size = v
+				defaultRuleSizeSum += size
 			}
 			defaultRules = append(defaultRules, api.Bucket{Treatment: &treatment, Size: &size})
+		}
+
+		// Validate the sum of all default rule sizes equals 100.
+		if defaultRuleSizeSum != 100 {
+			return nil, errors.New(errDefaultRuleSizeSum)
 		}
 
 		opts.DefaultRule = defaultRules
@@ -438,7 +467,7 @@ func constructSplitDefinitionRequestOpts(d *schema.ResourceData) *api.SplitDefin
 		opts.Rules = newRules
 	}
 
-	return opts
+	return opts, nil
 }
 
 func setTreatmentInState(d *schema.ResourceData, sd *api.SplitDefinition) {
