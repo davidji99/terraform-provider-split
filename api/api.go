@@ -1,6 +1,7 @@
 package api
 
 import (
+	"errors"
 	"fmt"
 	"log"
 	"strconv"
@@ -22,6 +23,9 @@ const (
 	// DefaultAcceptHeader is the default and Content-Type header.
 	DefaultAcceptHeader = "application/json"
 
+	//DefaultClientTimeout is the default timeout before the client stops making api calls, will be overriden by split/config.go when instantiate
+	DefaultClientTimeout = 300 // 5 min
+
 	UserStatusPending     = "PENDING"
 	UserStatusActive      = "ACTIVE"
 	UserStatusDeactivated = "DEACTIVATED"
@@ -37,6 +41,9 @@ type Client struct {
 
 	// config represents all of the API's configurations.
 	config *Config
+
+	//expiresAt is a property that contains the time when the timeout happens
+	expiresAt time.Time
 
 	// Services used for talking to different parts of the Sendgrid APIv3.
 	Attributes   *AttributesService
@@ -77,6 +84,7 @@ func New(opts ...Option) (*Client, error) {
 		UserAgent:         DefaultUserAgent,
 		ContentTypeHeader: DefaultContentTypeHeader,
 		AcceptHeader:      DefaultAcceptHeader,
+		ClientTimeout:     DefaultClientTimeout,
 		APIKey:            "",
 	}
 
@@ -85,9 +93,12 @@ func New(opts ...Option) (*Client, error) {
 		return nil, optErr
 	}
 
+	expiresAt := time.Now().Add(time.Duration(config.ClientTimeout) * time.Second)
+
 	client := &Client{
-		config: config,
-		http:   simpleresty.NewWithBaseURL(config.APIBaseURL),
+		config:    config,
+		http:      simpleresty.NewWithBaseURL(config.APIBaseURL),
+		expiresAt: expiresAt,
 	}
 
 	// Set headers
@@ -142,43 +153,67 @@ func (c *Client) checkRateLimit(resp *simpleresty.Response) bool {
 	return false
 }
 
+// checkTimeout returns true if timeouted, false if still have time
+func (c *Client) checkTimeout() bool {
+	return time.Now().After(c.expiresAt)
+}
+
 func (c *Client) get(url string, r, body interface{}) (*simpleresty.Response, error) {
-	response, getErr := c.http.Get(url, &r, body)
-	if c.checkRateLimit(response) {
-		response, getErr = c.get(url, &r, body)
+	if !c.checkTimeout() {
+		response, getErr := c.http.Get(url, &r, body)
+		if c.checkRateLimit(response) {
+			response, getErr = c.get(url, &r, body)
+		}
+		return response, getErr
 	}
-	return response, getErr
+	timeoutError := errors.New("max timeout is reached, aborting")
+	return nil, timeoutError
 }
 
 func (c *Client) post(url string, r, opts interface{}) (*simpleresty.Response, error) {
-	response, getErr := c.http.Post(url, &r, opts)
-	if c.checkRateLimit(response) {
-		response, getErr = c.post(url, &r, opts)
+	if !c.checkTimeout() {
+		response, getErr := c.http.Post(url, &r, opts)
+		if c.checkRateLimit(response) {
+			response, getErr = c.post(url, &r, opts)
+		}
+		return response, getErr
 	}
-	return response, getErr
+	timeoutError := errors.New("reached maximum client timeout")
+	return nil, timeoutError
 }
 
 func (c *Client) put(url string, r, opts interface{}) (*simpleresty.Response, error) {
-	response, getErr := c.http.Put(url, &r, opts)
-	if c.checkRateLimit(response) {
-		response, getErr = c.put(url, &r, opts)
+	if !c.checkTimeout() {
+		response, getErr := c.http.Put(url, &r, opts)
+		if c.checkRateLimit(response) {
+			response, getErr = c.put(url, &r, opts)
+		}
+		return response, getErr
 	}
-
-	return response, getErr
+	timeoutError := errors.New("max timeout is reached, aborting")
+	return nil, timeoutError
 }
 
 func (c *Client) patch(url string, r, opts interface{}) (*simpleresty.Response, error) {
-	response, getErr := c.http.Patch(url, &r, opts)
-	if c.checkRateLimit(response) {
-		response, getErr = c.patch(url, &r, opts)
+	if !c.checkTimeout() {
+		response, getErr := c.http.Patch(url, &r, opts)
+		if c.checkRateLimit(response) {
+			response, getErr = c.patch(url, &r, opts)
+		}
+		return response, getErr
 	}
-	return response, getErr
+	timeoutError := errors.New("max timeout is reached, aborting")
+	return nil, timeoutError
 }
 
 func (c *Client) delete(url string, r, opts interface{}) (*simpleresty.Response, error) {
-	response, getErr := c.http.Delete(url, &r, opts)
-	if c.checkRateLimit(response) {
-		response, getErr = c.delete(url, &r, opts)
+	if !c.checkTimeout() {
+		response, getErr := c.http.Delete(url, &r, opts)
+		if c.checkRateLimit(response) {
+			response, getErr = c.delete(url, &r, opts)
+		}
+		return response, getErr
 	}
-	return response, getErr
+	timeoutError := errors.New("max timeout is reached, aborting")
+	return nil, timeoutError
 }

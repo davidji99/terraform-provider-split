@@ -43,6 +43,14 @@ func APIKey(token string) Option {
 	}
 }
 
+// ClientTimeout sets the client max timeout.
+func ClientTimeout(duration int) Option {
+	return func(c *Config) error {
+		c.ClientTimeout = duration
+		return nil
+	}
+}
+
 // validateBaseURLOption ensures that any custom base URLs do not end with a trailing slash.
 func validateBaseURLOption(url string) error {
 	// Validate that there is no trailing slashes before setting the custom baseURL

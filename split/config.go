@@ -2,10 +2,11 @@ package split
 
 import (
 	"fmt"
+	"log"
+
 	"github.com/davidji99/terraform-provider-split/api"
 	"github.com/davidji99/terraform-provider-split/version"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-	"log"
 )
 
 var (
@@ -19,6 +20,8 @@ type Config struct {
 	apiKey     string
 	apiBaseURL string
 
+	clientTimeout int
+
 	RemoveEnvFromStateOnly bool
 }
 
@@ -31,7 +34,7 @@ func NewConfig() *Config {
 func (c *Config) initializeAPI() error {
 	api, clientInitErr := api.New(api.APIKey(c.apiKey),
 		api.APIBaseURL(c.apiBaseURL), api.UserAgent(UserAgent),
-		api.CustomHTTPHeaders(c.Headers))
+		api.CustomHTTPHeaders(c.Headers), api.ClientTimeout(c.clientTimeout))
 	if clientInitErr != nil {
 		return clientInitErr
 	}

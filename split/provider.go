@@ -2,10 +2,11 @@ package split
 
 import (
 	"context"
+	"log"
+
 	"github.com/davidji99/terraform-provider-split/api"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-	"log"
 )
 
 func New() *schema.Provider {
@@ -27,6 +28,12 @@ func New() *schema.Provider {
 				Type:     schema.TypeMap,
 				Elem:     schema.TypeString,
 				Optional: true,
+			},
+
+			"client_timeout": {
+				Type:     schema.TypeInt,
+				Optional: true,
+				Default:  300, // 5 min
 			},
 
 			"remove_environment_from_state_only": {
@@ -77,6 +84,10 @@ func providerConfigure(_ context.Context, d *schema.ResourceData) (interface{}, 
 
 	if apiKey, ok := d.GetOk("api_key"); ok {
 		config.apiKey = apiKey.(string)
+	}
+
+	if clientTimeout, ok := d.GetOk("client_timeout"); ok {
+		config.clientTimeout = clientTimeout.(int)
 	}
 
 	if err := config.initializeAPI(); err != nil {
