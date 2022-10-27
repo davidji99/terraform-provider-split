@@ -63,6 +63,13 @@ $ terraform plan
 Refreshing Terraform state in-memory prior to plan...
 ```
 
+## Rate Limiting
+
+The Split provider provides automatic backoff in the event the provider detects the Split API has
+[rate limited](https://docs.split.io/reference/rate-limiting) your Terraform operations. Please note
+this backoff has a max timeout that can be configured by [`client_timeout`](#argument-reference) within
+your `provider {}` block.
+
 ## Argument Reference
 
 The following arguments are supported:
@@ -77,4 +84,5 @@ The following arguments are supported:
   state upon deletion. This is to address out-of-band, UI based prerequisites Split has when deleting an environment.
   Defaults to `false`.
 
-* `client_timeout` - (Optional) Configure client timeout before aborting. This is to address the client retrying forever. It's expressed in an integer that represents seconds. Defaults to `300`, which means 5 minutes
+* `client_timeout` - (Optional) Configure client (http) timeout before aborting. This is to address the client retrying forever.
+  It's expressed in an integer that represents seconds. Defaults to `300` seconds, or `5` minutes.
