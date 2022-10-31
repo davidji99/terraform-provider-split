@@ -52,6 +52,12 @@ func resourceSplitSplitDefinition() *schema.Resource {
 				Required: true,
 			},
 
+			"traffic_allocation": {
+				Type:     schema.TypeInt,
+				Optional: true,
+				Computed: true,
+			},
+
 			"treatment": {
 				Type:     schema.TypeList,
 				Required: true,
@@ -187,6 +193,7 @@ func resourceSplitSplitDefinitionImport(ctx context.Context, d *schema.ResourceD
 	d.Set("workspace_id", workspaceID)
 	d.Set("split_name", sd.GetName())
 	d.Set("environment_id", sd.GetEnvironment().GetID())
+	d.Set("traffic_allocation", sd.GetTrafficAllocation())
 	d.Set("default_treatment", sd.GetDefaultTreatment())
 
 	// Set Treatment in state
@@ -293,6 +300,7 @@ func resourceSplitSplitDefinitionRead(ctx context.Context, d *schema.ResourceDat
 	d.Set("workspace_id", workspaceID)
 	d.Set("split_name", sd.GetName())
 	d.Set("environment_id", sd.GetEnvironment().GetID())
+	d.Set("traffic_allocation", sd.GetTrafficAllocation())
 	d.Set("default_treatment", sd.GetDefaultTreatment())
 
 	// Set Treatment in state
@@ -340,6 +348,11 @@ func constructSplitDefinitionRequestOpts(d *schema.ResourceData) (*api.SplitDefi
 	if v, ok := d.GetOk("default_treatment"); ok {
 		opts.DefaultTreatment = v.(string)
 		log.Printf("[DEBUG] new split definition default_treatment is : %v", opts.DefaultTreatment)
+	}
+
+	if v, ok := d.GetOk("traffic_allocation"); ok {
+		opts.TrafficAllocation = v.(int)
+		log.Printf("[DEBUG] new split definition traffic_allocation is : %v", opts.TrafficAllocation)
 	}
 
 	if v, ok := d.GetOk("treatment"); ok {

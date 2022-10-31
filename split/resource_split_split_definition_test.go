@@ -29,6 +29,8 @@ func TestAccSplitSplitDefinition_Basic(t *testing.T) {
 					resource.TestCheckResourceAttr(
 						"split_split_definition.foobar", "environment_id", envID),
 					resource.TestCheckResourceAttr(
+						"split_split_definition.foobar", "traffic_allocation", "77"),
+					resource.TestCheckResourceAttr(
 						"split_split_definition.foobar", "default_treatment", "treatment_123"),
 					resource.TestCheckResourceAttr(
 						"split_split_definition.foobar", "treatment.0.name", "treatment_123"),
@@ -127,6 +129,7 @@ resource "split_split_definition" "foobar" {
 	workspace_id = "%[1]s"
 	split_name = split_split.foobar.name
 	environment_id = "%[5]s"
+	traffic_allocation = 77
 
 	default_treatment = "treatment_123"
 	treatment {
