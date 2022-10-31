@@ -137,7 +137,7 @@ func (s *SplitsService) UpdateDefinitionFull(workspaceId, splitName, environment
 	return &result, response, createErr
 }
 
-// RemoveDefinition unconfigures a Split Definition for a specific environment.
+// RemoveDefinition removes a Split Definition for a specific environment.
 //
 // Reference: https://docs.split.io/reference/remove-split-definition-from-environment
 func (s *SplitsService) RemoveDefinition(workspaceId, splitName, environmentId string) (*simpleresty.Response, error) {

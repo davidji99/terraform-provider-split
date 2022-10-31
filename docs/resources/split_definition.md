@@ -100,11 +100,11 @@ explain the difference between each treatment. This attribute block supports the
 ### `default_rule`
 
 For any of your customers that weren't assigned a treatment in the sections above,
-use this section to place them into a treatment or randomly distribute these customers between your treatments/variations
+use this section to place them into treatments or randomly distribute these customers among your treatments/variations
 based off of percentages you decide. This attribute block supports the following:
 
 * `treatment` - (Required) `<string>` Name of a valid Treatment.
-* `size` - (Required) `<integer>` Treatment size.
+* `size` - (Required) `<integer>` Treatment size. The sum of all your `default_rule` blocks must equal `100`.
 
 ### `rule`
 

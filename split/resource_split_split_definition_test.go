@@ -45,7 +45,11 @@ func TestAccSplitSplitDefinition_Basic(t *testing.T) {
 					resource.TestCheckResourceAttr(
 						"split_split_definition.foobar", "default_rule.0.treatment", "treatment_123"),
 					resource.TestCheckResourceAttr(
-						"split_split_definition.foobar", "default_rule.0.size", "100"),
+						"split_split_definition.foobar", "default_rule.0.size", "60"),
+					resource.TestCheckResourceAttr(
+						"split_split_definition.foobar", "default_rule.1.treatment", "treatment_456"),
+					resource.TestCheckResourceAttr(
+						"split_split_definition.foobar", "default_rule.1.size", "40"),
 					resource.TestCheckResourceAttr(
 						"split_split_definition.foobar", "rule.0.bucket.0.treatment", "treatment_123"),
 					resource.TestCheckResourceAttr(
@@ -138,8 +142,14 @@ resource "split_split_definition" "foobar" {
 
 	default_rule {
 		treatment = "treatment_123"
-		size = 100
+		size = 60
 	}
+
+	default_rule {
+		treatment = "treatment_456"
+		size = 40
+	}
+
 	rule {
 		bucket {
 			treatment = "treatment_123"
