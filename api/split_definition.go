@@ -16,25 +16,26 @@ type SplitDefinitions struct {
 type SplitDefinition struct {
 	ID                *string      `json:"id"`
 	Name              *string      `json:"name"`
+	DefaultTreatment  *string      `json:"defaultTreatment"`
 	Environment       *Environment `json:"environment"`
 	TrafficType       *TrafficType `json:"trafficType"`
 	Killed            *bool        `json:"killed"`
 	Treatments        []*Treatment `json:"treatments"`
-	DefaultTreatment  *string      `json:"defaultTreatment"`
-	TrafficAllocation *int         `json:"trafficAllocation"`
 	Rules             []*Rule      `json:"rules"`
 	DefaultRule       []*Bucket    `json:"defaultRule"`
+	TrafficAllocation *int         `json:"trafficAllocation"`
 	CreationTIme      *int         `json:"creationTIme"`
 	LastUpdateTime    *int         `json:"lastUpdateTime"`
 }
 
 // SplitDefinitionRequest creates or updates a split definition.
 type SplitDefinitionRequest struct {
-	Treatments       []Treatment `json:"treatments"`
-	DefaultTreatment string      `json:"defaultTreatment"`
-	Rules            []Rule      `json:"rules"`
-	DefaultRule      []Bucket    `json:"defaultRule"`
-	Comment          string      `json:"comment,omitempty"`
+	Treatments        []Treatment `json:"treatments"`
+	Rules             []Rule      `json:"rules"`
+	DefaultRule       []Bucket    `json:"defaultRule"`
+	DefaultTreatment  string      `json:"defaultTreatment"`
+	Comment           string      `json:"comment,omitempty"`
+	TrafficAllocation int         `json:"trafficAllocation"`
 }
 
 // Rule consists of a Condition and a list of Buckets.
@@ -137,7 +138,7 @@ func (s *SplitsService) UpdateDefinitionFull(workspaceId, splitName, environment
 	return &result, response, createErr
 }
 
-// RemoveDefinition unconfigures a Split Definition for a specific environment.
+// RemoveDefinition removes a Split Definition for a specific environment.
 //
 // Reference: https://docs.split.io/reference/remove-split-definition-from-environment
 func (s *SplitsService) RemoveDefinition(workspaceId, splitName, environmentId string) (*simpleresty.Response, error) {

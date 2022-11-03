@@ -155,7 +155,7 @@ func (c *Client) checkRateLimit(resp *simpleresty.Response) bool {
 	return false
 }
 
-// checkTimeout returns true if timeouted, false if still have time
+// checkTimeout returns true if timeout, false if still have time
 func (c *Client) checkTimeout() bool {
 	return time.Now().After(c.expiresAt)
 }
