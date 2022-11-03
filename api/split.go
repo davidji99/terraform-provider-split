@@ -18,7 +18,7 @@ type Split struct {
 	ID                     *string             `json:"id"`
 	Name                   *string             `json:"name"`
 	Description            *string             `json:"description"`
-	Tags                   []string            `json:"tags,omitempty"`
+	Tags                   []SplitTag          `json:"tags,omitempty"`
 	CreationTime           *int64              `json:"creationTime"`
 	RolloutStatusTimestamp *int64              `json:"rolloutStatusTimestamp"`
 	TrafficType            *TrafficType        `json:"trafficType"`
@@ -46,6 +46,11 @@ type SplitCreateRequest struct {
 // SplitUpdateRequest represents a request to update a split.
 type SplitUpdateRequest struct {
 	Description string `json:"description"`
+}
+
+// SplitTag represents a tag in the split
+type SplitTag struct {
+	Name string `json:"name"`
 }
 
 // List all splits.
