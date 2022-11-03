@@ -140,7 +140,7 @@ func (c *Client) setHeaders() {
 }
 
 func (c *Client) checkRateLimit(resp *simpleresty.Response) bool {
-	if resp.StatusCode == 429 {
+	if resp != nil && resp.StatusCode == 429 {
 		remainingOrgSeconds, _ := strconv.Atoi((resp.Resp.Header().Get("X-RateLimit-Reset-Seconds-Org")))
 		timeToSleep, _ := strconv.Atoi(resp.Resp.Header().Get("X-RateLimit-Reset-Seconds-IP"))
 		if remainingOrgSeconds != 0 {
