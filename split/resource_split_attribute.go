@@ -49,7 +49,8 @@ func resourceSplitAttribute() *schema.Resource {
 
 			"description": {
 				Type:     schema.TypeString,
-				Required: true,
+				Optional: true,
+				Computed: true,
 			},
 
 			"data_type": {
@@ -60,7 +61,10 @@ func resourceSplitAttribute() *schema.Resource {
 			},
 
 			"suggested_values": {
-				Type:     schema.TypeSet,
+				Type: schema.TypeSet,
+				Elem: &schema.Schema{
+					Type: schema.TypeString,
+				},
 				Optional: true,
 				Computed: true,
 			},
@@ -69,6 +73,11 @@ func resourceSplitAttribute() *schema.Resource {
 				Type:     schema.TypeBool,
 				Optional: true,
 				Default:  false,
+			},
+
+			"organization_id": {
+				Type:     schema.TypeString,
+				Computed: true,
 			},
 		},
 	}
@@ -86,18 +95,20 @@ func resourceSplitAttributeImport(ctx context.Context, d *schema.ResourceData, m
 	trafficTypeID := importID[1]
 	attributeID := importID[2]
 
-	a, _, getErr := client.Attributes.FindByID(workspaceID, trafficTypeID, attributeID)
+	a, _, getErr := client.Attributes.FindByID(workspaceID, trafficTypeID, attributeID, &api.AttributeListQueryParams{MarkerLimit: 200})
 	if getErr != nil {
 		return nil, getErr
 	}
 
 	d.SetId(a.GetID())
+	d.Set("identifier", a.GetID())
 	d.Set("workspace_id", workspaceID)
 	d.Set("traffic_type_id", trafficTypeID)
 	d.Set("display_name", a.GetDisplayName())
 	d.Set("description", a.GetDescription())
 	d.Set("data_type", a.GetDataType())
 	d.Set("is_searchable", a.GetIsSearchable())
+	d.Set("organization_id", a.GetOrganizationId())
 
 	return []*schema.ResourceData{d}, nil
 }
@@ -111,7 +122,7 @@ func resourceSplitAttributeCreate(ctx context.Context, d *schema.ResourceData, m
 	opts := constructAttributeRequestOpts(d)
 	opts.TrafficTypeID = &trafficTypeID
 
-	log.Printf("[DEBUG] Creating attribute %v", opts.Identifier)
+	log.Printf("[DEBUG] Creating attribute %v", *opts.Identifier)
 
 	a, _, createErr := client.Attributes.Create(workspaceID, trafficTypeID, opts)
 	if createErr != nil {
@@ -138,7 +149,7 @@ func resourceSplitAttributeRead(ctx context.Context, d *schema.ResourceData, met
 	workspaceID := getWorkspaceID(d)
 	trafficTypeID := getTrafficTypeID(d)
 
-	a, _, getErr := client.Attributes.FindByID(workspaceID, trafficTypeID, d.Id())
+	a, _, getErr := client.Attributes.FindByID(workspaceID, trafficTypeID, d.Id(), &api.AttributeListQueryParams{MarkerLimit: 200})
 	if getErr != nil {
 		diags = append(diags, diag.Diagnostic{
 			Severity: diag.Error,
@@ -148,10 +159,16 @@ func resourceSplitAttributeRead(ctx context.Context, d *schema.ResourceData, met
 		return diags
 	}
 
+	d.Set("identifier", a.GetID())
 	d.Set("display_name", a.GetDisplayName())
 	d.Set("description", a.GetDescription())
 	d.Set("data_type", a.GetDataType())
 	d.Set("is_searchable", a.GetIsSearchable())
+	d.Set("organization_id", a.GetOrganizationId())
+
+	if a.HasSuggestedValues() {
+		d.Set("suggested_values", a.SuggestedValues)
+	}
 
 	return diags
 }
@@ -166,29 +183,30 @@ func resourceSplitAttributeUpdate(ctx context.Context, d *schema.ResourceData, m
 	if ok := d.HasChange("display_name"); ok {
 		vs := d.Get("display_name").(string)
 		opts.DisplayName = &vs
+		log.Printf("[DEBUG] updated attribute %v display_name: %v", d.Id(), *opts.DisplayName)
 	}
 
 	if ok := d.HasChange("description"); ok {
-		o, n := d.GetChange("description")
+		_, n := d.GetChange("description")
 		var vs string
 		if n == nil {
-			opts.DisplayName = nil
+			opts.Description = nil
 		} else {
-			vs = o.(string)
-			opts.DisplayName = &vs
+			vs = n.(string)
+			opts.Description = &vs
 		}
 
-		opts.DisplayName = &vs
-		log.Printf("[DEBUG] updated attribute %v description: %v", d.Id(), *opts.DisplayName)
+		opts.Description = &vs
+		log.Printf("[DEBUG] updated attribute %v description: %v", d.Id(), *opts.Description)
 	}
 
 	if ok := d.HasChange("data_type"); ok {
-		o, n := d.GetChange("data_type")
+		_, n := d.GetChange("data_type")
 		var vs string
 		if n == nil {
 			opts.DataType = nil
 		} else {
-			vs = o.(string)
+			vs = n.(string)
 			opts.DataType = &vs
 		}
 
