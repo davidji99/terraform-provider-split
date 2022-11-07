@@ -1,14 +1,14 @@
 ---
 layout: "split"
-page_title: "Split: split_attribute"
-sidebar_current: "docs-split-resource-attribute"
+page_title: "Split: split_traffic_type_attribute"
+sidebar_current: "docs-split-resource-traffic-type-attribute"
 description: |-
-Provides the ability to manage a Split attribute.
+Provides the ability to manage a Split traffic type attribute.
 ---
 
-# split_attribute
+# split_traffic_type_attribute
 
-This resource provides the ability to manage an [Attribute](https://help.split.io/hc/en-us/articles/360020793231-Target-with-custom-attributes).
+This resource provides the ability to manage an [Traffic type Attribute](https://help.split.io/hc/en-us/articles/360020793231-Target-with-custom-attributes).
 
 ## Example Usage
 
@@ -18,7 +18,7 @@ resource "split_traffic_type" "foobar" {
 	name = "my_workspace_name"
 }
 
-resource "split_attribute" "foobar" {
+resource "split_traffic_type_attribute" "foobar" {
 	workspace_id = "my_workspace_id"
 	traffic_type_id = split_traffic_type.foobar.id
 	identifier = "my-attribute"
@@ -58,5 +58,5 @@ and attribute ID separated by a colon (':').
 For example:
 
 ```shell script
-$ terraform import split_attribute.foobar "0b46d8f7-9435-4f74-a770-3fcb22fbbfe6:110b3876-1d38-11ed-861d-0242ac120002:my-attribute"
+$ terraform import split_traffic_type_attribute.foobar "0b46d8f7-9435-4f74-a770-3fcb22fbbfe6:110b3876-1d38-11ed-861d-0242ac120002:my-attribute"
 ```

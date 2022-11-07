@@ -7,7 +7,7 @@ import (
 	"testing"
 )
 
-func TestAccSplitAttribute_Basic(t *testing.T) {
+func TestAccSplitTrafficTypeAttribute_Basic(t *testing.T) {
 	workspaceID := testAccConfig.GetWorkspaceIDorSkip(t)
 	ttName := fmt.Sprintf("tt-tftest-%s", acctest.RandString(8))
 	attrIdentifier := acctest.RandString(8)
@@ -18,31 +18,31 @@ func TestAccSplitAttribute_Basic(t *testing.T) {
 		ProviderFactories: testAccProviderFactories,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccCheckSplitAttribute_basic(workspaceID, attrIdentifier, ttName, attrName),
+				Config: testAccCheckSplitTrafficTypeAttribute_basic(workspaceID, attrIdentifier, ttName, attrName),
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttr(
-						"split_attribute.foobar", "workspace_id", workspaceID),
+						"split_traffic_type_attribute.foobar", "workspace_id", workspaceID),
 					resource.TestCheckResourceAttrSet(
-						"split_attribute.foobar", "traffic_type_id"),
+						"split_traffic_type_attribute.foobar", "traffic_type_id"),
 					resource.TestCheckResourceAttr(
-						"split_attribute.foobar", "display_name", attrName),
+						"split_traffic_type_attribute.foobar", "display_name", attrName),
 					resource.TestCheckResourceAttr(
-						"split_attribute.foobar", "description", "this is my attribute description"),
+						"split_traffic_type_attribute.foobar", "description", "this is my attribute description"),
 					resource.TestCheckResourceAttr(
-						"split_attribute.foobar", "data_type", "STRING"),
+						"split_traffic_type_attribute.foobar", "data_type", "STRING"),
 					resource.TestCheckResourceAttr(
-						"split_attribute.foobar", "suggested_values.#", "3"),
+						"split_traffic_type_attribute.foobar", "suggested_values.#", "3"),
 					resource.TestCheckResourceAttr(
-						"split_attribute.foobar", "is_searchable", "true"),
+						"split_traffic_type_attribute.foobar", "is_searchable", "true"),
 					resource.TestCheckResourceAttrSet(
-						"split_attribute.foobar", "organization_id"),
+						"split_traffic_type_attribute.foobar", "organization_id"),
 				),
 			},
 		},
 	})
 }
 
-func TestAccSplitAttribute_Updates(t *testing.T) {
+func TestAccSplitTrafficTypeAttribute_Updates(t *testing.T) {
 	workspaceID := testAccConfig.GetWorkspaceIDorSkip(t)
 	ttName := fmt.Sprintf("tt-tftest-%s", acctest.RandString(8))
 	attrIdentifier := acctest.RandString(8)
@@ -53,58 +53,58 @@ func TestAccSplitAttribute_Updates(t *testing.T) {
 		ProviderFactories: testAccProviderFactories,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccCheckSplitAttribute_basic(workspaceID, attrIdentifier, ttName, attrName),
+				Config: testAccCheckSplitTrafficTypeAttribute_basic(workspaceID, attrIdentifier, ttName, attrName),
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttr(
-						"split_attribute.foobar", "workspace_id", workspaceID),
+						"split_traffic_type_attribute.foobar", "workspace_id", workspaceID),
 					resource.TestCheckResourceAttrSet(
-						"split_attribute.foobar", "traffic_type_id"),
+						"split_traffic_type_attribute.foobar", "traffic_type_id"),
 					resource.TestCheckResourceAttr(
-						"split_attribute.foobar", "display_name", attrName),
+						"split_traffic_type_attribute.foobar", "display_name", attrName),
 					resource.TestCheckResourceAttr(
-						"split_attribute.foobar", "description", "this is my attribute description"),
+						"split_traffic_type_attribute.foobar", "description", "this is my attribute description"),
 					resource.TestCheckResourceAttr(
-						"split_attribute.foobar", "data_type", "STRING"),
+						"split_traffic_type_attribute.foobar", "data_type", "STRING"),
 					resource.TestCheckResourceAttr(
-						"split_attribute.foobar", "suggested_values.#", "3"),
+						"split_traffic_type_attribute.foobar", "suggested_values.#", "3"),
 					resource.TestCheckResourceAttr(
-						"split_attribute.foobar", "is_searchable", "true"),
+						"split_traffic_type_attribute.foobar", "is_searchable", "true"),
 					resource.TestCheckResourceAttrSet(
-						"split_attribute.foobar", "organization_id"),
+						"split_traffic_type_attribute.foobar", "organization_id"),
 				),
 			},
 			{
-				Config: testAccCheckSplitAttribute_updates(workspaceID, attrIdentifier, ttName, attrName),
+				Config: testAccCheckSplitTrafficTypeAttribute_updates(workspaceID, attrIdentifier, ttName, attrName),
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttr(
-						"split_attribute.foobar", "workspace_id", workspaceID),
+						"split_traffic_type_attribute.foobar", "workspace_id", workspaceID),
 					resource.TestCheckResourceAttrSet(
-						"split_attribute.foobar", "traffic_type_id"),
+						"split_traffic_type_attribute.foobar", "traffic_type_id"),
 					resource.TestCheckResourceAttr(
-						"split_attribute.foobar", "display_name", attrName+" edited"),
+						"split_traffic_type_attribute.foobar", "display_name", attrName+" edited"),
 					resource.TestCheckResourceAttr(
-						"split_attribute.foobar", "description", "this is my attribute description + edited"),
+						"split_traffic_type_attribute.foobar", "description", "this is my attribute description + edited"),
 					resource.TestCheckResourceAttr(
-						"split_attribute.foobar", "data_type", "NUMBER"),
+						"split_traffic_type_attribute.foobar", "data_type", "NUMBER"),
 					resource.TestCheckResourceAttr(
-						"split_attribute.foobar", "suggested_values.#", "3"),
+						"split_traffic_type_attribute.foobar", "suggested_values.#", "3"),
 					resource.TestCheckResourceAttr(
-						"split_attribute.foobar", "suggested_values.0", "1"),
+						"split_traffic_type_attribute.foobar", "suggested_values.0", "1"),
 					resource.TestCheckResourceAttr(
-						"split_attribute.foobar", "suggested_values.1", "2"),
+						"split_traffic_type_attribute.foobar", "suggested_values.1", "2"),
 					resource.TestCheckResourceAttr(
-						"split_attribute.foobar", "suggested_values.2", "3"),
+						"split_traffic_type_attribute.foobar", "suggested_values.2", "3"),
 					resource.TestCheckResourceAttr(
-						"split_attribute.foobar", "is_searchable", "true"),
+						"split_traffic_type_attribute.foobar", "is_searchable", "true"),
 					resource.TestCheckResourceAttrSet(
-						"split_attribute.foobar", "organization_id"),
+						"split_traffic_type_attribute.foobar", "organization_id"),
 				),
 			},
 		},
 	})
 }
 
-func testAccCheckSplitAttribute_basic(workspaceID, attrIdentifier, ttName, attrName string) string {
+func testAccCheckSplitTrafficTypeAttribute_basic(workspaceID, attrIdentifier, ttName, attrName string) string {
 	return fmt.Sprintf(`
 provider "split" {
 	remove_environment_from_state_only = true
@@ -115,7 +115,7 @@ resource "split_traffic_type" "foobar" {
 	name = "%[3]s"
 }
 
-resource "split_attribute" "foobar" {
+resource "split_traffic_type_attribute" "foobar" {
 	workspace_id = "%[1]s"
 	traffic_type_id = split_traffic_type.foobar.id
 	identifier = "%[2]s"
@@ -128,7 +128,7 @@ resource "split_attribute" "foobar" {
 `, workspaceID, attrIdentifier, ttName, attrName)
 }
 
-func testAccCheckSplitAttribute_updates(workspaceID, attrIdentifier, ttName, attrName string) string {
+func testAccCheckSplitTrafficTypeAttribute_updates(workspaceID, attrIdentifier, ttName, attrName string) string {
 	return fmt.Sprintf(`
 provider "split" {
 	remove_environment_from_state_only = true
@@ -139,7 +139,7 @@ resource "split_traffic_type" "foobar" {
 	name = "%[3]s"
 }
 
-resource "split_attribute" "foobar" {
+resource "split_traffic_type_attribute" "foobar" {
 	workspace_id = "%[1]s"
 	traffic_type_id = split_traffic_type.foobar.id
 	identifier = "%[2]s"

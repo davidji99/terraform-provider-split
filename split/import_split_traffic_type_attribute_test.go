@@ -8,7 +8,7 @@ import (
 	"testing"
 )
 
-func TestAccSplitAttribute_importBasic(t *testing.T) {
+func TestAccSplitTrafficTypeAttribute_importBasic(t *testing.T) {
 	workspaceID := testAccConfig.GetWorkspaceIDorSkip(t)
 	ttName := fmt.Sprintf("tt-tftest-%s", acctest.RandString(8))
 	attrIdentifier := acctest.RandString(8)
@@ -21,13 +21,13 @@ func TestAccSplitAttribute_importBasic(t *testing.T) {
 		ProviderFactories: testAccProviderFactories,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccCheckSplitAttribute_basic(workspaceID, attrIdentifier, ttName, attrName),
+				Config: testAccCheckSplitTrafficTypeAttribute_basic(workspaceID, attrIdentifier, ttName, attrName),
 			},
 			{
-				ResourceName:      "split_attribute.foobar",
+				ResourceName:      "split_traffic_type_attribute.foobar",
 				ImportState:       true,
 				ImportStateVerify: true,
-				ImportStateIdFunc: testAccSplitAttributeImportStateIDFunc("split_attribute.foobar"),
+				ImportStateIdFunc: testAccSplitAttributeImportStateIDFunc("split_traffic_type_attribute.foobar"),
 			},
 		},
 	})

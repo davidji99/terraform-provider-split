@@ -10,15 +10,15 @@ import (
 	"log"
 )
 
-func resourceSplitAttribute() *schema.Resource {
+func resourceSplitTrafficTypeAttribute() *schema.Resource {
 	return &schema.Resource{
-		CreateContext: resourceSplitAttributeCreate,
-		ReadContext:   resourceSplitAttributeRead,
-		UpdateContext: resourceSplitAttributeUpdate,
-		DeleteContext: resourceSplitAttributeDelete,
+		CreateContext: resourceSplitTrafficTypeAttributeCreate,
+		ReadContext:   resourceSplitTrafficTypeAttributeRead,
+		UpdateContext: resourceSplitTrafficTypeAttributeUpdate,
+		DeleteContext: resourceSplitTrafficTypeAttributeDelete,
 
 		Importer: &schema.ResourceImporter{
-			StateContext: resourceSplitAttributeImport,
+			StateContext: resourceSplitTrafficTypeAttributeImport,
 		},
 
 		Schema: map[string]*schema.Schema{
@@ -83,7 +83,7 @@ func resourceSplitAttribute() *schema.Resource {
 	}
 }
 
-func resourceSplitAttributeImport(ctx context.Context, d *schema.ResourceData, meta interface{}) ([]*schema.ResourceData, error) {
+func resourceSplitTrafficTypeAttributeImport(ctx context.Context, d *schema.ResourceData, meta interface{}) ([]*schema.ResourceData, error) {
 	client := meta.(*Config).API
 
 	importID, parseErr := parseCompositeID(d.Id(), 3)
@@ -113,7 +113,7 @@ func resourceSplitAttributeImport(ctx context.Context, d *schema.ResourceData, m
 	return []*schema.ResourceData{d}, nil
 }
 
-func resourceSplitAttributeCreate(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
+func resourceSplitTrafficTypeAttributeCreate(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
 	var diags diag.Diagnostics
 	client := meta.(*Config).API
 	workspaceID := getWorkspaceID(d)
@@ -122,28 +122,28 @@ func resourceSplitAttributeCreate(ctx context.Context, d *schema.ResourceData, m
 	opts := constructAttributeRequestOpts(d)
 	opts.TrafficTypeID = &trafficTypeID
 
-	log.Printf("[DEBUG] Creating attribute %v", *opts.Identifier)
+	log.Printf("[DEBUG] Creating traffic type attribute %v", *opts.Identifier)
 
 	a, _, createErr := client.Attributes.Create(workspaceID, trafficTypeID, opts)
 	if createErr != nil {
 		diags = append(diags, diag.Diagnostic{
 			Severity: diag.Error,
-			Summary:  fmt.Sprintf("Unable to create attribute %v", opts.DisplayName),
+			Summary:  fmt.Sprintf("Unable to traffic type create attribute %v", opts.DisplayName),
 			Detail:   createErr.Error(),
 		})
 		return diags
 	}
 
-	log.Printf("[DEBUG] Created attribute %v", a.GetID())
+	log.Printf("[DEBUG] Created traffic type attribute %v", a.GetID())
 
 	d.SetId(a.GetID())
 	d.Set("workspace_id", workspaceID)
 	d.Set("traffic_type_id", a.GetTrafficTypeID())
 
-	return resourceSplitAttributeRead(ctx, d, meta)
+	return resourceSplitTrafficTypeAttributeRead(ctx, d, meta)
 }
 
-func resourceSplitAttributeRead(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
+func resourceSplitTrafficTypeAttributeRead(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
 	var diags diag.Diagnostics
 	client := meta.(*Config).API
 	workspaceID := getWorkspaceID(d)
@@ -153,7 +153,7 @@ func resourceSplitAttributeRead(ctx context.Context, d *schema.ResourceData, met
 	if getErr != nil {
 		diags = append(diags, diag.Diagnostic{
 			Severity: diag.Error,
-			Summary:  fmt.Sprintf("unable to fetch attribute %s", d.Id()),
+			Summary:  fmt.Sprintf("unable to fetch traffic type attribute %s", d.Id()),
 			Detail:   getErr.Error(),
 		})
 		return diags
@@ -173,7 +173,7 @@ func resourceSplitAttributeRead(ctx context.Context, d *schema.ResourceData, met
 	return diags
 }
 
-func resourceSplitAttributeUpdate(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
+func resourceSplitTrafficTypeAttributeUpdate(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
 	var diags diag.Diagnostics
 	client := meta.(*Config).API
 	opts := &api.AttributeRequest{}
@@ -183,7 +183,7 @@ func resourceSplitAttributeUpdate(ctx context.Context, d *schema.ResourceData, m
 	if ok := d.HasChange("display_name"); ok {
 		vs := d.Get("display_name").(string)
 		opts.DisplayName = &vs
-		log.Printf("[DEBUG] updated attribute %v display_name: %v", d.Id(), *opts.DisplayName)
+		log.Printf("[DEBUG] updated traffic type attribute %v display_name: %v", d.Id(), *opts.DisplayName)
 	}
 
 	if ok := d.HasChange("description"); ok {
@@ -197,7 +197,7 @@ func resourceSplitAttributeUpdate(ctx context.Context, d *schema.ResourceData, m
 		}
 
 		opts.Description = &vs
-		log.Printf("[DEBUG] updated attribute %v description: %v", d.Id(), *opts.Description)
+		log.Printf("[DEBUG] updated traffic type attribute %v description: %v", d.Id(), *opts.Description)
 	}
 
 	if ok := d.HasChange("data_type"); ok {
@@ -211,7 +211,7 @@ func resourceSplitAttributeUpdate(ctx context.Context, d *schema.ResourceData, m
 		}
 
 		opts.DataType = &vs
-		log.Printf("[DEBUG] updated attribute %v data_type: %v", d.Id(), *opts.DataType)
+		log.Printf("[DEBUG] updated traffic type attribute %v data_type: %v", d.Id(), *opts.DataType)
 	}
 
 	if ok := d.HasChange("suggested_values"); ok {
@@ -224,33 +224,33 @@ func resourceSplitAttributeUpdate(ctx context.Context, d *schema.ResourceData, m
 		}
 
 		opts.SuggestedValues = suggestedValues
-		log.Printf("[DEBUG] updated attribute %v suggested_values: %v", d.Id(), opts.SuggestedValues)
+		log.Printf("[DEBUG] updated traffic type attribute %v suggested_values: %v", d.Id(), opts.SuggestedValues)
 	}
 
 	if ok := d.HasChange("is_searchable"); ok {
 		v := d.Get("is_searchable").(bool)
 		opts.IsSearchable = &v
-		log.Printf("[DEBUG] updated attribute %v is_searchable: %v", d.Id(), *opts.IsSearchable)
+		log.Printf("[DEBUG] updated traffic type attribute %v is_searchable: %v", d.Id(), *opts.IsSearchable)
 	}
 
-	log.Printf("[DEBUG] Updating attribute %v", d.Id())
+	log.Printf("[DEBUG] Updating traffic type attribute %v", d.Id())
 
 	_, _, updateErr := client.Attributes.Update(workspaceID, trafficTypeID, d.Id(), opts)
 	if updateErr != nil {
 		diags = append(diags, diag.Diagnostic{
 			Severity: diag.Error,
-			Summary:  fmt.Sprintf("Unable to update attribute %v", d.Id()),
+			Summary:  fmt.Sprintf("Unable to update traffic type attribute %v", d.Id()),
 			Detail:   updateErr.Error(),
 		})
 		return diags
 	}
 
-	log.Printf("[DEBUG] Updated attribute %v", d.Id())
+	log.Printf("[DEBUG] Updated traffic type attribute %v", d.Id())
 
-	return resourceSplitAttributeRead(ctx, d, meta)
+	return resourceSplitTrafficTypeAttributeRead(ctx, d, meta)
 }
 
-func resourceSplitAttributeDelete(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
+func resourceSplitTrafficTypeAttributeDelete(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
 	client := meta.(*Config).API
 	var diags diag.Diagnostics
 	workspaceID := getWorkspaceID(d)
@@ -261,13 +261,13 @@ func resourceSplitAttributeDelete(ctx context.Context, d *schema.ResourceData, m
 	if deleteErr != nil {
 		diags = append(diags, diag.Diagnostic{
 			Severity: diag.Error,
-			Summary:  fmt.Sprintf("unable to delete attribute %s", d.Id()),
+			Summary:  fmt.Sprintf("unable to delete traffic type attribute %s", d.Id()),
 			Detail:   deleteErr.Error(),
 		})
 		return diags
 	}
 
-	log.Printf("[DEBUG] Deleted attribute %s", d.Id())
+	log.Printf("[DEBUG] Deleted traffic type attribute %s", d.Id())
 
 	d.SetId("")
 
@@ -280,25 +280,25 @@ func constructAttributeRequestOpts(d *schema.ResourceData) *api.AttributeRequest
 	if v, ok := d.GetOk("identifier"); ok {
 		vs := v.(string)
 		opts.Identifier = &vs
-		log.Printf("[DEBUG] new attribute identifier is : %v", *opts.Identifier)
+		log.Printf("[DEBUG] new traffic type attribute identifier is : %v", *opts.Identifier)
 	}
 
 	if v, ok := d.GetOk("display_name"); ok {
 		vs := v.(string)
 		opts.DisplayName = &vs
-		log.Printf("[DEBUG] new attribute display_name is : %v", *opts.DisplayName)
+		log.Printf("[DEBUG] new traffic type attribute display_name is : %v", *opts.DisplayName)
 	}
 
 	if v, ok := d.GetOk("description"); ok {
 		vs := v.(string)
 		opts.Description = &vs
-		log.Printf("[DEBUG] new attribute description is : %v", *opts.Description)
+		log.Printf("[DEBUG] new traffic type attribute description is : %v", *opts.Description)
 	}
 
 	if v, ok := d.GetOk("data_type"); ok {
 		vs := v.(string)
 		opts.DataType = &vs
-		log.Printf("[DEBUG] new attribute data_type is : %v", *opts.DataType)
+		log.Printf("[DEBUG] new traffic type attribute data_type is : %v", *opts.DataType)
 	}
 
 	if v, ok := d.GetOk("suggested_values"); ok {
@@ -310,12 +310,12 @@ func constructAttributeRequestOpts(d *schema.ResourceData) *api.AttributeRequest
 
 		}
 		opts.SuggestedValues = suggestedValues
-		log.Printf("[DEBUG] new attribute suggested_values is : %v", opts.SuggestedValues)
+		log.Printf("[DEBUG] new traffic type attribute suggested_values is : %v", opts.SuggestedValues)
 	}
 
 	isSearchable := d.Get("is_searchable").(bool)
 	opts.IsSearchable = &isSearchable
-	log.Printf("[DEBUG] new attribute is_searchable is : %v", *opts.IsSearchable)
+	log.Printf("[DEBUG] new traffic type attribute is_searchable is : %v", *opts.IsSearchable)
 
 	return opts
 }
