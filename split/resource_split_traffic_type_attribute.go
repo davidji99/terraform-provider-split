@@ -37,20 +37,23 @@ func resourceSplitTrafficTypeAttribute() *schema.Resource {
 			},
 
 			"identifier": {
-				Type:     schema.TypeString,
-				Required: true,
-				ForceNew: true,
+				Type:         schema.TypeString,
+				Required:     true,
+				ForceNew:     true,
+				ValidateFunc: validation.StringLenBetween(1, 200),
 			},
 
 			"display_name": {
-				Type:     schema.TypeString,
-				Required: true,
+				Type:         schema.TypeString,
+				Required:     true,
+				ValidateFunc: validation.StringLenBetween(1, 200),
 			},
 
 			"description": {
-				Type:     schema.TypeString,
-				Optional: true,
-				Computed: true,
+				Type:         schema.TypeString,
+				Optional:     true,
+				Computed:     true,
+				ValidateFunc: validation.StringLenBetween(0, 500),
 			},
 
 			"data_type": {
@@ -63,10 +66,12 @@ func resourceSplitTrafficTypeAttribute() *schema.Resource {
 			"suggested_values": {
 				Type: schema.TypeSet,
 				Elem: &schema.Schema{
-					Type: schema.TypeString,
+					Type:         schema.TypeString,
+					ValidateFunc: validation.StringLenBetween(1, 50),
 				},
 				Optional: true,
 				Computed: true,
+				MaxItems: 50,
 			},
 
 			"is_searchable": {

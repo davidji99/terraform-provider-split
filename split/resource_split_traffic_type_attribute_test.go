@@ -146,7 +146,7 @@ resource "split_traffic_type_attribute" "foobar" {
 	display_name = "%[4]s edited"
 	description = "this is my attribute description + edited"
 	data_type = "NUMBER"
-	suggested_values = [1, 2, 3]
+	suggested_values = ["1", "2", "3"]
 	is_searchable = true
 }
 `, workspaceID, attrIdentifier, ttName, attrName)
