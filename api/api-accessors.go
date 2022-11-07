@@ -29,12 +29,12 @@ func (a *Attribute) GetDisplayName() string {
 	return *a.DisplayName
 }
 
-// GetIdentifier returns the Identifier field if it's non-nil, zero value otherwise.
-func (a *Attribute) GetIdentifier() string {
-	if a == nil || a.Identifier == nil {
+// GetID returns the ID field if it's non-nil, zero value otherwise.
+func (a *Attribute) GetID() string {
+	if a == nil || a.ID == nil {
 		return ""
 	}
-	return *a.Identifier
+	return *a.ID
 }
 
 // GetIsSearchable returns the IsSearchable field if it's non-nil, zero value otherwise.
@@ -53,6 +53,17 @@ func (a *Attribute) GetOrganizationId() string {
 	return *a.OrganizationId
 }
 
+// HasSuggestedValues checks if Attribute has any SuggestedValues.
+func (a *Attribute) HasSuggestedValues() bool {
+	if a == nil || a.SuggestedValues == nil {
+		return false
+	}
+	if len(a.SuggestedValues) == 0 {
+		return false
+	}
+	return true
+}
+
 // GetTrafficTypeID returns the TrafficTypeID field if it's non-nil, zero value otherwise.
 func (a *Attribute) GetTrafficTypeID() string {
 	if a == nil || a.TrafficTypeID == nil {
@@ -61,12 +72,63 @@ func (a *Attribute) GetTrafficTypeID() string {
 	return *a.TrafficTypeID
 }
 
+// GetDataType returns the DataType field if it's non-nil, zero value otherwise.
+func (a *AttributeRequest) GetDataType() string {
+	if a == nil || a.DataType == nil {
+		return ""
+	}
+	return *a.DataType
+}
+
+// GetDescription returns the Description field if it's non-nil, zero value otherwise.
+func (a *AttributeRequest) GetDescription() string {
+	if a == nil || a.Description == nil {
+		return ""
+	}
+	return *a.Description
+}
+
+// GetDisplayName returns the DisplayName field if it's non-nil, zero value otherwise.
+func (a *AttributeRequest) GetDisplayName() string {
+	if a == nil || a.DisplayName == nil {
+		return ""
+	}
+	return *a.DisplayName
+}
+
+// GetIdentifier returns the Identifier field if it's non-nil, zero value otherwise.
+func (a *AttributeRequest) GetIdentifier() string {
+	if a == nil || a.Identifier == nil {
+		return ""
+	}
+	return *a.Identifier
+}
+
 // GetIsSearchable returns the IsSearchable field if it's non-nil, zero value otherwise.
 func (a *AttributeRequest) GetIsSearchable() bool {
 	if a == nil || a.IsSearchable == nil {
 		return false
 	}
 	return *a.IsSearchable
+}
+
+// HasSuggestedValues checks if AttributeRequest has any SuggestedValues.
+func (a *AttributeRequest) HasSuggestedValues() bool {
+	if a == nil || a.SuggestedValues == nil {
+		return false
+	}
+	if len(a.SuggestedValues) == 0 {
+		return false
+	}
+	return true
+}
+
+// GetTrafficTypeID returns the TrafficTypeID field if it's non-nil, zero value otherwise.
+func (a *AttributeRequest) GetTrafficTypeID() string {
+	if a == nil || a.TrafficTypeID == nil {
+		return ""
+	}
+	return *a.TrafficTypeID
 }
 
 // GetSize returns the Size field if it's non-nil, zero value otherwise.
