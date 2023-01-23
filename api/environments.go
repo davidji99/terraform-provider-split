@@ -2,9 +2,8 @@ package api
 
 import (
 	"fmt"
-	"strconv"
-
 	"github.com/davidji99/simpleresty"
+	"strconv"
 )
 
 // EnvironmentsService handles communication with the environments related
@@ -22,10 +21,31 @@ type Environment struct {
 	Production *bool   `json:"production"`
 }
 
+// EnvironmentSegment represents a segment in an environment.
+type EnvironmentSegment struct {
+	ID             *string      `json:"id"`
+	OrgID          *string      `json:"orgId"`
+	Environment    *string      `json:"environment"`
+	Name           *string      `json:"name"`
+	TrafficTypeID  *string      `json:"trafficTypeId"`
+	Description    *string      `json:"description"`
+	Status         *string      `json:"status"`
+	CreationTime   *int64       `json:"creationTime"`
+	LastUpdateTime *int64       `json:"lastUpdateTime"`
+	TrafficTypeURN *TrafficType `json:"trafficTypeURN"`
+	Creator        *User        `json:"creator"`
+}
+
 // EnvironmentRequest represents a request modify an environment.
 type EnvironmentRequest struct {
 	Name       *string `json:"name,omitempty"`
 	Production *bool   `json:"production,omitempty"`
+}
+
+// EnvironmentSegmentKeysRequest represents a request to add/remove segment keys in an environment.
+type EnvironmentSegmentKeysRequest struct {
+	Keys    []string `json:"keys"`
+	Comment string   `json:"comment,omitempty"`
 }
 
 // List all environments.
@@ -39,15 +59,47 @@ func (e *EnvironmentsService) List(workspaceID string) ([]*Environment, *simpler
 	return result, response, getErr
 }
 
-// ListSegments retrieves the Segments given an environment.
+// ListSegments retrieves segments given an environment.
 //
-// Reference: https://docs.split.io/reference#list-segments-in-environment
-func (e *EnvironmentsService) ListSegments(workspaceID string) (*SegmentListResult, *simpleresty.Response, error) {
+// Reference: https://docs.split.io/reference/list-segments-in-environment
+func (e *EnvironmentsService) ListSegments(workspaceID, environmentID string) (*SegmentListResult, *simpleresty.Response, error) {
 	var result SegmentListResult
-	urlStr := e.client.http.RequestURL("/segments/ws/%s", workspaceID)
+	urlStr := e.client.http.RequestURL("/segments/ws/%s/environments/%s", workspaceID, environmentID)
 	response, getErr := e.client.get(urlStr, &result, nil)
 
 	return &result, response, getErr
+}
+
+// AddSegmentKeys for a given an environment.
+//
+// Reference: https://docs.split.io/reference/update-segment-keys-in-environment-via-json
+func (e *EnvironmentsService) AddSegmentKeys(environmentID, segmentName string, shouldReplace bool, opts *EnvironmentSegmentKeysRequest) (*EnvironmentSegment, *simpleresty.Response, error) {
+	var result EnvironmentSegment
+	urlStr := e.client.http.RequestURL("/segments/%s/%s/uploadKeys?replace=%v", environmentID, segmentName, shouldReplace)
+	response, updateErr := e.client.put(urlStr, &result, opts)
+
+	return &result, response, updateErr
+}
+
+// GetSegmentKeys retrieves segment keys given an environment.
+//
+// Reference: https://docs.split.io/reference/get-segment-keys-in-environment
+func (e *EnvironmentsService) GetSegmentKeys(environmentID, segmentName string) (*SegmentKeysList, *simpleresty.Response, error) {
+	var result SegmentKeysList
+	urlStr := e.client.http.RequestURL("/segments/%s/%s/keys", environmentID, segmentName)
+	response, getErr := e.client.get(urlStr, &result, nil)
+
+	return &result, response, getErr
+}
+
+// RemoveSegmentKeys removes segment keys given an environment.
+//
+// Reference: https://docs.split.io/reference/remove-segment-keys-from-environment
+func (e *EnvironmentsService) RemoveSegmentKeys(environmentID, segmentName string, opts *EnvironmentSegmentKeysRequest) (*simpleresty.Response, error) {
+	urlStr := e.client.http.RequestURL("/segments/%s/%s/removeKeys", environmentID, segmentName)
+	response, err := e.client.put(urlStr, nil, opts)
+
+	return response, err
 }
 
 // FindByID retrieves an environment by its ID.

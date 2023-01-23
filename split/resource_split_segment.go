@@ -14,7 +14,6 @@ func resourceSplitSegment() *schema.Resource {
 	return &schema.Resource{
 		CreateContext: resourceSplitSegmentCreate,
 		ReadContext:   resourceSplitSegmentRead,
-		//UpdateContext: resourceSplitSegmentUpdate,
 		DeleteContext: resourceSplitSegmentDelete,
 
 		Importer: &schema.ResourceImporter{
@@ -140,10 +139,6 @@ func resourceSplitSegmentRead(ctx context.Context, d *schema.ResourceData, meta 
 
 	return diags
 }
-
-//func resourceSplitSegmentUpdate(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
-//	return nil
-//}
 
 func resourceSplitSegmentDelete(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
 	var diags diag.Diagnostics
