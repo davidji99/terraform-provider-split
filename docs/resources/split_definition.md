@@ -96,6 +96,8 @@ explain the difference between each treatment. This attribute block supports the
 * `configurations` - (Required) `<string>` Dynamically configure components of your feature (e.g. A button's color or backend API pagination).
   This attribute's value must be a valid JSON string.
 * `description` - (Optional) `<string>` Description of the treatment.
+* `keys` - (Optional) `<list(string)>` List of target key ids.
+* `segments` - (Optional) `<list(string)>` List of segments.
 
 ### `default_rule`
 

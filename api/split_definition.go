@@ -52,8 +52,8 @@ type Treatment struct {
 	Name           *string  `json:"name"`
 	Configurations *string  `json:"configurations"`
 	Description    *string  `json:"description"`
-	Keys           *string  `json:"keys,omitempty"`
-	Segment        []string `json:"segment,omitempty"`
+	Keys           []string `json:"keys,omitempty"`
+	Segments       []string `json:"segments,omitempty"`
 }
 
 // Bucket represents a sticky distribution of customers into treatments of a Split.
