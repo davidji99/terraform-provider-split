@@ -80,6 +80,22 @@ func resourceSplitSplitDefinition() *schema.Resource {
 							Optional: true,
 							Computed: true,
 						},
+
+						"keys": {
+							Type: schema.TypeSet,
+							Elem: &schema.Schema{
+								Type: schema.TypeString,
+							},
+							Optional: true,
+						},
+
+						"segments": {
+							Type: schema.TypeSet,
+							Elem: &schema.Schema{
+								Type: schema.TypeString,
+							},
+							Optional: true,
+						},
 					},
 				},
 			},
@@ -375,6 +391,24 @@ func constructSplitDefinitionRequestOpts(d *schema.ResourceData) (*api.SplitDefi
 				t.Description = &v
 			}
 
+			if v, ok := vt["keys"]; ok {
+				vL := v.(*schema.Set).List()
+				keys := make([]string, 0)
+				for _, e := range vL {
+					keys = append(keys, e.(string))
+				}
+				t.Keys = keys
+			}
+
+			if v, ok := vt["segments"]; ok {
+				vL := v.(*schema.Set).List()
+				segments := make([]string, 0)
+				for _, e := range vL {
+					segments = append(segments, e.(string))
+				}
+				t.Segments = segments
+			}
+
 			treatments = append(treatments, t)
 		}
 
@@ -484,9 +518,23 @@ func constructSplitDefinitionRequestOpts(d *schema.ResourceData) (*api.SplitDefi
 }
 
 func setTreatmentInState(d *schema.ResourceData, sd *api.SplitDefinition) {
-	treatments := make([]map[string]string, 0)
+	treatments := make([]map[string]interface{}, 0)
 	for _, t := range sd.Treatments {
-		treatments = append(treatments, map[string]string{
+		treatment := map[string]interface{}{
+			"name":           t.GetName(),
+			"configurations": t.GetConfigurations(),
+			"description":    t.GetDescription(),
+		}
+
+		if t.HasKeys() {
+			treatment["keys"] = t.Keys
+		}
+
+		if t.HasSegments() {
+			treatment["segments"] = t.Segments
+		}
+
+		treatments = append(treatments, map[string]interface{}{
 			"name":           t.GetName(),
 			"configurations": t.GetConfigurations(),
 			"description":    t.GetDescription(),

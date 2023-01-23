@@ -760,12 +760,15 @@ func (t *Treatment) GetDescription() string {
 	return *t.Description
 }
 
-// GetKeys returns the Keys field if it's non-nil, zero value otherwise.
-func (t *Treatment) GetKeys() string {
+// HasKeys checks if Treatment has any Keys.
+func (t *Treatment) HasKeys() bool {
 	if t == nil || t.Keys == nil {
-		return ""
+		return false
 	}
-	return *t.Keys
+	if len(t.Keys) == 0 {
+		return false
+	}
+	return true
 }
 
 // GetName returns the Name field if it's non-nil, zero value otherwise.
@@ -776,12 +779,12 @@ func (t *Treatment) GetName() string {
 	return *t.Name
 }
 
-// HasSegment checks if Treatment has any Segment.
-func (t *Treatment) HasSegment() bool {
-	if t == nil || t.Segment == nil {
+// HasSegments checks if Treatment has any Segments.
+func (t *Treatment) HasSegments() bool {
+	if t == nil || t.Segments == nil {
 		return false
 	}
-	if len(t.Segment) == 0 {
+	if len(t.Segments) == 0 {
 		return false
 	}
 	return true
