@@ -206,6 +206,105 @@ func (e *EnvironmentRequest) GetProduction() bool {
 	return *e.Production
 }
 
+// GetCreationTime returns the CreationTime field if it's non-nil, zero value otherwise.
+func (e *EnvironmentSegment) GetCreationTime() int64 {
+	if e == nil || e.CreationTime == nil {
+		return 0
+	}
+	return *e.CreationTime
+}
+
+// GetCreator returns the Creator field.
+func (e *EnvironmentSegment) GetCreator() *User {
+	if e == nil {
+		return nil
+	}
+	return e.Creator
+}
+
+// GetDescription returns the Description field if it's non-nil, zero value otherwise.
+func (e *EnvironmentSegment) GetDescription() string {
+	if e == nil || e.Description == nil {
+		return ""
+	}
+	return *e.Description
+}
+
+// GetEnvironment returns the Environment field if it's non-nil, zero value otherwise.
+func (e *EnvironmentSegment) GetEnvironment() string {
+	if e == nil || e.Environment == nil {
+		return ""
+	}
+	return *e.Environment
+}
+
+// GetID returns the ID field if it's non-nil, zero value otherwise.
+func (e *EnvironmentSegment) GetID() string {
+	if e == nil || e.ID == nil {
+		return ""
+	}
+	return *e.ID
+}
+
+// GetLastUpdateTime returns the LastUpdateTime field if it's non-nil, zero value otherwise.
+func (e *EnvironmentSegment) GetLastUpdateTime() int64 {
+	if e == nil || e.LastUpdateTime == nil {
+		return 0
+	}
+	return *e.LastUpdateTime
+}
+
+// GetName returns the Name field if it's non-nil, zero value otherwise.
+func (e *EnvironmentSegment) GetName() string {
+	if e == nil || e.Name == nil {
+		return ""
+	}
+	return *e.Name
+}
+
+// GetOrgID returns the OrgID field if it's non-nil, zero value otherwise.
+func (e *EnvironmentSegment) GetOrgID() string {
+	if e == nil || e.OrgID == nil {
+		return ""
+	}
+	return *e.OrgID
+}
+
+// GetStatus returns the Status field if it's non-nil, zero value otherwise.
+func (e *EnvironmentSegment) GetStatus() string {
+	if e == nil || e.Status == nil {
+		return ""
+	}
+	return *e.Status
+}
+
+// GetTrafficTypeID returns the TrafficTypeID field if it's non-nil, zero value otherwise.
+func (e *EnvironmentSegment) GetTrafficTypeID() string {
+	if e == nil || e.TrafficTypeID == nil {
+		return ""
+	}
+	return *e.TrafficTypeID
+}
+
+// GetTrafficTypeURN returns the TrafficTypeURN field.
+func (e *EnvironmentSegment) GetTrafficTypeURN() *TrafficType {
+	if e == nil {
+		return nil
+	}
+	return e.TrafficTypeURN
+}
+
+// HasKeys checks if EnvironmentSegmentKeysRequest has any Keys.
+func (e *EnvironmentSegmentKeysRequest) HasKeys() bool {
+	if e == nil || e.Keys == nil {
+		return false
+	}
+	if len(e.Keys) == 0 {
+		return false
+	}
+	return true
+}
+
 // GetLimit returns the Limit field if it's non-nil, zero value otherwise.
 func (g *GenericListResult) GetLimit() int {
 	if g == nil || g.Limit == nil {
@@ -440,6 +539,25 @@ func (s *Segment) GetTrafficType() *TrafficType {
 		return nil
 	}
 	return s.TrafficType
+}
+
+// GetKey returns the Key field if it's non-nil, zero value otherwise.
+func (s *SegmentKey) GetKey() string {
+	if s == nil || s.Key == nil {
+		return ""
+	}
+	return *s.Key
+}
+
+// HasKeys checks if SegmentKeysList has any Keys.
+func (s *SegmentKeysList) HasKeys() bool {
+	if s == nil || s.Keys == nil {
+		return false
+	}
+	if len(s.Keys) == 0 {
+		return false
+	}
+	return true
 }
 
 // HasObjects checks if SegmentListResult has any Objects.
