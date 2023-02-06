@@ -41,6 +41,8 @@ func resourceSplitEnvironmentSegmentKeys() *schema.Resource {
 					Type: schema.TypeString,
 				},
 				Required: true,
+				MinItems: 1,
+				MaxItems: 10000,
 			},
 		},
 	}
