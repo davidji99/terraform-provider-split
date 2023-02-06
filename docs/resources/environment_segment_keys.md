@@ -3,12 +3,12 @@ layout: "split"
 page_title: "Split: split_environment"
 sidebar_current: "docs-split-resource-environment"
 description: |-
-  Provides the ability to manage a Segment keys in a Split environment.
+  Provides the ability to manage Segment keys in a Split environment.
 ---
 
 # split_environment
 
-This resource pProvides the ability to manage a Segment keys in a Split environment.
+This resource pProvides the ability to manage Segment keys in a Split environment.
 
 ## Example Usage
 
