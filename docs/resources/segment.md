@@ -10,7 +10,7 @@ Provides the ability to manage a Split segment.
 
 This resource provides the ability to manage a [Segment](https://help.split.io/hc/en-us/articles/360020407512-Create-a-segment).
 A segment is a pre-defined group of customers that a feature can be targeted to. Segments are best for targeting relatively
-fixed or specific groups of users that you can easily identify, like a whitelist of accounts.
+fixed or specific groups of users that you can easily identify, like an allowlist of individual targets.
 
 ## Example Usage
 
@@ -37,7 +37,7 @@ resource "split_segment" "foobar" {
 The following arguments are supported:
 
 * `workspace_id` - (Required) `<string>` The UUID of the workspace.
-* `traffic_type_id` - (Required) `<string>` The UUID of the traffice type.
+* `traffic_type_id` - (Required) `<string>` The UUID of the traffic type.
 * `name` - (Required) `<string>` Name of the segment.
 * `description` - (Optional) `<boolean>` Description of the segment.
 
