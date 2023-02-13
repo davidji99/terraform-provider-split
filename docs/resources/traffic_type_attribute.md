@@ -10,8 +10,8 @@ Provides the ability to manage a Split traffic type attribute.
 
 This resource provides the ability to manage an [Traffic type Attribute](https://help.split.io/hc/en-us/articles/360020793231-Target-with-custom-attributes).
 
-Attribute schemas (commonly called Attributes) define are definitions for attribute values, which are stored on Traffic
-ID Keys (Identities). With the API you can attributes programmatically manage these attributes.
+Attribute schemas (commonly called Attributes) are definitions for attribute values, which are stored on Traffic
+ID Keys (Identities).
 
 ## Default attributes
 

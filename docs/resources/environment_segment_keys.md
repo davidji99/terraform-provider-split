@@ -8,7 +8,7 @@ description: |-
 
 # split_environment
 
-This resource pProvides the ability to manage Segment keys in a Split environment.
+This resource provides the ability to manage Segment keys in a Split environment.
 
 ## Example Usage
 
