@@ -122,7 +122,8 @@ customers in the subset between your treatments. This attribute block supports t
     * `matcher` - (Required) `<block>` rule condition matcher.
         * `type` - (Required) `<string>` rule condition matcher type.
         * `attribute` - (Required) `<string>` rule condition matcher type.
-        * `strings` - (Required) `<list(string)>` rule condition matcher type.
+        * `string` - (Optional) `<string>` This matcher selects customers with an attribute or key that matches the regex pattern set by this attribute.
+        * `strings` - (Optional) `<list(string)>` rule condition matcher type.
 
 It is recommended to view the UI in order to determine what are some of the possible attribute values.
 
