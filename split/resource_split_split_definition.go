@@ -4,11 +4,12 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"log"
+
 	"github.com/davidji99/terraform-provider-split/api"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
-	"log"
 )
 
 var (
@@ -163,12 +164,17 @@ func resourceSplitSplitDefinition() *schema.Resource {
 													Required: true,
 												},
 
+												"string": {
+													Type:     schema.TypeString,
+													Optional: true,
+												},
+
 												"strings": {
 													Type: schema.TypeList,
 													Elem: &schema.Schema{
 														Type: schema.TypeString,
 													},
-													Required: true,
+													Optional: true,
 												},
 											},
 										},
@@ -494,6 +500,9 @@ func constructSplitDefinitionRequestOpts(d *schema.ResourceData) (*api.SplitDefi
 							if v, ok := matcher["attribute"].(string); ok {
 								newRuleConditionMatcher.Attribute = &v
 							}
+							if v, ok := matcher["string"].(string); ok {
+								newRuleConditionMatcher.String = &v
+							}
 							if v, ok := matcher["strings"]; ok {
 								stringsRaw := v.([]interface{})
 								sList := make([]string, 0)
@@ -571,6 +580,7 @@ func setRuleInState(d *schema.ResourceData, sd *api.SplitDefinition) {
 			ruleConditionMatchers = append(ruleConditionMatchers, map[string]interface{}{
 				"type":      rcm.GetType(),
 				"attribute": rcm.GetAttribute(),
+				"string":    rcm.GetString(),
 				"strings":   rcm.Strings,
 			})
 		}
