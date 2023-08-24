@@ -3,12 +3,13 @@ package split
 import (
 	"context"
 	"fmt"
-	"github.com/davidji99/terraform-provider-split/api"
+	"log"
+	"regexp"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
-	"log"
-	"regexp"
+	"github.com/pmcjury/terraform-provider-split/api"
 )
 
 func resourceSplitSplit() *schema.Resource {

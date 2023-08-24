@@ -7,7 +7,8 @@ package main
 
 import (
 	"fmt"
-	"github.com/davidji99/terraform-provider-split/version"
+
+	"github.com/pmcjury/terraform-provider-split/version"
 )
 
 var ver = version.ProviderVersion

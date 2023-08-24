@@ -1,7 +1,7 @@
 TEST?=$$(go list ./... |grep -v 'vendor')
 GOFMT_FILES?=$$(find . -name '*.go' |grep -v vendor)
 PKG_NAME=split
-WEBSITE_REPO=github.com/davidji99/terraform-provider-${PKG_NAME}
+WEBSITE_REPO=github.com/pmcjury/terraform-provider-${PKG_NAME}
 OS := $(shell uname | tr '[:upper:]' '[:lower:]')
 VERSION := $(shell go run ${PKG_NAME}/version.go)
 SHA := $(shell git rev-parse --short HEAD)
@@ -21,7 +21,7 @@ release: fmtcheck
 	scripts/build-release
 
 test: fmtcheck
-	go test -i $(TEST) || exit 1
+	go test $(TEST) || exit 1
 	echo $(TEST) | \
 		xargs -t -n4 go test -v $(TESTARGS) -timeout=30s -parallel=4
 

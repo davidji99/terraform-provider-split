@@ -6,10 +6,10 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/davidji99/terraform-provider-split/api"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
+	"github.com/pmcjury/terraform-provider-split/api"
 )
 
 var (

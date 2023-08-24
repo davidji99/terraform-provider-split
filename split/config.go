@@ -4,9 +4,9 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/davidji99/terraform-provider-split/api"
-	"github.com/davidji99/terraform-provider-split/version"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+	"github.com/pmcjury/terraform-provider-split/api"
+	"github.com/pmcjury/terraform-provider-split/version"
 )
 
 var (

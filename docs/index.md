@@ -1,7 +1,7 @@
 ---
-layout: "split"
-page_title: "Provider: Split"
-sidebar_current: "docs-split-index"
+layout: 'split'
+page_title: 'Provider: Split'
+sidebar_current: 'docs-split-index'
 description: |-
   The Split provider is used to interact with resources provided by the Split API.
 ---
@@ -13,10 +13,10 @@ The Split provider is used to interact with resources provided by the
 
 ## Contributing
 
-Development happens in the [GitHub repo](https://github.com/davidji99/terraform-provider-split):
+Development happens in the [GitHub repo](https://github.com/pmcjury/terraform-provider-split):
 
-* [Releases](https://github.com/davidji99/terraform-provider-split/releases)
-* [Issues](https://github.com/davidji99/terraform-provider-split/issues)
+- [Releases](https://github.com/pmcjury/terraform-provider-split/releases)
+- [Issues](https://github.com/pmcjury/terraform-provider-split/issues)
 
 ## Example Usage
 
@@ -74,15 +74,15 @@ your `provider {}` block.
 
 The following arguments are supported:
 
-* `api_key` - (Required) Split API key. It must be provided, but it can also
+- `api_key` - (Required) Split API key. It must be provided, but it can also
   be sourced from [other locations](#Authentication).
 
-* `base_url` - (Optional) Custom API URL.
+- `base_url` - (Optional) Custom API URL.
   Can also be sourced from the `SPLIT_API_URL` environment variable.
 
-* `remove_environment_from_state_only` - (Optional) Configure `split_environment` to only remove the resource from
+- `remove_environment_from_state_only` - (Optional) Configure `split_environment` to only remove the resource from
   state upon deletion. This is to address out-of-band, UI based prerequisites Split has when deleting an environment.
   Defaults to `false`.
 
-* `client_timeout` - (Optional) Configure client (http) timeout before aborting. This is to address the client retrying forever.
+- `client_timeout` - (Optional) Configure client (http) timeout before aborting. This is to address the client retrying forever.
   It's expressed in an integer that represents seconds. Defaults to `300` seconds, or `5` minutes.

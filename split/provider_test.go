@@ -3,8 +3,8 @@ package split
 import (
 	"testing"
 
-	helper "github.com/davidji99/terraform-provider-split/helper/test"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+	helper "github.com/pmcjury/terraform-provider-split/helper/test"
 )
 
 var providers []*schema.Provider

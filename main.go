@@ -1,8 +1,8 @@
 package main
 
 import (
-	"github.com/davidji99/terraform-provider-split/split"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/plugin"
+	"github.com/pmcjury/terraform-provider-split/split"
 )
 
 func main() {

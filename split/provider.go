@@ -4,9 +4,9 @@ import (
 	"context"
 	"log"
 
-	"github.com/davidji99/terraform-provider-split/api"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+	"github.com/pmcjury/terraform-provider-split/api"
 )
 
 func New() *schema.Provider {
