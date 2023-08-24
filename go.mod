@@ -1,4 +1,4 @@
-module github.com/davidji99/terraform-provider-split
+module github.com/pmcjury/terraform-provider-split
 
 go 1.18
 
