@@ -28,6 +28,8 @@ func TestAccSplitSplit_Basic(t *testing.T) {
 						"split_split.foobar", "description", "my split description"),
 					resource.TestCheckResourceAttrSet(
 						"split_split.foobar", "traffic_type_id"),
+					resource.TestCheckResourceAttrSet(
+						["split.testtag"], "tags"),
 				),
 			},
 			{
