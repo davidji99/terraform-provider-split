@@ -1,6 +1,6 @@
 module github.com/davidji99/terraform-provider-split
 
-go 1.18
+go 1.19
 
 require (
 	github.com/davidji99/simpleresty v0.4.1

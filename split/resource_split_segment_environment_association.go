@@ -133,7 +133,6 @@ func resourceSplitSegmentEnvironmentAssociationRead(ctx context.Context, d *sche
 		diags = append(diags, diag.Diagnostic{
 			Severity: diag.Error,
 			Summary:  fmt.Sprintf("did not find to segment [%s] in environment [%s]", d.Id(), environmentID),
-			Detail:   getErr.Error(),
 		})
 		return diags
 	}
