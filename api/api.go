@@ -48,6 +48,7 @@ type Client struct {
 	expiresAt time.Time
 
 	// Services used for talking to different parts of the Sendgrid APIv3.
+	ApiKeys      *KeysService
 	Attributes   *AttributesService
 	Environments *EnvironmentsService
 	Groups       *GroupsService
@@ -115,6 +116,7 @@ func New(opts ...Option) (*Client, error) {
 // injectServices adds the services to the client.
 func (c *Client) injectServices() {
 	c.common.client = c
+	c.ApiKeys = (*KeysService)(&c.common)
 	c.Attributes = (*AttributesService)(&c.common)
 	c.Environments = (*EnvironmentsService)(&c.common)
 	c.Groups = (*GroupsService)(&c.common)
