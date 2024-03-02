@@ -404,6 +404,87 @@ func (g *GroupListResult) GetPreviousMarker() string {
 	return *g.PreviousMarker
 }
 
+// HasEnvironments checks if KeyRequest has any Environments.
+func (k *KeyRequest) HasEnvironments() bool {
+	if k == nil || k.Environments == nil {
+		return false
+	}
+	if len(k.Environments) == 0 {
+		return false
+	}
+	return true
+}
+
+// HasRoles checks if KeyRequest has any Roles.
+func (k *KeyRequest) HasRoles() bool {
+	if k == nil || k.Roles == nil {
+		return false
+	}
+	if len(k.Roles) == 0 {
+		return false
+	}
+	return true
+}
+
+// GetWorkspace returns the Workspace field.
+func (k *KeyRequest) GetWorkspace() *KeyWorkspaceRequest {
+	if k == nil {
+		return nil
+	}
+	return k.Workspace
+}
+
+// GetApiKeyType returns the ApiKeyType field if it's non-nil, zero value otherwise.
+func (k *KeyResponse) GetApiKeyType() string {
+	if k == nil || k.ApiKeyType == nil {
+		return ""
+	}
+	return *k.ApiKeyType
+}
+
+// GetId returns the Id field if it's non-nil, zero value otherwise.
+func (k *KeyResponse) GetId() string {
+	if k == nil || k.Id == nil {
+		return ""
+	}
+	return *k.Id
+}
+
+// GetKey returns the Key field if it's non-nil, zero value otherwise.
+func (k *KeyResponse) GetKey() string {
+	if k == nil || k.Key == nil {
+		return ""
+	}
+	return *k.Key
+}
+
+// GetName returns the Name field if it's non-nil, zero value otherwise.
+func (k *KeyResponse) GetName() string {
+	if k == nil || k.Name == nil {
+		return ""
+	}
+	return *k.Name
+}
+
+// HasRoles checks if KeyResponse has any Roles.
+func (k *KeyResponse) HasRoles() bool {
+	if k == nil || k.Roles == nil {
+		return false
+	}
+	if len(k.Roles) == 0 {
+		return false
+	}
+	return true
+}
+
+// GetType returns the Type field if it's non-nil, zero value otherwise.
+func (k *KeyResponse) GetType() string {
+	if k == nil || k.Type == nil {
+		return ""
+	}
+	return *k.Type
+}
+
 // GetAttribute returns the Attribute field if it's non-nil, zero value otherwise.
 func (m *Matcher) GetAttribute() string {
 	if m == nil || m.Attribute == nil {

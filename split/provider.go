@@ -50,6 +50,7 @@ func New() *schema.Provider {
 		},
 
 		ResourcesMap: map[string]*schema.Resource{
+			"split_api_key":                         resourceSplitApiKey(),
 			"split_environment":                     resourceSplitEnvironment(),
 			"split_environment_segment_keys":        resourceSplitEnvironmentSegmentKeys(),
 			"split_group":                           resourceSplitGroup(),

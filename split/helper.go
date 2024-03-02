@@ -64,3 +64,13 @@ func parseCompositeID(id string, numOfSplits int) ([]string, error) {
 	}
 	return parts, nil
 }
+
+func Truncate(text string, width int) string {
+	if width < 0 {
+		return ""
+	}
+
+	r := []rune(text)
+	trunc := r[:width]
+	return string(trunc) + "..."
+}
