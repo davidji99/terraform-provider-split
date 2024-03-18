@@ -44,6 +44,18 @@ func resourceSplitEnvironmentSegmentKeys() *schema.Resource {
 				MinItems: 1,
 				MaxItems: 10000,
 			},
+
+			"comment": {
+				Type:     schema.TypeString,
+				Optional: true,
+				Computed: true,
+			},
+
+			"title": {
+				Type:     schema.TypeString,
+				Optional: true,
+				Computed: true,
+			},
 		},
 	}
 }
@@ -84,6 +96,16 @@ func resourceSplitEnvironmentSegmentKeysCreate(ctx context.Context, d *schema.Re
 	opts := &api.EnvironmentSegmentKeysRequest{}
 	environmentID := getEnvironmentID(d)
 	segmentName := d.Get("segment_name").(string)
+
+	if v, ok := d.GetOk("comment"); ok {
+		opts.Comment = v.(string)
+		log.Printf("[DEBUG] new env segment key comment is : %v", opts.Comment)
+	}
+
+	if v, ok := d.GetOk("title"); ok {
+		opts.Title = v.(string)
+		log.Printf("[DEBUG] new env segment key title is : %v", opts.Title)
+	}
 
 	if v, ok := d.GetOk("keys"); ok {
 		vL := v.(*schema.Set).List()
