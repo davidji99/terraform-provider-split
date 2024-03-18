@@ -31,6 +31,10 @@ func TestAccSplitEnvironmentSegmentKeys_Basic(t *testing.T) {
 					//	"split_environment_segment_keys.foobar", "keys.#.1", "tester2"),
 					resource.TestCheckResourceAttrSet(
 						"split_environment_segment_keys.foobar", "environment_id"),
+					resource.TestCheckResourceAttr(
+						"split_environment_segment_keys.foobar", "comment", "test comment"),
+					resource.TestCheckResourceAttr(
+						"split_environment_segment_keys.foobar", "title", "test title"),
 				),
 			},
 			{
@@ -90,6 +94,8 @@ resource "split_environment_segment_keys" "foobar" {
 	environment_id = split_environment.foobar.id
 	segment_name = split_segment_environment_association.foobar.segment_name
 	keys = ["tester1", "tester2"]
+	title = "test title"
+	comment = "test comment"
 }
 
 `, workspaceID, environmentName, trafficTypeName, segmentName, production)
