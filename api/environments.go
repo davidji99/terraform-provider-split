@@ -46,6 +46,7 @@ type EnvironmentRequest struct {
 type EnvironmentSegmentKeysRequest struct {
 	Keys    []string `json:"keys"`
 	Comment string   `json:"comment,omitempty"`
+	Title   string   `json:"title,omitempty"`
 }
 
 // List all environments.
