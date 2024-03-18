@@ -51,6 +51,7 @@ type Client struct {
 	ApiKeys      *KeysService
 	Attributes   *AttributesService
 	Environments *EnvironmentsService
+	FeatureFlags *FeatureFlagsService
 	Groups       *GroupsService
 	TrafficTypes *TrafficTypesService
 	Segments     *SegmentsService
@@ -119,6 +120,7 @@ func (c *Client) injectServices() {
 	c.ApiKeys = (*KeysService)(&c.common)
 	c.Attributes = (*AttributesService)(&c.common)
 	c.Environments = (*EnvironmentsService)(&c.common)
+	c.FeatureFlags = (*FeatureFlagsService)(&c.common)
 	c.Groups = (*GroupsService)(&c.common)
 	c.TrafficTypes = (*TrafficTypesService)(&c.common)
 	c.Segments = (*SegmentsService)(&c.common)
@@ -143,7 +145,7 @@ func (c *Client) setHeaders() {
 
 func (c *Client) checkRateLimit(resp *simpleresty.Response) bool {
 	if resp != nil && resp.StatusCode == 429 {
-		remainingOrgSeconds, _ := strconv.Atoi((resp.Resp.Header().Get("X-RateLimit-Reset-Seconds-Org")))
+		remainingOrgSeconds, _ := strconv.Atoi(resp.Resp.Header().Get("X-RateLimit-Reset-Seconds-Org"))
 		timeToSleep, _ := strconv.Atoi(resp.Resp.Header().Get("X-RateLimit-Reset-Seconds-IP"))
 		if remainingOrgSeconds != 0 {
 			// Got rate-limit by Organization
