@@ -31,13 +31,28 @@ type FeatureFlagsListOpts struct {
 	GenericListQueryParams
 
 	// Tags are repeatable tag parameter(s) to query by
-	Tags []string `url:"tags,omitempty"`
+	Tags []string `url:"tag,omitempty"`
 }
 
-// List all feature flags.
+// List feature flags.
 //
 // Reference: https://docs.split.io/reference/list-feature-flags
 func (f *FeatureFlagsService) List(workspaceID string, opts *FeatureFlagsListOpts) (*FeatureFlagsListResponse, *simpleresty.Response, error) {
+	var result FeatureFlagsListResponse
+	urlStr, err := f.client.http.RequestURLWithQueryParams(fmt.Sprintf("/splits/ws/%s", workspaceID), opts)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	response, getErr := f.client.get(urlStr, &result, nil)
+
+	return &result, response, getErr
+}
+
+// ListAll feature flags. Compared to `List()`, `ListAll()` will return all feature flags by listing through all pages.
+//
+// Reference: https://docs.split.io/reference/list-feature-flags
+func (f *FeatureFlagsService) ListAll(workspaceID string, opts *FeatureFlagsListOpts) ([]*FeatureFlag, *simpleresty.Response, error) {
 	var result FeatureFlagsListResponse
 	urlStr, err := f.client.http.RequestURLWithQueryParams(fmt.Sprintf("/splits/ws/%s", workspaceID), opts)
 	if err != nil {
