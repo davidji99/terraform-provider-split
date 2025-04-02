@@ -41,9 +41,10 @@ type Splits struct {
 type SplitCreateRequest struct {
 	Name        string `json:"name"`
 	Description string `json:"description"`
+	Tags []string `json:"tags"`
 }
 
-// SplitUpdateRequest represents a request to update a split.
+// SplitUpdateRequest represents a request to update a split description.
 type SplitUpdateRequest struct {
 	Description string `json:"description"`
 }
@@ -51,6 +52,13 @@ type SplitUpdateRequest struct {
 // SplitTag represents a tag in the split
 type SplitTag struct {
 	Name string `json:"name"`
+}
+
+// SplitUpdateFlagRequest represents a request to update a split.
+type SplitUpdateFlagRequest struct {
+	Op    string    `json:"op"`
+	Path  string    `json:"path"`
+	Value SplitTag  `json:"value"`
 }
 
 // List all splits.
@@ -125,4 +133,19 @@ func (s *SplitsService) Delete(workspaceId, splitName string) (*simpleresty.Resp
 	response, createErr := s.client.delete(urlStr, nil, nil)
 
 	return response, createErr
+}
+
+// Update an existing split.
+//
+// Reference: https://docs.split.io/reference/update-feature-flag
+func (s *SplitsService) UpdateSplit(workspaceId string, splitName string, opts *[]SplitUpdateFlagRequest) (*Split, *simpleresty.Response, error) {
+	var result Split
+
+	splitNameEncoded := url.QueryEscape(splitName)
+	urlStr := s.client.http.RequestURL("/splits/ws/%s/%s", workspaceId, splitNameEncoded)
+
+	// Execute the request
+	response, updateErr := s.client.patch(urlStr, &result, opts)
+
+	return &result, response, updateErr
 }
