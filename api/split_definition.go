@@ -35,6 +35,7 @@ type SplitDefinitionRequest struct {
 	DefaultRule       []Bucket    `json:"defaultRule"`
 	DefaultTreatment  string      `json:"defaultTreatment"`
 	Comment           string      `json:"comment,omitempty"`
+	Title             string      `json:"title,omitempty"`
 	TrafficAllocation int         `json:"trafficAllocation"`
 }
 

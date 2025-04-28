@@ -367,6 +367,8 @@ func resourceSplitSplitDefinitionDelete(ctx context.Context, d *schema.ResourceD
 func constructSplitDefinitionRequestOpts(d *schema.ResourceData) (*api.SplitDefinitionRequest, error) {
 	opts := &api.SplitDefinitionRequest{}
 
+	opts.Title = "terraform-provider-split"
+
 	if v, ok := d.GetOk("default_treatment"); ok {
 		opts.DefaultTreatment = v.(string)
 		log.Printf("[DEBUG] new split definition default_treatment is : %v", opts.DefaultTreatment)
