@@ -33,7 +33,12 @@ func TestProvider_impl(t *testing.T) {
 }
 
 func testAccPreCheck(t *testing.T) {
-	testAccConfig.GetOrAbort(t, helper.TestConfigSplitAPIKey)
+	// Check for either API key or harness token
+	apiKey := testAccConfig.Get(helper.TestConfigSplitAPIKey)
+	harnessToken := testAccConfig.Get(helper.TestConfigSplitHarnessToken)
+	if apiKey == "" && harnessToken == "" {
+		t.Fatal("Either SPLIT_API_KEY or HARNESS_TOKEN must be set for acceptance tests")
+	}
 }
 
 func testAccProviderFactoriesInit(providers []*schema.Provider, providerNames []string) map[string]func() (*schema.Provider, error) {

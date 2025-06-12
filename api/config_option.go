@@ -75,3 +75,11 @@ func AcceptHeader(s string) Option {
 		return nil
 	}
 }
+
+// HarnessToken sets the Harness token for x-api-key header authentication.
+func HarnessToken(token string) Option {
+	return func(c *Config) error {
+		c.HarnessToken = token
+		return nil
+	}
+}

@@ -191,3 +191,51 @@ func resourceSplitWorkspaceDelete(ctx context.Context, d *schema.ResourceData, m
 
 	return diags
 }
+
+// resourceSplitWorkspaceWithDeprecation wraps resourceSplitWorkspace and adds deprecation checks for harness_token
+func resourceSplitWorkspaceWithDeprecation() *schema.Resource {
+	r := resourceSplitWorkspace()
+
+	// Add plan-time validation using CustomizeDiff
+	r.CustomizeDiff = func(ctx context.Context, diff *schema.ResourceDiff, meta interface{}) error {
+		if diags := checkResourceDeprecationWithHarnessToken("split_workspace", meta); len(diags) > 0 {
+			return fmt.Errorf(diags[0].Summary + ": " + diags[0].Detail)
+		}
+		return nil
+	}
+
+	// Wrap create function with deprecation check
+	originalCreate := r.CreateContext
+	r.CreateContext = func(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
+		// Check if the harness_token is set
+		if diags := checkResourceDeprecationWithHarnessToken("split_workspace", meta); len(diags) > 0 {
+			return diags
+		}
+
+		return originalCreate(ctx, d, meta)
+	}
+
+	// Wrap read function with deprecation check
+	originalRead := r.ReadContext
+	r.ReadContext = func(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
+		// Check if the harness_token is set
+		if diags := checkResourceDeprecationWithHarnessToken("split_workspace", meta); len(diags) > 0 {
+			return diags
+		}
+
+		return originalRead(ctx, d, meta)
+	}
+
+	// Wrap update function with deprecation check
+	originalUpdate := r.UpdateContext
+	r.UpdateContext = func(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
+		// Check if the harness_token is set
+		if diags := checkResourceDeprecationWithHarnessToken("split_workspace", meta); len(diags) > 0 {
+			return diags
+		}
+
+		return originalUpdate(ctx, d, meta)
+	}
+
+	return r
+}

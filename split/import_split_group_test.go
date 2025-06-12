@@ -8,6 +8,9 @@ import (
 )
 
 func TestAccSplitGroup_importBasic(t *testing.T) {
+	// Skip test if using harness_token as this resource is deprecated with harness_token
+	skipIfUsingHarnessToken(t, "split_group")
+
 	name := fmt.Sprintf("tftest-%s", acctest.RandString(8))
 
 	resource.Test(t, resource.TestCase{

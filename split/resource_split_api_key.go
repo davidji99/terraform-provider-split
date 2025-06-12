@@ -169,3 +169,32 @@ func resourceSplitApiKeyDelete(ctx context.Context, d *schema.ResourceData, meta
 
 	return diags
 }
+
+// resourceSplitApiKeyWithDeprecation wraps resourceSplitApiKey and adds deprecation checks for harness_token
+func resourceSplitApiKeyWithDeprecation() *schema.Resource {
+	r := resourceSplitApiKey()
+
+	// Add plan-time validation using CustomizeDiff
+	r.CustomizeDiff = func(ctx context.Context, diff *schema.ResourceDiff, meta interface{}) error {
+		// Only check for admin type API keys
+		if keyType, ok := diff.GetOk("type"); ok && keyType.(string) == "admin" {
+			if diags := checkApiKeyTypeDeprecationWithHarnessTokenDiff("split_api_key", diff, meta); len(diags) > 0 {
+				return fmt.Errorf(diags[0].Summary + ": " + diags[0].Detail)
+			}
+		}
+		return nil
+	}
+
+	// Wrap the create function with deprecation check
+	originalCreate := r.CreateContext
+	r.CreateContext = func(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
+		// Check if the harness_token is set and the type is 'admin'
+		if diags := checkApiKeyTypeDeprecationWithHarnessToken("split_api_key", d, meta); len(diags) > 0 {
+			return diags
+		}
+
+		return originalCreate(ctx, d, meta)
+	}
+
+	return r
+}
