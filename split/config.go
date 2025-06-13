@@ -17,8 +17,9 @@ type Config struct {
 	API     *api.Client
 	Headers map[string]string
 
-	apiKey     string
-	apiBaseURL string
+	apiKey       string
+	harnessToken string
+	apiBaseURL   string
 
 	clientTimeout int
 
@@ -32,9 +33,23 @@ func NewConfig() *Config {
 }
 
 func (c *Config) initializeAPI() error {
-	api, clientInitErr := api.New(api.APIKey(c.apiKey),
-		api.APIBaseURL(c.apiBaseURL), api.UserAgent(UserAgent),
-		api.CustomHTTPHeaders(c.Headers), api.ClientTimeout(c.clientTimeout))
+	opts := []api.Option{
+		api.APIBaseURL(c.apiBaseURL),
+		api.UserAgent(UserAgent),
+		api.CustomHTTPHeaders(c.Headers),
+		api.ClientTimeout(c.clientTimeout),
+	}
+
+	// Use harness_token if provided, otherwise use api_key
+	if c.harnessToken != "" {
+		log.Printf("[INFO] Using harness_token for authentication")
+		opts = append(opts, api.HarnessToken(c.harnessToken))
+	} else if c.apiKey != "" {
+		log.Printf("[INFO] Using api_key for authentication")
+		opts = append(opts, api.APIKey(c.apiKey))
+	}
+
+	api, clientInitErr := api.New(opts...)
 	if clientInitErr != nil {
 		return clientInitErr
 	}
@@ -61,6 +76,11 @@ func (c *Config) applySchema(d *schema.ResourceData) (err error) {
 	if v, ok := d.GetOk("base_url"); ok {
 		vs := v.(string)
 		c.apiBaseURL = vs
+	}
+
+	if v, ok := d.GetOk("harness_token"); ok {
+		vs := v.(string)
+		c.harnessToken = vs
 	}
 
 	if v, ok := d.GetOk("remove_environment_from_state_only"); ok {

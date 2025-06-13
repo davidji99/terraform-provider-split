@@ -9,6 +9,9 @@ import (
 )
 
 func TestAccSplitWorkspace_importBasic(t *testing.T) {
+	// Skip test if using harness_token as this resource is deprecated with harness_token
+	skipIfUsingHarnessToken(t, "split_workspace")
+
 	name := fmt.Sprintf("w-tftest-%s", acctest.RandString(10))
 
 	resource.Test(t, resource.TestCase{

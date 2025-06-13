@@ -18,6 +18,13 @@ func New() *schema.Provider {
 				DefaultFunc: schema.EnvDefaultFunc("SPLIT_API_KEY", nil),
 			},
 
+			"harness_token": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				DefaultFunc: schema.EnvDefaultFunc("HARNESS_TOKEN", nil),
+				Description: "Harness token for authentication. When set, uses 'x-api-key' header authentication instead of Bearer token.",
+			},
+
 			"base_url": {
 				Type:        schema.TypeString,
 				Optional:    true,
@@ -50,18 +57,18 @@ func New() *schema.Provider {
 		},
 
 		ResourcesMap: map[string]*schema.Resource{
-			"split_api_key":                         resourceSplitApiKey(),
+			"split_api_key":                         resourceSplitApiKeyWithDeprecation(),
 			"split_environment":                     resourceSplitEnvironment(),
 			"split_environment_segment_keys":        resourceSplitEnvironmentSegmentKeys(),
-			"split_group":                           resourceSplitGroup(),
+			"split_group":                           resourceSplitGroupWithDeprecation(),
 			"split_segment":                         resourceSplitSegment(),
 			"split_segment_environment_association": resourceSplitSegmentEnvironmentAssociation(),
 			"split_split":                           resourceSplitSplit(),
 			"split_split_definition":                resourceSplitSplitDefinition(),
 			"split_traffic_type":                    resourceSplitTrafficType(),
 			"split_traffic_type_attribute":          resourceSplitTrafficTypeAttribute(),
-			"split_user":                            resourceSplitUser(),
-			"split_workspace":                       resourceSplitWorkspace(),
+			"split_user":                            resourceSplitUserWithDeprecation(),
+			"split_workspace":                       resourceSplitWorkspaceWithDeprecation(),
 		},
 
 		ConfigureContextFunc: providerConfigure,
@@ -87,6 +94,10 @@ func providerConfigure(_ context.Context, d *schema.ResourceData) (interface{}, 
 
 	if apiKey, ok := d.GetOk("api_key"); ok {
 		config.apiKey = apiKey.(string)
+	}
+
+	if harnessToken, ok := d.GetOk("harness_token"); ok {
+		config.harnessToken = harnessToken.(string)
 	}
 
 	if clientTimeout, ok := d.GetOk("client_timeout"); ok {

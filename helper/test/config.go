@@ -17,6 +17,7 @@ const (
 	TestConfigSplitEnvironmentID
 	TestConfigSplitTrafficTypeID
 	TestConfigSplitUserEmail
+	TestConfigSplitHarnessToken
 	TestConfigAcceptanceTestKey
 )
 
@@ -28,6 +29,7 @@ var testConfigKeyToEnvName = map[TestConfigKey]string{
 	TestConfigSplitWorkspaceName:   "SPLIT_WORKSPACE_NAME",
 	TestConfigSplitEnvironmentID:   "SPLIT_ENVIRONMENT_ID",
 	TestConfigSplitUserEmail:       "SPLIT_USER_EMAIL",
+	TestConfigSplitHarnessToken:    "HARNESS_TOKEN",
 	TestConfigAcceptanceTestKey:    resource.EnvTfAcc,
 }
 

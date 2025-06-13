@@ -8,6 +8,9 @@ import (
 )
 
 func TestAccSplitWorkspace_Basic(t *testing.T) {
+	// Skip test if using harness_token as this resource is deprecated with harness_token
+	skipIfUsingHarnessToken(t, "split_workspace")
+
 	name := fmt.Sprintf("w-tftest-%s", acctest.RandString(10))
 
 	resource.Test(t, resource.TestCase{
@@ -38,13 +41,11 @@ func TestAccSplitWorkspace_Basic(t *testing.T) {
 
 func testAccCheckSplitWorkspace_basic(name, requireTitleComments string) string {
 	return fmt.Sprintf(`
-provider "split" {
-	remove_environment_from_state_only = true
-}
+%s
 
 resource "split_workspace" "foobar" {
 	name = "%s"
 	require_title_comments = %s
 }
-`, name, requireTitleComments)
+`, testAccGetProviderConfig(), name, requireTitleComments)
 }
