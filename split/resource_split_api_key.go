@@ -43,7 +43,7 @@ func resourceSplitApiKey() *schema.Resource {
 				Type:         schema.TypeString,
 				Required:     true,
 				ForceNew:     true,
-				ValidateFunc: validation.StringLenBetween(1, 15),
+				ValidateFunc: validation.StringLenBetween(1, 100),
 			},
 
 			"type": {
