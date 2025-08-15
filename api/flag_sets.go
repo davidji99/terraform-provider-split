@@ -63,10 +63,36 @@ func (f *FlagSetsService) FindByID(id string) (*FlagSet, *simpleresty.Response, 
 //
 // Reference: https://docs.split.io/reference/list-flag-sets
 func (f *FlagSetsService) List(workspaceID string) ([]*FlagSet, *simpleresty.Response, error) {
-	var result FlagSetListResult
-	urlStr := fmt.Sprintf("https://api.split.io/api/v3/flag-sets?workspace_id=%s", workspaceID)
-	response, getErr := f.client.get(urlStr, &result, nil)
-	return result.Objects, response, getErr
+	var allFlagSets []*FlagSet
+	var lastResponse *simpleresty.Response
+	var after string
+	
+	for {
+		var result FlagSetListResult
+		urlStr := fmt.Sprintf("https://api.split.io/api/v3/flag-sets?workspace_id=%s&limit=200", workspaceID)
+		
+		if after != "" {
+			urlStr += fmt.Sprintf("&after=%s", after)
+		}
+		
+		response, getErr := f.client.get(urlStr, &result, nil)
+		lastResponse = response
+		if getErr != nil {
+			return allFlagSets, response, getErr
+		}
+		
+		if result.Objects != nil {
+			allFlagSets = append(allFlagSets, result.Objects...)
+		}
+		
+		if result.NextMarker == nil || *result.NextMarker == "" {
+			break
+		}
+		
+		after = *result.NextMarker
+	}
+	
+	return allFlagSets, lastResponse, nil
 }
 
 // FindByName retrieves a flag set by its name.
