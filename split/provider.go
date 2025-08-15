@@ -45,6 +45,7 @@ func New() *schema.Provider {
 
 		DataSourcesMap: map[string]*schema.Resource{
 			"split_environment":  dataSourceSplitEnvironment(),
+			"split_flag_set":     dataSourceSplitFlagSet(),
 			"split_traffic_type": dataSourceSplitTrafficType(),
 			"split_workspace":    dataSourceSplitWorkspace(),
 		},
@@ -53,6 +54,7 @@ func New() *schema.Provider {
 			"split_api_key":                         resourceSplitApiKey(),
 			"split_environment":                     resourceSplitEnvironment(),
 			"split_environment_segment_keys":        resourceSplitEnvironmentSegmentKeys(),
+			"split_flag_set":                        resourceSplitFlagSet(),
 			"split_group":                           resourceSplitGroup(),
 			"split_segment":                         resourceSplitSegment(),
 			"split_segment_environment_association": resourceSplitSegmentEnvironmentAssociation(),
