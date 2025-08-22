@@ -55,7 +55,6 @@ type WorkspaceListQueryParams struct {
 // Reference: https://docs.split.io/reference#get-workspaces
 func (w *WorkspacesService) List(opts ...interface{}) (*Workspaces, *simpleresty.Response, error) {
 	var result *Workspaces
-	//
 	urlStr, err := w.client.http.RequestURLWithQueryParams("/workspaces", opts...)
 	if err != nil {
 		return nil, nil, err
