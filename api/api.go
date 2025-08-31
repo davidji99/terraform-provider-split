@@ -51,6 +51,7 @@ type Client struct {
 	ApiKeys      *KeysService
 	Attributes   *AttributesService
 	Environments *EnvironmentsService
+	FlagSets     *FlagSetsService
 	Groups       *GroupsService
 	TrafficTypes *TrafficTypesService
 	Segments     *SegmentsService
@@ -119,6 +120,7 @@ func (c *Client) injectServices() {
 	c.ApiKeys = (*KeysService)(&c.common)
 	c.Attributes = (*AttributesService)(&c.common)
 	c.Environments = (*EnvironmentsService)(&c.common)
+	c.FlagSets = (*FlagSetsService)(&c.common)
 	c.Groups = (*GroupsService)(&c.common)
 	c.TrafficTypes = (*TrafficTypesService)(&c.common)
 	c.Segments = (*SegmentsService)(&c.common)
