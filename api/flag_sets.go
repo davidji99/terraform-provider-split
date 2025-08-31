@@ -34,9 +34,9 @@ type FlagSetRequest struct {
 
 // FlagSetListResult represents the response when listing flag sets.
 type FlagSetListResult struct {
-	Objects       []*FlagSet `json:"objects"`
-	NextMarker    *string    `json:"nextMarker"`
-	PreviousMarker *string   `json:"previousMarker"`
+	Objects        []*FlagSet `json:"objects"`
+	NextMarker     *string    `json:"nextMarker"`
+	PreviousMarker *string    `json:"previousMarker"`
 }
 
 // Create a flag set.
@@ -66,32 +66,32 @@ func (f *FlagSetsService) List(workspaceID string) ([]*FlagSet, *simpleresty.Res
 	var allFlagSets []*FlagSet
 	var lastResponse *simpleresty.Response
 	var after string
-	
+
 	for {
 		var result FlagSetListResult
 		urlStr := fmt.Sprintf("https://api.split.io/api/v3/flag-sets?workspace_id=%s&limit=200", workspaceID)
-		
+
 		if after != "" {
 			urlStr += fmt.Sprintf("&after=%s", after)
 		}
-		
+
 		response, getErr := f.client.get(urlStr, &result, nil)
 		lastResponse = response
 		if getErr != nil {
 			return allFlagSets, response, getErr
 		}
-		
+
 		if result.Objects != nil {
 			allFlagSets = append(allFlagSets, result.Objects...)
 		}
-		
+
 		if result.NextMarker == nil || *result.NextMarker == "" {
 			break
 		}
-		
+
 		after = *result.NextMarker
 	}
-	
+
 	return allFlagSets, lastResponse, nil
 }
 
