@@ -16,9 +16,18 @@ type EnvironmentsService service
 // environment. During the feature release process, Splits can be promoted through the various environments; allowing for
 // a targeted roll out throughout the development process.
 type Environment struct {
+	ID         *string    `json:"id"`
+	Name       *string    `json:"name"`
+	Production *bool      `json:"production"`
+	ApiTokens  []ApiToken `json:"apiTokens,omitempty"`
+}
+
+// ApiToken represents an automatically-created API token for an environment.
+type ApiToken struct {
 	ID         *string `json:"id"`
 	Name       *string `json:"name"`
-	Production *bool   `json:"production"`
+	Type       *string `json:"type"`
+	ApiKeyType *string `json:"apiKeyType"`
 }
 
 // EnvironmentSegment represents a segment in an environment.
