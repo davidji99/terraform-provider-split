@@ -305,6 +305,89 @@ func (e *EnvironmentSegmentKeysRequest) HasKeys() bool {
 	return true
 }
 
+// GetDescription returns the Description field if it's non-nil, zero value otherwise.
+func (f *FlagSet) GetDescription() string {
+	if f == nil || f.Description == nil {
+		return ""
+	}
+	return *f.Description
+}
+
+// GetID returns the ID field if it's non-nil, zero value otherwise.
+func (f *FlagSet) GetID() string {
+	if f == nil || f.ID == nil {
+		return ""
+	}
+	return *f.ID
+}
+
+// GetName returns the Name field if it's non-nil, zero value otherwise.
+func (f *FlagSet) GetName() string {
+	if f == nil || f.Name == nil {
+		return ""
+	}
+	return *f.Name
+}
+
+// GetWorkspace returns the Workspace field.
+func (f *FlagSet) GetWorkspace() *WorkspaceIDRef {
+	if f == nil {
+		return nil
+	}
+	return f.Workspace
+}
+
+// GetNextMarker returns the NextMarker field if it's non-nil, zero value otherwise.
+func (f *FlagSetListResult) GetNextMarker() string {
+	if f == nil || f.NextMarker == nil {
+		return ""
+	}
+	return *f.NextMarker
+}
+
+// HasObjects checks if FlagSetListResult has any Objects.
+func (f *FlagSetListResult) HasObjects() bool {
+	if f == nil || f.Objects == nil {
+		return false
+	}
+	if len(f.Objects) == 0 {
+		return false
+	}
+	return true
+}
+
+// GetPreviousMarker returns the PreviousMarker field if it's non-nil, zero value otherwise.
+func (f *FlagSetListResult) GetPreviousMarker() string {
+	if f == nil || f.PreviousMarker == nil {
+		return ""
+	}
+	return *f.PreviousMarker
+}
+
+// GetDescription returns the Description field if it's non-nil, zero value otherwise.
+func (f *FlagSetRequest) GetDescription() string {
+	if f == nil || f.Description == nil {
+		return ""
+	}
+	return *f.Description
+}
+
+// GetName returns the Name field if it's non-nil, zero value otherwise.
+func (f *FlagSetRequest) GetName() string {
+	if f == nil || f.Name == nil {
+		return ""
+	}
+	return *f.Name
+}
+
+// GetWorkspace returns the Workspace field.
+func (f *FlagSetRequest) GetWorkspace() *WorkspaceIDRef {
+	if f == nil {
+		return nil
+	}
+	return f.Workspace
+}
+
 // GetLimit returns the Limit field if it's non-nil, zero value otherwise.
 func (g *GenericListResult) GetLimit() int {
 	if g == nil || g.Limit == nil {
@@ -1136,6 +1219,22 @@ func (w *Workspace) GetRequiresTitleAndComments() bool {
 
 // GetType returns the Type field if it's non-nil, zero value otherwise.
 func (w *Workspace) GetType() string {
+	if w == nil || w.Type == nil {
+		return ""
+	}
+	return *w.Type
+}
+
+// GetID returns the ID field if it's non-nil, zero value otherwise.
+func (w *WorkspaceIDRef) GetID() string {
+	if w == nil || w.ID == nil {
+		return ""
+	}
+	return *w.ID
+}
+
+// GetType returns the Type field if it's non-nil, zero value otherwise.
+func (w *WorkspaceIDRef) GetType() string {
 	if w == nil || w.Type == nil {
 		return ""
 	}
