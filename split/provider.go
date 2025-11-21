@@ -62,7 +62,7 @@ func New() *schema.Provider {
 			"split_environment":                     resourceSplitEnvironment(),
 			"split_environment_segment_keys":        resourceSplitEnvironmentSegmentKeys(),
 			"split_flag_set":                        resourceSplitFlagSet(),
-			"split_group":                           resourceSplitGroup(),
+			"split_group":                           resourceSplitGroupWithDeprecation(),
 			"split_segment":                         resourceSplitSegment(),
 			"split_segment_environment_association": resourceSplitSegmentEnvironmentAssociation(),
 			"split_split":                           resourceSplitSplit(),

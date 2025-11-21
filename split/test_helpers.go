@@ -2,6 +2,7 @@ package split
 
 import (
 	"os"
+	"strconv"
 	"strings"
 	"testing"
 )
@@ -22,10 +23,14 @@ func testAccGetProviderConfig(additionalConfig ...string) string {
 	}
 
 	// Add authentication based on environment variables
+	// Use strconv.Quote to properly escape special characters, then remove outer quotes
+	// since we're already adding them in the template
 	if harnessToken := os.Getenv("HARNESS_TOKEN"); harnessToken != "" {
-		lines = append(lines, "\tharness_token = \""+harnessToken+"\"")
+		escapedToken := strings.Trim(strconv.Quote(harnessToken), `"`)
+		lines = append(lines, "\tharness_token = \""+escapedToken+"\"")
 	} else if apiKey := os.Getenv("SPLIT_API_KEY"); apiKey != "" {
-		lines = append(lines, "\tapi_key = \""+apiKey+"\"")
+		escapedKey := strings.Trim(strconv.Quote(apiKey), `"`)
+		lines = append(lines, "\tapi_key = \""+escapedKey+"\"")
 	}
 
 	// Add common config that's needed for tests
