@@ -2,10 +2,11 @@ package split
 
 import (
 	"fmt"
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/acctest"
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"strings"
 	"testing"
+
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/acctest"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 )
 
 func TestAccSplitUser_Basic(t *testing.T) {
@@ -39,8 +40,10 @@ func TestAccSplitUser_Basic(t *testing.T) {
 
 func testAccCheckSplitUser_basic(email string) string {
 	return fmt.Sprintf(`
+%s
+
 resource "split_user" "foobar" {
 	email = "%s"
 }
-`, email)
+`, testAccGetProviderConfig(), email)
 }

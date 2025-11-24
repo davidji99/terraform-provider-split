@@ -26,10 +26,12 @@ func testAccGetProviderConfig(additionalConfig ...string) string {
 	// Use strconv.Quote to properly escape special characters, then remove outer quotes
 	// since we're already adding them in the template
 	if harnessToken := os.Getenv("HARNESS_TOKEN"); harnessToken != "" {
-		escapedToken := strings.Trim(strconv.Quote(harnessToken), `"`)
+		quoted := strconv.Quote(harnessToken)
+		escapedToken := strings.TrimPrefix(strings.TrimSuffix(quoted, `"`), `"`)
 		lines = append(lines, "\tharness_token = \""+escapedToken+"\"")
 	} else if apiKey := os.Getenv("SPLIT_API_KEY"); apiKey != "" {
-		escapedKey := strings.Trim(strconv.Quote(apiKey), `"`)
+		quoted := strconv.Quote(apiKey)
+		escapedKey := strings.TrimPrefix(strings.TrimSuffix(quoted, `"`), `"`)
 		lines = append(lines, "\tapi_key = \""+escapedKey+"\"")
 	}
 
