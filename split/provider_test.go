@@ -35,7 +35,7 @@ func TestProvider_impl(t *testing.T) {
 func testAccPreCheck(t *testing.T) {
 	// First check if TF_ACC is set - skip gracefully if not
 	testAccConfig.SkipUnlessAccTest(t)
-	
+
 	// Check for either API key or harness token
 	apiKey := testAccConfig.Get(helper.TestConfigSplitAPIKey)
 	harnessToken := testAccConfig.Get(helper.TestConfigSplitHarnessToken)
