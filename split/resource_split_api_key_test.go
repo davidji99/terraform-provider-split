@@ -50,6 +50,9 @@ func TestAccSplitApiKey_ServerSide_Basic(t *testing.T) {
 // TestAccSplitApiKey_Admin_Basic may or may not work depending on your account's functionality. You may get the following
 // error: `402 {"code":402,"message":"Forbidden by Paywalls:`
 func TestAccSplitApiKey_Admin_Basic(t *testing.T) {
+	// Skip test if using harness_token as admin API keys are deprecated with harness_token
+	skipIfUsingHarnessTokenAndAdminType(t, "admin")
+
 	workspaceID := testAccConfig.GetWorkspaceIDorSkip(t)
 	name := fmt.Sprintf("tftest-%s", acctest.RandString(8))
 	envName := fmt.Sprintf("tftest-%s", acctest.RandString(8))

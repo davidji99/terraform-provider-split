@@ -3,11 +3,12 @@ package split
 import (
 	"context"
 	"fmt"
+	"log"
+
 	"github.com/davidji99/terraform-provider-split/api"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
-	"log"
 )
 
 func resourceSplitApiKey() *schema.Resource {
@@ -168,4 +169,25 @@ func resourceSplitApiKeyDelete(ctx context.Context, d *schema.ResourceData, meta
 	d.SetId("")
 
 	return diags
+}
+
+// resourceSplitApiKeyWithDeprecation wraps resourceSplitApiKey and adds plan-time deprecation checks for harness_token
+func resourceSplitApiKeyWithDeprecation() *schema.Resource {
+	r := resourceSplitApiKey()
+
+	// Add plan-time validation using CustomizeDiff
+	r.CustomizeDiff = func(ctx context.Context, diff *schema.ResourceDiff, meta interface{}) error {
+		// Detect harness_token from provider config OR environment
+		tokenSet := isHarnessTokenSet(meta)
+
+		// Only check for admin type API keys
+		if tokenSet {
+			if keyType, ok := diff.GetOk("type"); ok && keyType.(string) == "admin" {
+				return fmt.Errorf("resource split_api_key with type 'admin' cannot be used when harness_token is set: the resource split_api_key with type 'admin' is deprecated when using harness_token for authentication, please use the harness terraform provider instead")
+			}
+		}
+		return nil
+	}
+
+	return r
 }

@@ -3,10 +3,11 @@ package split
 import (
 	"context"
 	"fmt"
+	"log"
+
 	"github.com/davidji99/terraform-provider-split/api"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-	"log"
 )
 
 func resourceSplitGroup() *schema.Resource {
@@ -142,4 +143,23 @@ func resourceSplitGroupDelete(ctx context.Context, d *schema.ResourceData, meta 
 	d.SetId("")
 
 	return diags
+}
+
+// resourceSplitGroupWithDeprecation wraps resourceSplitGroup and adds plan-time deprecation checks for harness_token
+func resourceSplitGroupWithDeprecation() *schema.Resource {
+	r := resourceSplitGroup()
+
+	// Add plan-time validation using CustomizeDiff
+	r.CustomizeDiff = func(ctx context.Context, diff *schema.ResourceDiff, meta interface{}) error {
+		// Detect harness_token from provider config OR environment
+		tokenSet := isHarnessTokenSet(meta)
+
+		// If token is set, show deprecation error during plan
+		if tokenSet {
+			return fmt.Errorf("resource split_group cannot be used when harness_token is set: the resource split_group is deprecated when using harness_token for authentication, please use the harness terraform provider instead")
+		}
+		return nil
+	}
+
+	return r
 }

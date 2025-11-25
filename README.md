@@ -23,8 +23,30 @@ Usage
 ```hcl
 provider "split" {
   version = "~> 0.1.0"
+  
+  # Use either api_key (default) for Bearer token authentication
+  api_key = "YOUR_API_KEY"
+  
+  # OR use harness_token for x-api-key header authentication
+  # harness_token = "YOUR_HARNESS_TOKEN"
 }
 ```
+
+### Authentication Options
+
+This provider supports two authentication methods:
+
+1. **API Key Authentication (Default)**: Uses a Bearer token in the Authorization header.
+   - Set via the `api_key` parameter or the `SPLIT_API_KEY` environment variable.
+
+2. **Harness Token Authentication**: Uses the `x-api-key` header for authentication.
+   - Set via the `harness_token` parameter or the `HARNESS_TOKEN` environment variable.
+   - When this authentication method is used, the following resources are deprecated and cannot be used:
+     - `split_user`
+     - `split_group`
+     - `split_workspace`
+     - `split_api_key` (only when `type = "admin"`)
+
 
 Releases
 ------------
