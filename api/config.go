@@ -20,6 +20,9 @@ type Config struct {
 	// APIKey
 	APIKey string
 
+	// HarnessToken is used for x-api-key header authentication
+	HarnessToken string
+
 	// ClientTimeout
 	ClientTimeout int
 }

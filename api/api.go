@@ -133,9 +133,19 @@ func (c *Client) setHeaders() {
 	c.http.SetHeader("Content-type", c.config.ContentTypeHeader).
 		SetHeader("Accept", c.config.AcceptHeader).
 		SetHeader("User-Agent", c.config.UserAgent).
-		SetHeader("Authorization", fmt.Sprintf("Bearer %s", c.config.APIKey)).
 		SetTimeout(2 * time.Minute).
 		SetAllowGetMethodPayload(true)
+
+	// Add authentication headers based on what's available
+	if c.config.HarnessToken != "" {
+		// Use x-api-key header with harness_token when it's provided
+		log.Printf("[DEBUG] Using x-api-key header for authentication")
+		c.http.SetHeader("x-api-key", c.config.HarnessToken)
+	} else if c.config.APIKey != "" {
+		// Otherwise use Bearer token with API key
+		log.Printf("[DEBUG] Using Bearer token for authentication")
+		c.http.SetHeader("Authorization", fmt.Sprintf("Bearer %s", c.config.APIKey))
+	}
 
 	// Set additional headers
 	if c.config.CustomHTTPHeaders != nil {

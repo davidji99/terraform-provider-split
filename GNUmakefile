@@ -6,6 +6,7 @@ OS := $(shell uname | tr '[:upper:]' '[:lower:]')
 VERSION := $(shell go run ${PKG_NAME}/version.go)
 SHA := $(shell git rev-parse --short HEAD)
 FILE_NAME=terraform-provider-${PKG_NAME}_v${VERSION}
+GOPATH := $(shell go env GOPATH)
 
 default: build
 
@@ -15,6 +16,7 @@ build: fmtcheck
 install: fmtcheck
 	make fmt
 	make build
+	mkdir -p ~/.terraform.d/plugins/${OS}_amd64/
 	cp ${GOPATH}/bin/terraform-provider-${PKG_NAME} ~/.terraform.d/plugins/${OS}_amd64/${FILE_NAME}
 
 release: fmtcheck
@@ -27,6 +29,9 @@ test: fmtcheck
 
 testacc: fmtcheck
 	TF_ACC=1 go test $(TEST) -v $(TESTARGS) -timeout 120m -ldflags="-X=github.com/davidji99/terraform-provider-${PKG_NAME}/version.ProviderVersion=test"
+
+testaccseq: fmtcheck
+	TF_ACC=1 go test $(TEST) -v $(TESTARGS) -timeout 120m -parallel=1 -ldflags="-X=github.com/davidji99/terraform-provider-${PKG_NAME}/version.ProviderVersion=test"
 
 vet:
 	@echo "go vet ."
