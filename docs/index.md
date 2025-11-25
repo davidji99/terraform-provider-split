@@ -38,29 +38,52 @@ The following methods are supported, listed in order of precedence, and explaine
 - Static credentials
 - Environment variables
 
+### Authentication Options
+
+This provider supports two authentication methods:
+
+1. **API Key Authentication (Default)**: Uses a Bearer token in the Authorization header.
+   - Set via the `api_key` parameter or the `SPLIT_API_KEY` environment variable.
+
+2. **Harness Token Authentication**: Uses the `x-api-key` header for authentication.
+   - Set via the `harness_token` parameter or the `HARNESS_TOKEN` environment variable.
+   - When this authentication method is used, the following resources are deprecated and cannot be used:
+     - `split_user` 
+     - `split_group` 
+     - `split_workspace` (resource only - the `split_workspace` data source is still available)
+     - `split_api_key` (only when `type = "admin"`)
+
 ### Static credentials
 
-Credentials can be provided statically by adding an `api_key` arguments to the Split provider block:
+Credentials can be provided statically by adding an `api_key` or `harness_token` argument to the Split provider block:
 
 ```hcl
 provider "split" {
+  # Use either api_key (default) for Bearer token authentication
   api_key = "SOME_API_KEY"
+  
+  # OR use harness_token for x-api-key header authentication
+  # harness_token = "SOME_HARNESS_TOKEN"
 }
 ```
 
 ### Environment variables
 
-When the Split provider block does not contain an `api_key` argument, the missing credentials will be sourced
-from the environment via the `SPLIT_API_KEY` environment variables respectively:
+When the Split provider block does not contain an `api_key` or `harness_token` argument, the missing credentials will be sourced
+from the environment via the `SPLIT_API_KEY` or `HARNESS_TOKEN` environment variables respectively:
 
 ```hcl
 provider "split" {}
 ```
 
 ```shell
+# For API key authentication
 $ export SPLIT_API_KEY="SOME_KEY"
 $ terraform plan
-Refreshing Terraform state in-memory prior to plan...
+
+# OR for Harness token authentication
+$ export HARNESS_TOKEN="SOME_TOKEN"
+$ terraform plan
 ```
 
 ## Rate Limiting
@@ -74,8 +97,12 @@ your `provider {}` block.
 
 The following arguments are supported:
 
-* `api_key` - (Required) Split API key. It must be provided, but it can also
-  be sourced from [other locations](#Authentication).
+* `api_key` - (Optional) Split API key for Bearer token authentication. It can be provided here or
+  sourced from the `SPLIT_API_KEY` environment variable. Either `api_key` or `harness_token` must be provided.
+
+* `harness_token` - (Optional) Harness token for x-api-key header authentication. It can be provided here or
+  sourced from the `HARNESS_TOKEN` environment variable. Either `api_key` or `harness_token` must be provided.
+  When using `harness_token`, certain resources are deprecated (see [Authentication Options](#authentication-options)).
 
 * `base_url` - (Optional) Custom API URL.
   Can also be sourced from the `SPLIT_API_URL` environment variable.
