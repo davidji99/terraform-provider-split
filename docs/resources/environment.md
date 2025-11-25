@@ -37,7 +37,7 @@ The following arguments are supported:
 
 The following attributes are exported:
 
-n/a
+* `api_token_ids` - `<list(string)>` IDs of automatically-created API tokens for this environment. These tokens are automatically deleted when the environment is destroyed.
 
 ## Import
 
@@ -49,3 +49,5 @@ For example:
 ```shell script
 $ terraform import split_environment.foobar "0b46d8f7-9435-4f74-a770-3fcb22fbbfe6:110b3876-1d38-11ed-861d-0242ac120002"
 ```
+
+**Note:** Imported environments will not have `api_token_ids` tracked in state. If you need to destroy an imported environment, you may need to manually delete any auto-created API tokens via the Split.io UI or API first, as environments cannot be deleted until all associated tokens are revoked.
