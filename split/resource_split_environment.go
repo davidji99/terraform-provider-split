@@ -40,6 +40,15 @@ func resourceSplitEnvironment() *schema.Resource {
 				Optional: true,
 				Default:  false,
 			},
+
+			"api_token_ids": {
+				Type:        schema.TypeList,
+				Computed:    true,
+				Description: "IDs of automatically-created API tokens for this environment",
+				Elem: &schema.Schema{
+					Type: schema.TypeString,
+				},
+			},
 		},
 	}
 }
@@ -101,6 +110,18 @@ func resourceSplitEnvironmentCreate(ctx context.Context, d *schema.ResourceData,
 
 	d.SetId(e.GetID())
 
+	// Store the automatically-created API token IDs
+	if len(e.ApiTokens) > 0 {
+		tokenIDs := make([]string, 0, len(e.ApiTokens))
+		for _, token := range e.ApiTokens {
+			if token.ID != nil {
+				tokenIDs = append(tokenIDs, *token.ID)
+				log.Printf("[DEBUG] Storing API token ID %s for environment %s", *token.ID, e.GetID())
+			}
+		}
+		d.Set("api_token_ids", tokenIDs)
+	}
+
 	return resourceSplitEnvironmentRead(ctx, d, meta)
 }
 
@@ -121,6 +142,19 @@ func resourceSplitEnvironmentRead(ctx context.Context, d *schema.ResourceData, m
 	d.Set("workspace_id", getWorkspaceID(d))
 	d.Set("name", e.GetName())
 	d.Set("production", e.GetProduction())
+
+	// Preserve API token IDs in state if they exist
+	// The API List endpoint doesn't always return apiTokens, so we keep what's in state
+	if len(e.ApiTokens) > 0 {
+		tokenIDs := make([]string, 0, len(e.ApiTokens))
+		for _, token := range e.ApiTokens {
+			if token.ID != nil {
+				tokenIDs = append(tokenIDs, *token.ID)
+			}
+		}
+		d.Set("api_token_ids", tokenIDs)
+	}
+	// If no tokens in response, keep existing state (don't overwrite)
 
 	return diags
 }
@@ -164,13 +198,34 @@ func resourceSplitEnvironmentDelete(ctx context.Context, d *schema.ResourceData,
 	if !config.RemoveEnvFromStateOnly {
 		client := config.API
 
+		// Delete associated API tokens first (required before environment deletion)
+		if tokenIDs, ok := d.GetOk("api_token_ids"); ok {
+			tokenList := tokenIDs.([]interface{})
+			for _, tokenID := range tokenList {
+				tokenIDStr := tokenID.(string)
+				log.Printf("[DEBUG] Deleting API token %s for environment %s", tokenIDStr, d.Id())
+				_, deleteTokenErr := client.ApiKeys.Delete(tokenIDStr)
+				if deleteTokenErr != nil {
+					log.Printf("[WARN] Error deleting API token %s: %s", tokenIDStr, deleteTokenErr.Error())
+					// Continue trying to delete other tokens and the environment
+				} else {
+					log.Printf("[DEBUG] Deleted API token %s", tokenIDStr)
+				}
+			}
+		}
+
 		log.Printf("[DEBUG] Deleting Environment %s", d.Id())
 		_, deleteErr := client.Environments.Delete(getWorkspaceID(d), d.Id())
 		if deleteErr != nil {
+			// Provide helpful error message for token-related deletion issues
+			errorDetail := deleteErr.Error()
+			if _, hasTokens := d.GetOk("api_token_ids"); !hasTokens {
+				errorDetail = fmt.Sprintf("%s\n\nNote: Environments cannot be deleted until all associated API tokens are revoked. If this environment was created with an older provider version, you may need to manually delete the auto-created API tokens via the Split.io UI or API before destroying this environment.", errorDetail)
+			}
 			diags = append(diags, diag.Diagnostic{
 				Severity: diag.Error,
 				Summary:  fmt.Sprintf("unable to delete environment %s", d.Id()),
-				Detail:   deleteErr.Error(),
+				Detail:   errorDetail,
 			})
 			return diags
 		}
