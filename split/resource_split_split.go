@@ -50,6 +50,15 @@ func resourceSplitSplit() *schema.Resource {
 				Optional: true,
 				Computed: true,
 			},
+
+			"tags":{
+				Type: schema.TypeList,
+				Elem: &schema.Schema{
+					Type: schema.TypeString,
+				},
+				Optional: true, 
+				ForceNew: true,
+			},
 		},
 	}
 }
@@ -109,6 +118,40 @@ func resourceSplitSplitCreate(ctx context.Context, d *schema.ResourceData, meta 
 	}
 
 	log.Printf("[DEBUG] Created split %v", s.GetID())
+
+	tagsRaw := d.Get("tags").([]interface{})
+	tags := make([]string, len(tagsRaw))
+	log.Printf("[DEBUG] Creating Tag amount: %v", len(tags))
+
+	if len(tags) > 0 {
+		log.Printf("[DEBUG] Creating Tags %v",tags)
+		// Create object
+		operations := []api.SplitUpdateFlagRequest{}
+		for _, tag := range tagsRaw {
+			operation := api.SplitUpdateFlagRequest{
+				Op:   "add",
+				Path: "/tags/0",
+				Value: api.SplitTag{
+					Name: tag.(string),
+				},
+			}
+			operations = append(operations, operation)
+		}
+
+		log.Printf("[DEBUG] Operations: %v", &operations)
+		s, _, updateForTagErr := client.Splits.UpdateSplit(workspaceID, opts.Name, &operations)
+		if updateForTagErr != nil {
+			diags = append(diags, diag.Diagnostic{
+				Severity: diag.Error,
+				Summary:  fmt.Sprintf("Unable to update split flags %v", opts.Name),
+				Detail:   createErr.Error(),
+			})
+			return diags
+		}
+
+		log.Printf("[DEBUG] Updated split %v", s.GetID())
+	}
+		
 
 	d.SetId(s.GetID())
 	d.Set("workspace_id", workspaceID)
