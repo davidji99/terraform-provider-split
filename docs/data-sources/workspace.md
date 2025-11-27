@@ -10,6 +10,9 @@ description: |-
 
 Use this data source to get information about a Split workspace.
 
+-> **NOTE**
+This data source is available when using either `api_key` or `harness_token` authentication. While the `split_workspace` resource is deprecated when using `harness_token`, this data source remains fully functional.
+
 ## Example Usage
 
 ```hcl-terraform

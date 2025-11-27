@@ -13,6 +13,9 @@ This resource provides the ability to manage an [API key](https://docs.split.io/
 Due to API limitations, it is not possible update an existing API key. Any modifications to a `split_api_key` resource
 will result in a destroy and recreate process.
 
+-> **DEPRECATION NOTICE**
+When using `harness_token` for authentication (x-api-key header), API keys with `type = "admin"` are deprecated and cannot be used. Please use the Harness Terraform provider instead for managing admin API keys when using Harness authentication.
+
 -> **IMPORTANT!**
 Please be very careful when deleting this resource as the deleted API keys are NOT recoverable and invalidated immediately.
 Furthermore, this resource renders the actual API key plain-text in your state file.

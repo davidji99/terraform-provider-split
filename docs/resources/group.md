@@ -10,6 +10,9 @@ Provides the ability to manage a Split group.
 
 This resource provides the ability to manage a group in Split.
 
+-> **DEPRECATION NOTICE**
+When using `harness_token` for authentication (x-api-key header), this resource is deprecated and cannot be used. Please use the Harness Terraform provider instead when using Harness authentication.
+
 -> **IMPORTANT!**
 Groups are not available on Split's free tier.
 

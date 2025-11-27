@@ -10,6 +10,9 @@ description: |-
 
 Use this resource to manage a Split workspace.
 
+-> **DEPRECATION NOTICE**
+When using `harness_token` for authentication (x-api-key header), this resource is deprecated and cannot be used. Please use the Harness Terraform provider instead when using Harness authentication.
+
 Workspaces allow you to separately manage your feature flags and experiments across your different business units,
 product lines, and applications.
 
