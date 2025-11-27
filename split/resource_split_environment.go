@@ -111,7 +111,7 @@ func resourceSplitEnvironmentCreate(ctx context.Context, d *schema.ResourceData,
 	d.SetId(e.GetID())
 
 	// Store the automatically-created API token IDs
-	if e.ApiTokens != nil && len(e.ApiTokens) > 0 {
+	if len(e.ApiTokens) > 0 {
 		tokenIDs := make([]string, 0, len(e.ApiTokens))
 		for _, token := range e.ApiTokens {
 			if token.ID != nil {
@@ -145,7 +145,7 @@ func resourceSplitEnvironmentRead(ctx context.Context, d *schema.ResourceData, m
 
 	// Preserve API token IDs in state if they exist
 	// The API List endpoint doesn't always return apiTokens, so we keep what's in state
-	if e.ApiTokens != nil && len(e.ApiTokens) > 0 {
+	if len(e.ApiTokens) > 0 {
 		tokenIDs := make([]string, 0, len(e.ApiTokens))
 		for _, token := range e.ApiTokens {
 			if token.ID != nil {
