@@ -48,8 +48,8 @@ This provider supports two authentication methods:
 2. **Harness Token Authentication**: Uses the `x-api-key` header for authentication.
    - Set via the `harness_token` parameter or the `HARNESS_TOKEN` environment variable.
    - When this authentication method is used, the following resources are deprecated and cannot be used:
-     - `split_user` 
-     - `split_group` 
+     - `split_user`
+     - `split_group`
      - `split_workspace` (resource only - the `split_workspace` data source is still available)
      - `split_api_key` (only when `type = "admin"`)
 
@@ -61,7 +61,7 @@ Credentials can be provided statically by adding an `api_key` or `harness_token`
 provider "split" {
   # Use either api_key (default) for Bearer token authentication
   api_key = "SOME_API_KEY"
-  
+
   # OR use harness_token for x-api-key header authentication
   # harness_token = "SOME_HARNESS_TOKEN"
 }
