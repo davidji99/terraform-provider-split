@@ -8,7 +8,7 @@ description: |-
 
 # split_environment
 
-This resource provides the ability to manage an [Environment](https://help.split.io/hc/en-us/articles/360019915771-Environments).
+This resource provides the ability to manage an [Environment](https://developer.harness.io/docs/feature-management-experimentation/environments/).
 Environments allow you to manage your splits throughout your development lifecycle — from local development to staging and production.
 
 ## Example Usage
