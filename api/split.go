@@ -19,10 +19,17 @@ type Split struct {
 	Name                   *string             `json:"name"`
 	Description            *string             `json:"description"`
 	Tags                   []SplitTag          `json:"tags,omitempty"`
+	Owners                 []SplitOwner        `json:"owners,omitempty"`
 	CreationTime           *int64              `json:"creationTime"`
 	RolloutStatusTimestamp *int64              `json:"rolloutStatusTimestamp"`
 	TrafficType            *TrafficType        `json:"trafficType"`
 	RolloutStatus          *SplitRolloutStatus `json:"rolloutStatus"`
+}
+
+// SplitOwner represents an owner of a split (feature flag).
+type SplitOwner struct {
+	Id   string `json:"id"`
+	Type string `json:"type"`
 }
 
 // SplitRolloutStatus represents the rollout status.
@@ -39,8 +46,9 @@ type Splits struct {
 
 // SplitCreateRequest represents a request to create a split.
 type SplitCreateRequest struct {
-	Name        string `json:"name"`
-	Description string `json:"description"`
+	Name        string       `json:"name"`
+	Description string       `json:"description"`
+	Owners      []SplitOwner `json:"owners,omitempty"`
 }
 
 // SplitUpdateRequest represents a request to update a split.

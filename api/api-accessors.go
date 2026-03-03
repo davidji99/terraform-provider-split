@@ -845,6 +845,14 @@ func (s *Split) GetTrafficType() *TrafficType {
 	return s.TrafficType
 }
 
+// GetOwners returns the Owners field.
+func (s *Split) GetOwners() []SplitOwner {
+	if s == nil || s.Owners == nil {
+		return nil
+	}
+	return s.Owners
+}
+
 // GetCreationTIme returns the CreationTIme field if it's non-nil, zero value otherwise.
 func (s *SplitDefinition) GetCreationTIme() int {
 	if s == nil || s.CreationTIme == nil {

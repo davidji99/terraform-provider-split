@@ -17,6 +17,8 @@ const (
 	TestConfigSplitEnvironmentID
 	TestConfigSplitTrafficTypeID
 	TestConfigSplitUserEmail
+	TestConfigSplitUserID
+	TestConfigSplitGroupID
 	TestConfigSplitHarnessToken
 	TestConfigAcceptanceTestKey
 )
@@ -29,6 +31,8 @@ var testConfigKeyToEnvName = map[TestConfigKey]string{
 	TestConfigSplitWorkspaceName:   "SPLIT_WORKSPACE_NAME",
 	TestConfigSplitEnvironmentID:   "SPLIT_ENVIRONMENT_ID",
 	TestConfigSplitUserEmail:       "SPLIT_USER_EMAIL",
+	TestConfigSplitUserID:          "SPLIT_USER_ID",
+	TestConfigSplitGroupID:         "SPLIT_GROUP_ID",
 	TestConfigSplitHarnessToken:    "HARNESS_TOKEN",
 	TestConfigAcceptanceTestKey:    resource.EnvTfAcc,
 }
@@ -103,4 +107,12 @@ func (t *TestConfig) GetTrafficTypeNameorSkip(testing *testing.T) (val string) {
 
 func (t *TestConfig) GetUserEmailorSkip(testing *testing.T) (val string) {
 	return t.GetOrSkip(testing, TestConfigSplitUserEmail)
+}
+
+func (t *TestConfig) GetUserIDorSkip(testing *testing.T) (val string) {
+	return t.GetOrSkip(testing, TestConfigSplitUserID)
+}
+
+func (t *TestConfig) GetGroupIDorSkip(testing *testing.T) (val string) {
+	return t.GetOrSkip(testing, TestConfigSplitGroupID)
 }
