@@ -2,13 +2,16 @@ package split
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
+	"log"
+	"os"
+	"regexp"
+
 	"github.com/davidji99/terraform-provider-split/api"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
-	"log"
-	"regexp"
 )
 
 func resourceSplitSplit() *schema.Resource {
@@ -50,6 +53,27 @@ func resourceSplitSplit() *schema.Resource {
 				Optional: true,
 				Computed: true,
 			},
+
+			"owners": {
+				Type:     schema.TypeSet,
+				Optional: true,
+				ForceNew: true,
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"id": {
+							Type:         schema.TypeString,
+							Required:     true,
+							ValidateFunc: validation.StringLenBetween(1, 256),
+						},
+						"type": {
+							Type:         schema.TypeString,
+							Optional:     true,
+							Default:      "user",
+							ValidateFunc: validation.StringInSlice([]string{"user", "group"}, false),
+						},
+					},
+				},
+			},
 		},
 	}
 }
@@ -75,6 +99,9 @@ func resourceSplitSplitImport(ctx context.Context, d *schema.ResourceData, meta 
 	d.Set("traffic_type_id", s.GetTrafficType().GetID())
 	d.Set("name", s.GetName())
 	d.Set("description", s.GetDescription())
+	if err := d.Set("owners", flattenSplitOwners(s.GetOwners())); err != nil {
+		return nil, err
+	}
 
 	return []*schema.ResourceData{d}, nil
 }
@@ -96,7 +123,16 @@ func resourceSplitSplitCreate(ctx context.Context, d *schema.ResourceData, meta 
 		log.Printf("[DEBUG] new split description is : %v", opts.Description)
 	}
 
+	if v, ok := d.GetOk("owners"); ok {
+		opts.Owners = expandSplitOwners(v.(*schema.Set))
+	}
+
 	log.Printf("[DEBUG] Creating split %v", opts.Name)
+	if os.Getenv("TF_ACC") == "1" {
+		if reqJSON, err := json.MarshalIndent(opts, "", "  "); err == nil {
+			log.Printf("[DEBUG] Split create request body: %s", reqJSON)
+		}
+	}
 
 	s, _, createErr := client.Splits.Create(workspaceID, trafficTypeID, opts)
 	if createErr != nil {
@@ -160,6 +196,14 @@ func resourceSplitSplitRead(ctx context.Context, d *schema.ResourceData, meta in
 	d.Set("name", s.GetName())
 	d.Set("description", s.GetDescription())
 	d.Set("traffic_type_id", s.GetTrafficType().GetID())
+	if err := d.Set("owners", flattenSplitOwners(s.GetOwners())); err != nil {
+		diags = append(diags, diag.Diagnostic{
+			Severity: diag.Error,
+			Summary:  "Error setting owners",
+			Detail:   err.Error(),
+		})
+		return diags
+	}
 
 	return diags
 }
@@ -185,4 +229,38 @@ func resourceSplitSplitDelete(ctx context.Context, d *schema.ResourceData, meta 
 	d.SetId("")
 
 	return diags
+}
+
+func expandSplitOwners(set *schema.Set) []api.SplitOwner {
+	owners := make([]api.SplitOwner, 0, set.Len())
+	for _, raw := range set.List() {
+		m := raw.(map[string]interface{})
+		ownerType := "user"
+		if v, ok := m["type"].(string); ok && v != "" {
+			ownerType = v
+		}
+		owners = append(owners, api.SplitOwner{
+			Id:   m["id"].(string),
+			Type: ownerType,
+		})
+	}
+	return owners
+}
+
+func flattenSplitOwners(owners []api.SplitOwner) []interface{} {
+	if owners == nil {
+		return nil
+	}
+	out := make([]interface{}, 0, len(owners))
+	for _, o := range owners {
+		ownerType := o.Type
+		if ownerType == "" {
+			ownerType = "user"
+		}
+		out = append(out, map[string]interface{}{
+			"id":   o.Id,
+			"type": ownerType,
+		})
+	}
+	return out
 }
