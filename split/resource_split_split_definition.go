@@ -176,6 +176,11 @@ func resourceSplitSplitDefinition() *schema.Resource {
 													},
 													Optional: true,
 												},
+
+												"number": {
+													Type:     schema.TypeInt,
+													Optional: true,
+												},
 											},
 										},
 									},
@@ -513,6 +518,9 @@ func constructSplitDefinitionRequestOpts(d *schema.ResourceData) (*api.SplitDefi
 								}
 								newRuleConditionMatcher.Strings = sList
 							}
+							if v, ok := matcher["number"].(int); ok {
+								newRuleConditionMatcher.Number = &v
+							}
 							newRuleConditionMatchers = append(newRuleConditionMatchers, &newRuleConditionMatcher)
 						}
 						newRuleCondition.Matchers = newRuleConditionMatchers
@@ -579,12 +587,16 @@ func setRuleInState(d *schema.ResourceData, sd *api.SplitDefinition) {
 		conditions := make([]map[string]interface{}, 0)
 		ruleConditionMatchers := make([]map[string]interface{}, 0)
 		for _, rcm := range r.Condition.Matchers {
-			ruleConditionMatchers = append(ruleConditionMatchers, map[string]interface{}{
+			matcher := map[string]interface{}{
 				"type":      rcm.GetType(),
 				"attribute": rcm.GetAttribute(),
 				"string":    rcm.GetString(),
 				"strings":   rcm.Strings,
-			})
+			}
+			if rcm.Number != nil {
+				matcher["number"] = *rcm.Number
+			}
+			ruleConditionMatchers = append(ruleConditionMatchers, matcher)
 		}
 		conditions = append(conditions, map[string]interface{}{
 			"combiner": *r.Condition.Combiner,
